@@ -6,6 +6,8 @@
                 GoBites
             </div>
         </router-link>
+        <router-link to="/restaurant" class="router_link">Restaurant</router-link>
+        <router-link to="/login" class="router_link">Login</router-link>
     </nav>
     <router-view />
 </div>
