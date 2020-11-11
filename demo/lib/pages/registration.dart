@@ -38,21 +38,21 @@ class MyStatelessWidget extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Register an Account'),
       ),
-      body: MyCustomForm(),
+      body: RegistrationForm(),
     );
   }
 }
 
-class MyCustomForm extends StatefulWidget {
+class RegistrationForm extends StatefulWidget {
   @override
-  MyCustomFormState createState() {
-    return MyCustomFormState();
+  RegistrationFormState createState() {
+    return RegistrationFormState();
   }
 }
 
 // Create a corresponding State class.
 // This class holds data related to the form.
-class MyCustomFormState extends State<MyCustomForm> {
+class RegistrationFormState extends State<RegistrationForm> {
   // Create a global key that uniquely identifies the Form widget
   // and allows validation of the form.
   //
@@ -161,17 +161,239 @@ class MyCustomFormState extends State<MyCustomForm> {
               onPressed: () {
                 // Validate returns true if the form is valid, or false
                 // otherwise.
-                if (_formKey.currentState.validate()) {
+                if (usertype == "Customer") {
                   // If the form is valid, display a Snackbar.
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text('Processing Data')));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CusRegistrationForm()));
                 }
               },
-              child: Text('Submit'),
+              child: Text('Continue'),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class CusRegistrationForm extends StatefulWidget {
+  @override
+  CusRegistrationFormState createState() {
+    return CusRegistrationFormState();
+  }
+}
+
+class CusRegistrationFormState extends State<CusRegistrationForm> {
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a GlobalKey<FormState>,
+  // not a GlobalKey<MyCustomFormState>.
+  final _formKey = GlobalKey<FormState>();
+  DateTime selectedDate = DateTime.now();
+  String gender;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(1900),
+        lastDate: selectedDate);
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Build a Form widget using the _formKey created above.
+    return Scaffold(
+        appBar: AppBar(title: Text('Customer Registration')),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Customer Name:',
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Name',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Gender:',
+                        ),
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Male'),
+                      leading: Radio(
+                        value: 'Male',
+                        groupValue: gender,
+                        onChanged: (String value) {
+                          setState(() {
+                            gender = value;
+                          });
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      title: const Text('Female'),
+                      leading: Radio(
+                        value: 'Female',
+                        groupValue: gender,
+                        onChanged: (String value) {
+                          setState(() {
+                            gender = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Birthday:',
+                        ),
+                      ),
+                    ),
+                    Row(children: [
+                      Text("${selectedDate.toLocal()}".split(' ')[0]),
+                      Material(
+                        child: Center(
+                          child: IconButton(
+                            icon: Icon(
+                              Icons.calendar_today_sharp,
+                            ),
+                            color: Colors.black,
+                            onPressed: () => _selectDate(context),
+                          ),
+                        ),
+                      ),
+                    ]),
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Address:',
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      maxLines: 6,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter your address here.',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Telephone No.:',
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Telephone No.:',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Column(children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Email:',
+                        ),
+                      ),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter some text';
+                        }
+                        return null;
+                      },
+                    ),
+                  ]),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Validate returns true if the form is valid, or false
+                      // otherwise.
+                      // if (usertype == "Customer") {
+                      //   // If the form is valid, display a Snackbar.
+
+                      // }
+                    },
+                    child: Text('Submit'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }
