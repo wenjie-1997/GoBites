@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:demo/pages/registration.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -41,6 +44,19 @@ class _LoginState extends State<Login> {
           ),
         ));
 
+    final registrationlink = Container(
+      child: InkWell(
+          child: new Text(
+            'New user? Register Now',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+              color: Colors.blue[800],
+            ),
+          ),
+          onTap: () => Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => Register()))),
+    );
+
     return Scaffold(
       body: Center(
         child: Container(
@@ -67,6 +83,7 @@ class _LoginState extends State<Login> {
                 SizedBox(
                   height: 15.0,
                 ),
+                registrationlink,
               ],
             ),
           ),

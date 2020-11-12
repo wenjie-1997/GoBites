@@ -1,3 +1,4 @@
+//import 'dart:html';
 import 'dart:ui';
 
 /// Flutter code sample for AppBar
@@ -114,6 +115,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Radio(
                     value: 'Customer',
@@ -148,7 +150,10 @@ class RegistrationFormState extends State<RegistrationForm> {
                     // If the form is valid, display a Snackbar.
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CusRegistrationForm()));
-                  } else if (usertype == "Restaurant") {}
+                  } else if (usertype == "Restaurant") {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => RestRegistrationForm()));
+                  }
                 }
               },
               child: Text('Continue'),
@@ -201,7 +206,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
                     TextFormField(
                       decoration: const InputDecoration(
@@ -217,7 +222,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   ]),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -228,7 +233,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Radio(
                           value: 'Male',
@@ -255,7 +260,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   ]),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
                     Align(
                       alignment: Alignment.centerLeft,
@@ -326,7 +331,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter youor email';
+                          return 'Please enter your email';
                         }
                         return null;
                       },
@@ -338,6 +343,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {}
+                      Navigator.of(context).pop();
                     },
                     child: Text('Submit'),
                   ),
@@ -346,5 +352,148 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
             ),
           ),
         ));
+  }
+}
+
+class RestRegistrationForm extends StatefulWidget {
+  @override
+  RestRegistrationFormState createState() {
+    return RestRegistrationFormState();
+  }
+}
+
+class RestRegistrationFormState extends State<RestRegistrationForm> {
+  // Create a global key that uniquely identifies the Form widget
+  // and allows validation of the form.
+  //
+  // Note: This is a GlobalKey<FormState>,
+  // not a GlobalKey<MyCustomFormState>.
+  final _formKey = GlobalKey<FormState>();
+  String rest_type;
+
+  @override
+  Widget build(BuildContext context) {
+    // Build a Form widget using the _formKey created above.
+    return Scaffold(
+      appBar: AppBar(title: Text('Customer Registration')),
+      body: SingleChildScrollView(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Restaurant Name',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the restaurant name';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => {
+                    //
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    labelText: 'Restaurant Owner Name',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the restaurant owner name';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => {
+                    //
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: TextFormField(
+                  maxLines: 6,
+                  decoration: const InputDecoration(
+                    labelText: 'Restaurant Address',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the restaurant address';
+                    }
+                    return null;
+                  },
+                  onSaved: (value) => {
+                    //
+                  },
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: Column(
+                  //crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                        child: Text(
+                          'Restaurant type/style',
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: DropdownButton<String>(
+                        value: rest_type,
+                        //icon: Icon(Icons.arrow_downward),
+                        //iconSize: 24,
+                        //elevation: 16,
+                        //style: TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            rest_type = newValue;
+                          });
+                        },
+                        items: <String>[
+                          'Malay',
+                          'Chinese',
+                          'Indian',
+                          'Western',
+                          'Arabic',
+                          'Others'
+                        ].map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {}
+                  },
+                  child: Text('Submit'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

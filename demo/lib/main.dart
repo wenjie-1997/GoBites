@@ -6,7 +6,7 @@ import 'package:demo/pages/registration.dart';
 
 void main() {
   runApp(MaterialApp(
-    initialRoute: '/registration',
+    initialRoute: '/',
     routes: {
       '/': (context) => Login(),
       '/loading': (context) => Loading(),
