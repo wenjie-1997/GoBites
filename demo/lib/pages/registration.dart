@@ -70,19 +70,11 @@ class RegistrationFormState extends State<RegistrationForm> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.only(left: 20, bottom: 10),
             child: Column(children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  child: Text(
-                    'Username:',
-                  ),
-                ),
-              ),
               TextFormField(
                 decoration: const InputDecoration(
-                  hintText: 'Username',
+                  labelText: 'Username',
                 ),
                 validator: (value) {
                   if (value.isEmpty) {
@@ -94,20 +86,12 @@ class RegistrationFormState extends State<RegistrationForm> {
             ]),
           ),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.only(left: 20, bottom: 10),
             child: Column(children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  child: Text(
-                    'Password:',
-                  ),
-                ),
-              ),
               TextFormField(
                 obscureText: true,
                 decoration: const InputDecoration(
-                  hintText: 'Enter your Password',
+                  labelText: 'Password',
                 ),
                 validator: (value) {
                   if (value.length < 8 || value.length > 15) {
@@ -119,7 +103,7 @@ class RegistrationFormState extends State<RegistrationForm> {
             ]),
           ),
           Container(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.only(left: 20, bottom: 10),
             child: Column(children: <Widget>[
               Align(
                 alignment: Alignment.centerLeft,
@@ -129,42 +113,42 @@ class RegistrationFormState extends State<RegistrationForm> {
                   ),
                 ),
               ),
-              ListTile(
-                title: const Text('Customer'),
-                leading: Radio(
-                  value: 'Customer',
-                  groupValue: usertype,
-                  onChanged: (String value) {
-                    setState(() {
-                      usertype = value;
-                    });
-                  },
-                ),
-              ),
-              ListTile(
-                title: const Text('Restaurant'),
-                leading: Radio(
-                  value: 'Restaurant',
-                  groupValue: usertype,
-                  onChanged: (String value) {
-                    setState(() {
-                      usertype = value;
-                    });
-                  },
-                ),
-              ),
+              Row(
+                children: [
+                  Radio(
+                    value: 'Customer',
+                    groupValue: usertype,
+                    onChanged: (String value) {
+                      setState(() {
+                        usertype = value;
+                      });
+                    },
+                  ),
+                  Text('Customer'),
+                  Radio(
+                    value: 'Restaurant',
+                    groupValue: usertype,
+                    onChanged: (String value) {
+                      setState(() {
+                        usertype = value;
+                      });
+                    },
+                  ),
+                  Text('Restaurant'),
+                ],
+              )
             ]),
           ),
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: EdgeInsets.only(left: 20, bottom: 10),
             child: ElevatedButton(
               onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                if (usertype == "Customer") {
-                  // If the form is valid, display a Snackbar.
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => CusRegistrationForm()));
+                if (_formKey.currentState.validate()) {
+                  if (usertype == "Customer") {
+                    // If the form is valid, display a Snackbar.
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => CusRegistrationForm()));
+                  } else if (usertype == "Restaurant") {}
                 }
               },
               child: Text('Continue'),
@@ -190,15 +174,15 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate;
   String gender;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate,
+        initialDate: selectedDate != null ? selectedDate : DateTime.now(),
         firstDate: DateTime(1900),
-        lastDate: selectedDate);
+        lastDate: DateTime.now());
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
@@ -219,21 +203,13 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                 Container(
                   padding: EdgeInsets.all(20),
                   child: Column(children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Text(
-                          'Customer Name:',
-                        ),
-                      ),
-                    ),
                     TextFormField(
                       decoration: const InputDecoration(
-                        hintText: 'Name',
+                        labelText: 'Customer Name',
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter your user name';
                         }
                         return null;
                       },
@@ -251,30 +227,31 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                         ),
                       ),
                     ),
-                    ListTile(
-                      title: const Text('Male'),
-                      leading: Radio(
-                        value: 'Male',
-                        groupValue: gender,
-                        onChanged: (String value) {
-                          setState(() {
-                            gender = value;
-                          });
-                        },
-                      ),
-                    ),
-                    ListTile(
-                      title: const Text('Female'),
-                      leading: Radio(
-                        value: 'Female',
-                        groupValue: gender,
-                        onChanged: (String value) {
-                          setState(() {
-                            gender = value;
-                          });
-                        },
-                      ),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Radio(
+                          value: 'Male',
+                          groupValue: gender,
+                          onChanged: (String value) {
+                            setState(() {
+                              gender = value;
+                            });
+                          },
+                        ),
+                        Text('Male'),
+                        Radio(
+                          value: 'Female',
+                          groupValue: gender,
+                          onChanged: (String value) {
+                            setState(() {
+                              gender = value;
+                            });
+                          },
+                        ),
+                        const Text('Female'),
+                      ],
+                    )
                   ]),
                 ),
                 Container(
@@ -289,7 +266,9 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                     ),
                     Row(children: [
-                      Text("${selectedDate.toLocal()}".split(' ')[0]),
+                      Text(
+                          "${selectedDate != null ? selectedDate.toLocal() : ''}"
+                              .split(' ')[0]),
                       Material(
                         child: Center(
                           child: IconButton(
@@ -305,24 +284,16 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   ]),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Text(
-                          'Address:',
-                        ),
-                      ),
-                    ),
                     TextFormField(
                       maxLines: 6,
                       decoration: const InputDecoration(
-                        hintText: 'Enter your address here.',
+                        labelText: 'Enter your address here.',
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter your address';
                         }
                         return null;
                       },
@@ -330,18 +301,11 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   ]),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Text(
-                          'Telephone No.:',
-                        ),
-                      ),
-                    ),
                     TextFormField(
                       decoration: const InputDecoration(
+                        labelText: 'Telephone No.',
                         hintText: 'Telephone No.:',
                       ),
                       validator: (value) {
@@ -354,23 +318,15 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   ]),
                 ),
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.only(left: 20, bottom: 15),
                   child: Column(children: <Widget>[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Text(
-                          'Email:',
-                        ),
-                      ),
-                    ),
                     TextFormField(
                       decoration: const InputDecoration(
-                        hintText: 'Email',
+                        labelText: 'Email',
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter youor email';
                         }
                         return null;
                       },
@@ -381,12 +337,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Validate returns true if the form is valid, or false
-                      // otherwise.
-                      // if (usertype == "Customer") {
-                      //   // If the form is valid, display a Snackbar.
-
-                      // }
+                      if (_formKey.currentState.validate()) {}
                     },
                     child: Text('Submit'),
                   ),
