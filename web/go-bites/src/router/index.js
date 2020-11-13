@@ -1,23 +1,45 @@
-import { createWebHistory, createRouter} from "vue-router";
-import Restaurant from "../views/Restaurant.vue";
-import Login from "../views/Login.vue";
+import Vue from 'vue'
+import Router from 'vue-router'
+import store from "../store";
+import Home from '../components/Home.vue'
+import Login from '../components/Login.vue'
+import Restaurant from '../components/Restaurant.vue';
 
-const routes = [
-    {
-        path: "/login",
-        name: "Login",
-        component: Login,
-    },
-    {
-        path: "/restaurant",
-        name: "Restaurant",
-        component: Restaurant,
-    },
-];
+Vue.use(Router)
 
-const router = createRouter({
-    history: createWebHistory(),
-    routes,
-});
+const ifNotAuthenticated = (to, from, next) => {
+    if (!store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    next("/");
+  };
+  
+  const ifAuthenticated = (to, from, next) => {
+    if (store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    next("/login");
+  };
 
-export default router;
+export default new Router({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            component: Home,
+            beforeEnter: ifAuthenticated
+        },
+        {
+            path: '/login',
+            component: Login,
+            beforeEnter: ifNotAuthenticated
+        },
+        {
+            path: '/restaurant',
+            component: Restaurant,
+            beforeEnter: ifAuthenticated
+        }
+    ],
+})

@@ -1,55 +1,107 @@
 <template>
 <div id="app">
-    <nav>
-        <router-link to="/" class="router_link">
-            <div class="navigation_logo">
-                GoBites
-            </div>
-        </router-link>
-        <router-link to="/restaurant" class="router_link">Restaurant</router-link>
-        <router-link to="/login" class="router_link">Login</router-link>
-    </nav>
-    <router-view />
+    <Nav />
+    <div class="auth-wrapper">
+        <div class="auth-inner">
+            <router-view />
+        </div>
+    </div>
 </div>
 </template>
 
 <script>
+import Nav from './components/Nav.vue'
+
+import {
+    USER_REQUEST
+} from "./store/actions/user";
+
 export default {
     name: 'App',
-    setup() {
-
+    components: {
+        Nav,
     },
+    created: function () {
+        if (this.$store.getters.isAuthenticated) {
+            this.$store.dispatch(USER_REQUEST);
+        }
+    }
 }
 </script>
 
-<style lang="scss">
-@import './styles/base.scss';
+<style>
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #1C8EF9 !important;
+    min-height: 100vh;
+    display: flex;
+    font-weight: 400;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label,
+span {
+    font-weight: 500;
+    font-family: 'Fira Sans', sans-serif;
+}
+
+body,
+html,
+#app,
+#root,
+.auth-wrapper {
+    width: 100%;
+    height: 100%;
+}
 
 #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    color: #2c3e50;
-    min-height: 100vh;
-    background-color: #F3F5FA;
+    text-align: center;
+}
 
-    nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 10px 5%;
-        background-color: rgba(77, 64, 192, 0.767);
-        color: white;
+.navbar-light {
+    background-color: #ffffff;
+    box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+}
 
-        .router_link {
-            color: inherit;
-            text-decoration: none;
-        }
+.auth-wrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: left;
+}
 
-        .navigation_logo {
-            font-weight: bold;
-            font-size: 24px;
-        }
-    }
+.auth-inner {
+    width: 450px;
+    margin: auto;
+    background: #ffffff;
+    box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+    padding: 40px 55px 45px 55px;
+}
+
+.auth-wrapper .form-control:focus {
+    border-color: #167bff;
+    box-shadow: none;
+}
+
+.auth-wrapper h3 {
+    text-align: center;
+    margin: 0;
+    line-height: 1;
+    padding-bottom: 20px;
+}
+
+.custom-control-label {
+    font-weight: 400;
 }
 </style>
