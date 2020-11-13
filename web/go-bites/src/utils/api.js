@@ -1,4 +1,4 @@
-import { admin } from '../assets/admin'
+import { admin } from '../assets/users/admin'
 
 const mocks = {
   auth: { POST: { token: "This-is-a-mocked-token" } },

@@ -1,8 +1,8 @@
 <template>
 <div id="nav">
-    <nav class="navbar navbar-expand navbar-light fixed-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
         <div class="container">
-            <span class="logo" v-if="!isAuthenticated">GoBites</span>
+            <span class="navbar-brand logo" v-if="!isAuthenticated">GoBites</span>
             <router-link class="navbar-brand logo" to="/" v-if="isAuthenticated">GoBites</router-link>
             <button class="btn btn-primary" type="button" v-if="isAuthenticated">
                 <span class="caret">
@@ -17,7 +17,7 @@
                             <button class="btn btn-primary dropdown-toggle top-menu" type="button" data-toggle="dropdown">
                                 <span class="caret">User</span>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
+                            <ul class="dropdown-menu dropdown-menu-right bg-dark">
                                 <li>
                                     <a href="#">
                                         <span>
@@ -32,6 +32,15 @@
                                         <span>
                                             <img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" />
                                             <router-link class="nav-link" to="/customer">Customer</router-link>
+                                        </span>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <span>
+                                            <img class="img" src="../assets/icon/icon-delivery.png" width="35px" alt="customer-icon" />
+                                            <router-link class="nav-link" to="/deliveryDriver">Delivery Driver</router-link>
                                         </span>
                                     </a>
                                 </li>
@@ -57,6 +66,7 @@
             </div>
         </div>
     </nav>
+
 </div>
 </template>
 
@@ -102,7 +112,7 @@ export default {
 
 .logo {
     font-family: 'Vibur', cursive;
-    font-size: 30px;
+    font-size: 28px;
 }
 
 .top-menu {
@@ -112,6 +122,10 @@ export default {
         color: #ffffff;
         text-decoration: none;
     }
+}
+
+.nav-link {
+    color: #000;
 }
 
 .img {

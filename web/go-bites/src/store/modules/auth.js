@@ -12,7 +12,7 @@ import apiCall from "../../utils/api";
 // import admin.js for getting admin username and password
 import {
   admin
-} from "../../assets/admin";
+} from "../../assets/users/admin";
 
 const state = {
   token: localStorage.getItem("user-token") || "",

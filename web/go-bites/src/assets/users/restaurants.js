@@ -1,4 +1,4 @@
-export const user = [
+export const restaurants = [
     {
         id: "1",
         type: "Restaurant",
@@ -13,17 +13,6 @@ export const user = [
     },
     {
         id: "2",
-        type: "Customer",
-        name: "Azman Hashim",
-        address: "Taman Sarjana",
-        city: "Skudai",
-        state: "Johor",
-        zipCode: "28800",
-        Country: "Malaysia",
-        totalOrderMade: "5",
-    },
-    {
-        id: "3",
         type: "Restaurant",
         name: "McDonald",
         address: "No 3, Lot 4 Jalan Gemilang",
@@ -35,7 +24,7 @@ export const user = [
         totalCustomer: "160"
     },
     {
-        id: "4",
+        id: "3",
         type: "Restaurant",
         name: "Nasi Ayam Kak Mala",
         address: "Taman Temerloh Jaya",
@@ -45,27 +34,5 @@ export const user = [
         Country: "Malaysia",
         rating: "5",
         totalCustomer: "50"
-    },
-    {
-        id: "5",
-        type: "Customer",
-        name: "Siti Aisyah",
-        address: "Kg Bendahara",
-        city: "Selayang",
-        state: "Selangor",
-        zipCode: "57800",
-        Country: "Malaysia",
-        totalOrderMade: "3",
-    },
-    {
-        id: "6",
-        type: "Customer",
-        name: "Alvin",
-        address: "Felda Umas 6",
-        city: "Tawau",
-        state: "Sabah",
-        zipCode: "32800",
-        Country: "Malaysia",
-        totalOrderMade: "1",
     },
 ]

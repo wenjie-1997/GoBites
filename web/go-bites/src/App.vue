@@ -6,11 +6,13 @@
             <router-view />
         </div>
     </div>
+    <Footer />
 </div>
 </template>
 
 <script>
 import Nav from './components/Nav.vue'
+import Footer from './components/Footer.vue'
 
 import {
     USER_REQUEST
@@ -20,6 +22,7 @@ export default {
     name: 'App',
     components: {
         Nav,
+        Footer,
     },
     created: function () {
         if (this.$store.getters.isAuthenticated) {
@@ -115,11 +118,13 @@ html,
 }
 
 .auth-inner {
-    width: 450px;
+    width: 99%;
+    height: 85%;
     margin: auto;
     background: #ffffff;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
     padding: 40px 55px 45px 55px;
+    border-radius: 5px;
 }
 
 .custom-control-label {
