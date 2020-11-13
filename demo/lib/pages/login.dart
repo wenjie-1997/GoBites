@@ -9,24 +9,40 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  bool _validateEmail = false;
+  bool _validatePassword = false;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final emailField = TextField(
+      controller: _email,
       obscureText: false,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: "Email",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        errorText: _validateEmail ? 'Email Can\'t Be Empty' : null,
+      ),
     );
 
     final passwordField = TextField(
+      controller: _password,
       obscureText: true,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        hintText: "Password",
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        errorText: _validatePassword ? 'Password Can\'t Be Empty' : null,
+      ),
     );
 
     final loginButton = Material(
@@ -35,7 +51,18 @@ class _LoginState extends State<Login> {
         color: Colors.red,
         child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          onPressed: () {},
+          onPressed: () {
+            setState(() {
+              _email.text.isEmpty
+                  ? _validateEmail = true
+                  : _validateEmail = false;
+            });
+            setState(() {
+              _password.text.isEmpty
+                  ? _validatePassword = true
+                  : _validatePassword = false;
+            });
+          },
           child: Text(
             "Login",
             textAlign: TextAlign.center,
