@@ -4,24 +4,35 @@
         <div class="container">
             <span class="logo" v-if="!isAuthenticated">GoBites</span>
             <router-link class="navbar-brand logo" to="/" v-if="isAuthenticated">GoBites</router-link>
-            <span v-if="isProfileLoaded" class="nav-link logout">{{ name }}</span>
+            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
+                <span class="caret">
+                    <router-link class="top-menu" to="/profile" v-if="isProfileLoaded">{{ name }}</router-link>
+                </span>
+            </button>
+
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" v-if="isAuthenticated">
                         <div class="dropdown">
-                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-                                User<span class="caret"></span>
+                            <button class="btn btn-primary dropdown-toggle top-menu" type="button" data-toggle="dropdown">
+                                <span class="caret">User</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right">
                                 <li>
                                     <a href="#">
-                                        <router-link class="nav-link" to="/restaurant">Restaurant</router-link>
+                                        <span>
+                                            <img class="img" src="../assets/icon/icon-restaurant.png" width="35px" alt="restaurant-icon" />
+                                            <router-link class="nav-link" to="/restaurant">Restaurant</router-link>
+                                        </span>
                                     </a>
                                 </li>
 
                                 <li>
                                     <a href="#">
-                                        <router-link class="nav-link" to="/customer">Customer</router-link>
+                                        <span>
+                                            <img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" />
+                                            <router-link class="nav-link" to="/customer">Customer</router-link>
+                                        </span>
                                     </a>
                                 </li>
                             </ul>
@@ -30,15 +41,15 @@
                     </li>
 
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
-                        <button class="btn btn-primary" type="button" data-toggle="dropdown">
-                            Logout<span class="caret"></span>
+                        <button class="btn btn-primary top-menu" type="button" data-toggle="dropdown">
+                            <span class="caret">Logout</span>
                         </button>
                     </li>
 
                     <li class="nav-item" v-if="!isAuthenticated && !authLoading">
                         <button class="btn btn-primary" type="button" data-toggle="dropdown">
                             <span class="caret">
-                                <router-link class="nav-link" to="/login">Login</router-link>
+                                <router-link class="top-menu" to="/login">Login</router-link>
                             </span>
                         </button>
                     </li>
@@ -92,5 +103,20 @@ export default {
 .logo {
     font-family: 'Vibur', cursive;
     font-size: 30px;
+}
+
+.top-menu {
+    color: #ddcfcf;
+
+    &:hover {
+        color: #ffffff;
+        text-decoration: none;
+    }
+}
+
+.img {
+    float: right;
+    top: 0;
+    right: 0;
 }
 </style>

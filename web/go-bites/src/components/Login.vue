@@ -14,7 +14,9 @@
             <input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="off" />
         </div>
 
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
+        <div class="login-btn">
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </div>
     </form>
 </div>
 </template>

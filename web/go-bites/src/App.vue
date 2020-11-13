@@ -29,7 +29,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @import url('https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700,800');
 
 * {
@@ -42,6 +42,10 @@ body {
     display: flex;
     font-weight: 400;
     font-family: 'Fira Sans', sans-serif;
+}
+
+#app {
+    text-align: center;
 }
 
 h1,
@@ -65,10 +69,6 @@ html,
     height: 100%;
 }
 
-#app {
-    text-align: center;
-}
-
 .navbar-light {
     background-color: #ffffff;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
@@ -79,6 +79,39 @@ html,
     justify-content: center;
     flex-direction: column;
     text-align: left;
+
+    .form-control {
+        border-radius: 24px;
+        box-shadow: 10px 5px 5px rgb(76, 194, 214);
+
+        &:focus {
+            border-color: #167bff;
+            box-shadow: none;
+        }
+    }
+
+    .login-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        button {
+            border-radius: 24px;
+            width: 100px;
+
+            &:hover {
+                border-color: #167bff;
+                box-shadow: 10px 5px 5px rgb(76, 194, 214);
+            }
+        }
+    }
+
+    h3 {
+        text-align: center;
+        margin: 0;
+        line-height: 1;
+        padding-bottom: 20px;
+    }
 }
 
 .auth-inner {
@@ -87,18 +120,6 @@ html,
     background: #ffffff;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
     padding: 40px 55px 45px 55px;
-}
-
-.auth-wrapper .form-control:focus {
-    border-color: #167bff;
-    box-shadow: none;
-}
-
-.auth-wrapper h3 {
-    text-align: center;
-    margin: 0;
-    line-height: 1;
-    padding-bottom: 20px;
 }
 
 .custom-control-label {

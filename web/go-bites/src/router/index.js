@@ -5,6 +5,7 @@ import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Restaurant from '../components/Restaurant.vue';
 import Customer from '../components/Customer.vue';
+import Profile from '../components/Profile.vue';
 
 Vue.use(Router)
 
@@ -45,6 +46,11 @@ export default new Router({
         {
           path: '/customer',
           component: Customer,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/profile',
+          component: Profile,
           beforeEnter: ifAuthenticated
         }
     ],
