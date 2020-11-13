@@ -4,6 +4,7 @@ import store from "../store";
 import Home from '../components/Home.vue'
 import Login from '../components/Login.vue'
 import Restaurant from '../components/Restaurant.vue';
+import Customer from '../components/Customer.vue';
 
 Vue.use(Router)
 
@@ -27,19 +28,24 @@ export default new Router({
     mode: 'history',
     routes: [
         {
-            path: '/',
-            component: Home,
-            beforeEnter: ifAuthenticated
+          path: '/',
+          component: Home,
+          beforeEnter: ifAuthenticated
         },
         {
-            path: '/login',
-            component: Login,
-            beforeEnter: ifNotAuthenticated
+          path: '/login',
+          component: Login,
+          beforeEnter: ifNotAuthenticated
         },
         {
-            path: '/restaurant',
-            component: Restaurant,
-            beforeEnter: ifAuthenticated
+          path: '/restaurant',
+          component: Restaurant,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/customer',
+          component: Customer,
+          beforeEnter: ifAuthenticated
         }
     ],
 })

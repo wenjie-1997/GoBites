@@ -8,15 +8,39 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" v-if="isAuthenticated">
-                        <router-link class="nav-link" to="/restaurant">Restaurant</router-link>
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                                User<span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="#">
+                                        <router-link class="nav-link" to="/restaurant">Restaurant</router-link>
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a href="#">
+                                        <router-link class="nav-link" to="/customer">Customer</router-link>
+                                    </a>
+                                </li>
+                            </ul>
+
+                        </div>
                     </li>
 
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
-                        <span class="nav-link logout">Logout</span>
+                        <button class="btn btn-primary" type="button" data-toggle="dropdown">
+                            Logout<span class="caret"></span>
+                        </button>
                     </li>
 
                     <li class="nav-item" v-if="!isAuthenticated && !authLoading">
-                        <router-link class="nav-link" to="/login">Login</router-link>
+                        <button class="btn btn-primary" type="button" data-toggle="dropdown">
+                            <span class="caret">
+                                <router-link class="nav-link" to="/login">Login</router-link>
+                            </span>
+                        </button>
                     </li>
                 </ul>
             </div>
@@ -58,7 +82,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 @import url(https://fonts.googleapis.com/css?family=Vibur);
 
 .logout {

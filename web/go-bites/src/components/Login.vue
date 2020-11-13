@@ -60,17 +60,18 @@ export default {
                 })
                 .then(
                     () => {
+                        this.isLoading = false;
                         this.$router.push("/");
                     }
                 );
 
             if (this.loginStatus === "fail") {
+                this.isLoading = false;
                 alert(this.message);
                 this.username = '';
                 this.password = '';
                 return;
             }
-
         }
     },
     computed: {
