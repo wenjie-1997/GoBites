@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:demo/pages/registration.dart';
+import 'package:demo/modules/http.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -45,6 +46,26 @@ class _LoginState extends State<Login> {
       ),
     );
 
+    checkCredential() async {
+      var result = await http_get("login", {
+        "username": _email.text,
+        "password": _password.text,
+      });
+      if (result.data['code'] == 200) {
+        return AlertDialog(
+          title: Text('Login Success'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      }
+    }
+
     final loginButton = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(30.0),
@@ -62,6 +83,9 @@ class _LoginState extends State<Login> {
                   ? _validatePassword = true
                   : _validatePassword = false;
             });
+            if (!_validateEmail && !_validatePassword) {
+              checkCredential();
+            }
           },
           child: Text(
             "Login",
