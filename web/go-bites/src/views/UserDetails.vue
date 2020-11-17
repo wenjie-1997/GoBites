@@ -300,7 +300,7 @@ export default {
         border: 10px inset rgb(117, 207, 235);
         padding: 5px 5px 5px 5px;
         box-shadow: inset 0 0 10px;
-        transition: 0.4s;
+        transition: 0.2s;
 
         .form-group {
             display: flex;
@@ -341,7 +341,7 @@ export default {
             border: 10px outset rgb(117, 207, 235);
             padding: 10px 10px 10px 10px;
             box-shadow: 5px 5px 10px;
-            transition: 0.4s;
+            transition: 0.2s;
         }
     }
 }
