@@ -55,7 +55,7 @@
                         <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                     </div>
                 </div>
             </form>
@@ -120,7 +120,7 @@
                         <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                     </div>
                 </div>
             </form>
@@ -170,7 +170,7 @@
                         <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
                         <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                     </div>
                 </div>
             </form>
@@ -236,6 +236,11 @@ export default {
                 this.$router.push('/deliveryDriver');
             }
 
+        },
+        deleteUser: function () {
+            if (window.confirm(`Delete user with id ${this.userId}`)) {
+                console.log("Deleting user");
+            }
         }
     },
     computed: {
