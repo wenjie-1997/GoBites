@@ -5,7 +5,7 @@ import {
   AUTH_LOGOUT,
   AUTH_FAIL
 } from "../actions/auth";
-import { USER_REQUEST } from "../actions/user";
+import { ADMIN_REQUEST } from "../actions/admin";
 import apiCall from "../../utils/api";
 // import axios from 'axios';
 
@@ -49,7 +49,7 @@ const actions = {
           commit(AUTH_SUCCESS, token);
 
           // You have your token, now log in user
-          dispatch(USER_REQUEST);
+          dispatch(ADMIN_REQUEST);
           resolve(resp);
 
           console.log("Login Success");

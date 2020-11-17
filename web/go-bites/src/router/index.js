@@ -7,6 +7,7 @@ import Restaurant from '../views/Restaurant.vue';
 import Customer from '../views/Customer.vue';
 import Profile from '../views/Profile.vue';
 import DeliveryDriver from '../views/DeliveryDriver.vue';
+import UserDetails from '../views/UserDetails.vue';
 
 Vue.use(Router)
 
@@ -57,6 +58,11 @@ export default new Router({
         {
           path: '/deliveryDriver',
           component: DeliveryDriver,
+          beforeEnter: ifAuthenticated
+        }, 
+        {
+          path: '/userDetails',
+          component: UserDetails,
           beforeEnter: ifAuthenticated
         }
     ],

@@ -4,28 +4,18 @@
     <div class="restaurants-list">
         <table>
             <tr>
-                <th>Id</th>
-                <th>Type</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip Code</th>
-                <th>Country</th>
                 <th>Rating</th>
                 <th>Total Customer</th>
+                <th>More Details</th>
             </tr>
             <tr v-for="restaurant in restaurants" :key="restaurant.id">
-                <td>{{ restaurant.id }}</td>
-                <td>{{ restaurant.type }}</td>
                 <td>{{ restaurant.name }}</td>
-                <td>{{ restaurant.address }}</td>
-                <td>{{ restaurant.city }}</td>
-                <td>{{ restaurant.state}}</td>
-                <td>{{ restaurant.zipCode }}</td>
-                <td>{{ restaurant.Country }}</td>
                 <td>{{ restaurant.rating }}</td>
                 <td>{{ restaurant.totalCustomer }}</td>
+                <td>
+                    <input type="button" @click="viewUserDetails(restaurant)" value="More Details" />
+                </td>
             </tr>
             <tr>
                 <th class="last-cell" colspan="10"></th>
@@ -40,11 +30,25 @@ import {
     restaurants
 } from '../assets/users/restaurants'
 
+import {
+    SET_RESTAURANT_USER_STATE
+} from "../store/actions/restaurantUser"
+
 export default {
     name: 'Restaurant',
     data() {
         return {
-            restaurants
+            restaurants,
+            urlPath: '/userDetails',
+            userId: ''
+        }
+    },
+    methods: {
+        viewUserDetails: function (restaurant) {
+            this.$store.dispatch(SET_RESTAURANT_USER_STATE, {
+                restaurant
+            });
+            this.$router.push('/userDetails?id=' + restaurant.id + '&type=' + restaurant.type.toLowerCase());
         }
     }
 }

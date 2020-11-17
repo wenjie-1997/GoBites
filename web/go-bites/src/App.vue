@@ -15,8 +15,8 @@ import Nav from './components/Nav.vue'
 import Footer from './components/Footer.vue'
 
 import {
-    USER_REQUEST
-} from "./store/actions/user";
+    ADMIN_REQUEST
+} from "./store/actions/admin";
 
 export default {
     name: 'App',
@@ -26,7 +26,7 @@ export default {
     },
     created: function () {
         if (this.$store.getters.isAuthenticated) {
-            this.$store.dispatch(USER_REQUEST);
+            this.$store.dispatch(ADMIN_REQUEST);
         }
     }
 }

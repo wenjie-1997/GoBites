@@ -4,26 +4,16 @@
     <div class="customers-list">
         <table>
             <tr>
-                <th>Id</th>
-                <th>Type</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip Code</th>
-                <th>Country</th>
                 <th>Total Order Made</th>
+                <th>More Details</th>
             </tr>
             <tr v-for="customer in customers" :key="customer.id">
-                <td>{{ customer.id }}</td>
-                <td>{{ customer.type }}</td>
                 <td>{{ customer.name }}</td>
-                <td>{{ customer.address }}</td>
-                <td>{{ customer.city }}</td>
-                <td>{{ customer.state}}</td>
-                <td>{{ customer.zipCode }}</td>
-                <td>{{ customer.Country }}</td>
                 <td>{{ customer.totalOrderMade }}</td>
+                <td>
+                    <input type="button" @click="viewUserDetails(customer)" value="More Details" />
+                </td>
             </tr>
 
             <tr>
@@ -39,11 +29,25 @@ import {
     customers
 } from '../assets/users/customers'
 
+import {
+    SET_CUSTOMER_USER_STATE
+} from '../store/actions/customerUser'
+
 export default {
     name: 'customer',
     data() {
         return {
             customers,
+            urlPath: '/userDetails',
+            userId: ''
+        }
+    },
+    methods: {
+        viewUserDetails: function (customer) {
+            this.$store.dispatch(SET_CUSTOMER_USER_STATE, {
+                customer
+            });
+            this.$router.push('/userDetails?id=' + customer.id + '&type=' + customer.type.toLowerCase());
         }
     }
 }

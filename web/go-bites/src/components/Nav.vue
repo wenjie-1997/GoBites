@@ -97,7 +97,7 @@ export default {
         ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
         ...mapState({
             authLoading: state => state.auth.status === "loading",
-            name: state => `${state.user.profile.title} ${state.user.profile.name}`
+            name: state => `${state.admin.profile.title} ${state.admin.profile.name}`
         })
     }
 }

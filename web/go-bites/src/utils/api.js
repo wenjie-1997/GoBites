@@ -2,7 +2,7 @@ import { admin } from '../assets/users/admin'
 
 const mocks = {
   auth: { POST: { token: "This-is-a-mocked-token" } },
-  "user/me": { GET: { name: admin.name, title: admin.title } }
+  "admin/me": { GET: { name: admin.name, title: admin.title } }
 };
 
 const apiCall = ({ url, method }) =>

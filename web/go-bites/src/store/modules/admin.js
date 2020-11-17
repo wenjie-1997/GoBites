@@ -1,4 +1,4 @@
-import { USER_REQUEST, USER_ERROR, USER_SUCCESS } from "../actions/user";
+import { ADMIN_REQUEST, ADMIN_ERROR, ADMIN_SUCCESS } from "../actions/admin";
 import apiCall from "../../utils/api";
 import Vue from "vue";
 import { AUTH_LOGOUT } from "../actions/auth";
@@ -11,14 +11,14 @@ const getters = {
 };
 
 const actions = {
-  [USER_REQUEST]: ({ commit, dispatch }) => {
-    commit(USER_REQUEST);
-    apiCall({ url: "user/me" })
+  [ADMIN_REQUEST]: ({ commit, dispatch }) => {
+    commit(ADMIN_REQUEST);
+    apiCall({ url: "admin/me" })
       .then(resp => {
-        commit(USER_SUCCESS, resp);
+        commit(ADMIN_SUCCESS, resp);
       })
       .catch(() => {
-        commit(USER_ERROR);
+        commit(ADMIN_ERROR);
         // if resp is unauthorized, logout, to
         dispatch(AUTH_LOGOUT);
       });
@@ -26,14 +26,14 @@ const actions = {
 };
 
 const mutations = {
-  [USER_REQUEST]: state => {
+  [ADMIN_REQUEST]: state => {
     state.status = "loading";
   },
-  [USER_SUCCESS]: (state, resp) => {
+  [ADMIN_SUCCESS]: (state, resp) => {
     state.status = "success";
     Vue.set(state, "profile", resp);
   },
-  [USER_ERROR]: state => {
+  [ADMIN_ERROR]: state => {
     state.status = "error";
   },
   [AUTH_LOGOUT]: state => {
