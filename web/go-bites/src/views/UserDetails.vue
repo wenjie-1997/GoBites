@@ -50,10 +50,13 @@
                         <input type="text" name="totalOrderMade" :value="getCustomerTotalOrderMade" :readonly="readOnlyStatus" />
                     </div>
 
-                    <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                    <div class="button-group">
+                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                    </div>
                 </div>
             </form>
         </div>
@@ -112,10 +115,13 @@
                         <input type="text" name="totalCustomer" :value="getRestaurantTotalCustomer" :readonly="readOnlyStatus" />
                     </div>
 
-                    <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                    <div class="button-group">
+                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                    </div>
                 </div>
             </form>
         </div>
@@ -159,10 +165,13 @@
                         <input type="text" name="workArea" :value="getDeliveryDriverWorkArea" :readonly="readOnlyStatus" />
                     </div>
 
-                    <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                    <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                    <div class="button-group">
+                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary" type="button" value="Delete" v-if="readOnlyStatus" />
+                    </div>
                 </div>
             </form>
         </div>
@@ -301,6 +310,16 @@ export default {
 
             input {
                 width: 65%;
+
+                &:read-only {
+                    background-color: rgb(226, 219, 219);
+                    border: 2px outset rgb(226, 219, 219);
+                }
+
+                &:read-write {
+                    background-color: rgb(255, 255, 255);
+                    border: 2px inset rgb(226, 219, 219);
+                }
             }
 
             label {
@@ -309,8 +328,13 @@ export default {
             }
         }
 
-        input[type=button] {
-            margin: 5px auto;
+        .button-group {
+            display: flex;
+            flex-direction: row;
+
+            input[type=button] {
+                margin: 5px 5px 5px 5px;
+            }
         }
 
         &:hover {
