@@ -1,5 +1,8 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express();
+app.use(bodyParser.json())
 
 //Settings
 app.set('port', process.env.PORT || 8000)

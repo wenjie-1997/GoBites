@@ -10,7 +10,7 @@ router.get('/', (req,res) => {
 
 //showing user works
 router.get('/:users', (req,res) => {
-	mysqlConnection.query('select * from user;', (error, rows, fields) => {
+	mysqlConnection.query('select * from User;', (error, rows, fields) => {
 		if(!error){
 			res.json(rows)
 		} else{
@@ -20,9 +20,10 @@ router.get('/:users', (req,res) => {
 })
 
 //showing user by id works
-router.get('/:users/:id', (req,res) => {
-	const {id} = req.params;
-	mysqlConnection.query('select * from user where id = ?;', [id], (error, rows, fields) => {
+router.get('/:users/:uid', (req,res) => {
+	const {UID} = req.params
+	console.log(req.params)
+	mysqlConnection.query('select * from User where UID = ?;', [UID], ( error, rows, fields) => {
 		if(!error){
 			res.json(rows)
 		} else {
@@ -31,12 +32,12 @@ router.get('/:users/:id', (req,res) => {
 	})
 })
 
-//adding values doesnt work!!
+// register user
 router.post('/:users', (req, res) => {
-	const {id, username, name, lastname, mail, randomstr, hash} = req.body;
-	console.log(req.body);
-	mysqlConnection.query('insert into user(id, username, name, lastname, mail, randomstr, hash) values (?, ?, ?, ?, ?, ?, ?)',
-	[id, username, name, lastname, mail, randomstr, hash], (error, rows, fields) =>{
+	const {username, password, usertype} = req.body
+	console.log(req.body)
+	mysqlConnection.query('insert into User(username, password, usertype) values (?,?,?);',
+	[username, password, usertype], (error, rows, fields) =>{
 		if(!error){
 			res.json({Status: 'User saved'})
 		} else{
@@ -45,11 +46,11 @@ router.post('/:users', (req, res) => {
 	})
 })
 
-router.put('/:users/:id', (req, res) => {
-	const {id, username, name, lastname, mail, randomstr, hash} = req.body
+router.put('/:users/:uid', (req, res) => {
+	const {username, password, usertype} = req.body
 	console.log(req.body)
-	mysqlConnection.query('update user set username = ?, name = ?, lastname =?, mail = ?, randomstr = ?, hash = ?, where id = ?;',
-	[username, name, lastname, mail, randomstr, hash, id], (error, rows, fields) => {
+	mysqlConnection.query('update User set username = ?, password = ?, usertype =?, where UID = ?;',
+	[username, password, usertype], (error, rows, fields) => {
 		if(!error){
 			res.json({Status: 'User updated'})
 		} else {
@@ -59,9 +60,9 @@ router.put('/:users/:id', (req, res) => {
 })
 
 //works well
-router.delete('/:users/:id', (req, res) => {
-	const {id} = req.params;
-	mysqlConnection.query('delete from user where id =?', [id], (error, rows, fields) => {
+router.delete('/:users/:uid', (req, res) => {
+	const {UID} = req.params;
+	mysqlConnection.query('delete from User where UID =?', [UID], (error, rows, fields) => {
 		if(!error){
 			res.json({Status: 'User deleted'})
 		} else{
