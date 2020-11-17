@@ -55,15 +55,14 @@ async function main(){
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
     });
-   
-    const server = http.createServer((req, res) => {
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/plain');
-      res.end('Hello World\n');
-    });
-    server.listen(port, hostname, () => {
-      console.log(`Server running at http://${hostname}:${port}/`);
+
+    db.connect((err)=>{
+      if(err){
+        console.log(err.message);
+      }
+      console.log('db '+ connection.state);
     });
 }
 
+app.listen(port, () => console.log(`Listening on port ${port}...`));
 main();

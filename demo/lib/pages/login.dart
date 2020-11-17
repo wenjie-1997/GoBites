@@ -47,11 +47,11 @@ class _LoginState extends State<Login> {
     );
 
     checkCredential() async {
-      var result = await http_get("login", {
+      var result = await http_post("login", {
         "username": _email.text,
         "password": _password.text,
       });
-      if (result.data['code'] == 200) {
+      if (result.statusCode == 200) {
         return AlertDialog(
           title: Text('Login Success'),
           actions: <Widget>[
