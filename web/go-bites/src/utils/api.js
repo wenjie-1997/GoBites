@@ -1,0 +1,21 @@
+import { admin } from '../assets/users/admin'
+
+const mocks = {
+  auth: { POST: { token: "This-is-a-mocked-token" } },
+  "admin/me": { GET: { name: admin.name, title: admin.title } }
+};
+
+const apiCall = ({ url, method }) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        resolve(mocks[url][method || "GET"]);
+        console.log(`Mocked '${url}' - ${method || "GET"}`);
+        console.log("response: ", mocks[url][method || "GET"]);
+      } catch (err) {
+        reject(new Error(err));
+      }
+    }, 1000);
+  });
+
+export default apiCall;

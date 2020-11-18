@@ -1,0 +1,3 @@
+export const ADMIN_REQUEST = "ADMIN_REQUEST";
+export const ADMIN_SUCCESS = "ADMIN_SUCCESS";
+export const ADMIN_ERROR = "ADMIN_ERROR";
