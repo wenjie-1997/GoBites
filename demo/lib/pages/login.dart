@@ -10,28 +10,28 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final _email = TextEditingController();
+  final _username = TextEditingController();
   final _password = TextEditingController();
   bool _validateEmail = false;
   bool _validatePassword = false;
 
   @override
   void dispose() {
-    _email.dispose();
+    _username.dispose();
     _password.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final emailField = TextField(
-      controller: _email,
+    final usernameField = TextField(
+      controller: _username,
       obscureText: false,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        hintText: "Email",
+        hintText: "Username",
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
-        errorText: _validateEmail ? 'Email Can\'t Be Empty' : null,
+        errorText: _validateEmail ? 'Username Can\'t Be Empty' : null,
       ),
     );
 
@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
 
     checkCredential() async {
       var result = await http_post("login", {
-        "username": _email.text,
+        "username": _username.text,
         "password": _password.text,
       });
       if (result.statusCode == 200) {
@@ -74,7 +74,7 @@ class _LoginState extends State<Login> {
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
             setState(() {
-              _email.text.isEmpty
+              _username.text.isEmpty
                   ? _validateEmail = true
                   : _validateEmail = false;
             });
@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
                         letterSpacing: 3.0,
                         color: Colors.black)),
                 SizedBox(height: 45.0),
-                emailField,
+                usernameField,
                 SizedBox(height: 25.0),
                 passwordField,
                 SizedBox(
