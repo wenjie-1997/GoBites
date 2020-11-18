@@ -34,8 +34,8 @@ router.get('/:users/:uid', (req,res) => {
 
 // register user
 router.post('/:users', (req, res) => {
+	console.log(req)
 	const {username, password, usertype} = req.body
-	console.log(req.body)
 	mysqlConnection.query('insert into User(username, password, usertype) values (?,?,?);',
 	[username, password, usertype], (error, rows, fields) =>{
 		if(!error){
