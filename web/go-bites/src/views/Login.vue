@@ -16,7 +16,7 @@
             </div>
 
             <div class="login-btn">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
+                <button type="submit" class="btn btn-primary btn-block" :disabled="isLoading">Login</button>
             </div>
         </div>
 
@@ -34,6 +34,7 @@ import {
 } from 'vuex';
 
 import loading from '../mixins/loading.vue'
+import UserDataService from "../services/UserDataService";
 
 export default {
     name: 'Login',
@@ -47,21 +48,40 @@ export default {
             message: "Either password or username is invalid \nHint: \n    username: admin \n    password: 1234",
             isLoading: false,
             fullPage: false,
-            loader: 'bars'
+            loader: 'bars',
+            admin: null,
         }
     },
     methods: {
+        async getAdminInformation() {
+            const type = "admin";
+            const id = 1;
+            await UserDataService.getAllUsersOfSameType(type, id)
+                .then((response) => {
+                    this.admin = response.data;
+                    this.admin = this.admin[0];
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        },
         login: function () {
-            this.isLoading = true;
+            if(this.admin === null) {
+                alert("Error! Check your database connection");
+                return;
+            }
 
+            this.isLoading = true;
             const {
                 username,
-                password
+                password,
+                admin
             } = this;
 
             this.$store.dispatch(AUTH_REQUEST, {
                     username,
-                    password
+                    password,
+                    admin
                 })
                 .then(
                     () => {
@@ -83,6 +103,9 @@ export default {
         ...mapState({
             loginStatus: state => state.auth.status
         })
+    },
+    mounted() {
+        this.getAdminInformation();
     }
 }
 </script>

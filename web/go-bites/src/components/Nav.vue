@@ -4,9 +4,9 @@
         <div class="container">
             <span class="navbar-brand logo" v-if="!isAuthenticated">GoBites</span>
             <router-link class="navbar-brand logo" to="/" v-if="isAuthenticated">GoBites</router-link>
-            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
+            <button class="btn btn-primary" type="button" v-if="isAuthenticated && isProfileLoaded">
                 <span class="caret">
-                    <router-link class="top-menu" to="/profile" v-if="isProfileLoaded">{{ name }}</router-link>
+                    <router-link class="top-menu" to="/profile">{{ getProfile }}</router-link>
                 </span>
             </button>
 
@@ -19,27 +19,15 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-right bg-dark">
                                 <li>
-                                    <a href="#">
-                                        <span>
-                                            <router-link class="nav-link" to="/restaurant"><img class="img" src="../assets/icon/icon-restaurant.png" width="35px" alt="restaurant-icon" /> Restaurant</router-link>
-                                        </span>
-                                    </a>
+                                    <router-link class="nav-link" to="/restaurant"><img class="img" src="../assets/icon/icon-restaurant.png" width="35px" alt="restaurant-icon" /> Restaurant</router-link>
                                 </li>
 
                                 <li>
-                                    <a href="#">
-                                        <span>
-                                            <router-link class="nav-link" to="/customer"><img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" /> Customer</router-link>
-                                        </span>
-                                    </a>
+                                    <router-link class="nav-link" to="/customer"><img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" /> Customer</router-link>
                                 </li>
 
                                 <li>
-                                    <a href="#">
-                                        <span>
-                                            <router-link class="nav-link" to="/deliveryDriver"><img class="img" src="../assets/icon/icon-delivery.png" width="35px" alt="customer-icon" /> Delivery Driver</router-link>
-                                        </span>
-                                    </a>
+                                    <router-link class="nav-link" to="/deliveryDriver"><img class="img" src="../assets/icon/icon-delivery.png" width="35px" alt="customer-icon" /> Delivery Driver</router-link>
                                 </li>
                             </ul>
 
@@ -49,14 +37,6 @@
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
                         <button class="btn btn-primary top-menu" type="button" data-toggle="dropdown">
                             <span class="caret">Logout</span>
-                        </button>
-                    </li>
-
-                    <li class="nav-item" v-if="!isAuthenticated && !authLoading">
-                        <button class="btn btn-primary" type="button" data-toggle="dropdown">
-                            <span class="caret">
-                                <router-link class="top-menu" to="/login">Login</router-link>
-                            </span>
                         </button>
                     </li>
                 </ul>
@@ -80,8 +60,8 @@ import {
 export default {
     name: 'Nav',
     methods: {
-        logout: function () {
-            this.$store.dispatch(AUTH_LOGOUT)
+        async logout() {
+            await this.$store.dispatch(AUTH_LOGOUT)
                 .then(
                     () => {
                         this.$router.push("/login")
@@ -94,7 +74,6 @@ export default {
         ...mapGetters(["getProfile", "isAuthenticated", "isProfileLoaded"]),
         ...mapState({
             authLoading: state => state.auth.status === "loading",
-            name: state => `${state.admin.profile.title} ${state.admin.profile.name}`
         })
     }
 }

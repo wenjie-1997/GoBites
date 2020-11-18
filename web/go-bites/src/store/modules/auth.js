@@ -5,23 +5,17 @@ import {
   AUTH_LOGOUT,
   AUTH_FAIL
 } from "../actions/auth";
-import { ADMIN_REQUEST } from "../actions/admin";
-import apiCall from "../../utils/api";
-// import axios from 'axios';
-
-// import admin.js for getting admin username and password
-import {
-  admin
-} from "../../assets/users/admin";
+import { ADMIN_REQUEST, ADMIN_LOGOUT } from "../actions/admin";
+import AdminDataService from "../../services/AdminDataService";
 
 const state = {
-  token: localStorage.getItem("user-token") || "",
   status: "",
-  hasLoadedOnce: false
+  hasLoadedOnce: false,
+  authenticationStatus: false
 };
 
 const getters = {
-  isAuthenticated: state => !!state.token,
+  isAuthenticated: state => state.authenticationStatus,
   authStatus: state => state.status
 };
 
@@ -29,61 +23,32 @@ const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST);
-      
+
       // Check username and password credential
-      if(admin.username !== user.username || admin.password !== user.password) {
+      if(user.admin.userName !== user.username || user.admin.userPassword !== user.password) {
         console.log("Invalid credential");
         commit(AUTH_FAIL);
         return;
       }
-
-      /* This method is used to replace axios
-       * Please do not delete this function
-       * Let it become comments instead
-      */
-      apiCall({ url: "auth", data: user, method: "POST" })
+      
+      AdminDataService.getAdminData(user.admin.adminId)
         .then(resp => {
-          const token = resp.token;
-          localStorage.setItem("user-token", resp.token); // store token into localStorage
-
-          commit(AUTH_SUCCESS, token);
-
-          // You have your token, now log in user
-          dispatch(ADMIN_REQUEST);
+          commit(AUTH_SUCCESS);
+          
+          //log in user
+          dispatch(ADMIN_REQUEST, resp.data[0]);
           resolve(resp);
-
-          console.log("Login Success");
         })
         .catch(err => {
           commit(AUTH_ERROR, err);
-          localStorage.removeItem("user-token"); // If the request fails, remove any possible user
           reject(err);
         });
-      
-      /* Runtime Error! Failed to resolve by Ainal */
-      // axios({ url: "auth", data: user, method: "POST" })
-      //   .then(resp => {
-      //     const token = resp.data.token
-      //     localStorage.setItem("user-token", token); // store token into localStorage
-
-      //     commit(AUTH_SUCCESS, token);
-
-      //     console.log(`Token ${ state.token }`);
-      //     // You have your token, now log in user
-      //     dispatch(USER_REQUEST);
-      //     resolve(resp);
-      //   })
-      //   .catch(err => {
-      //     commit(AUTH_ERROR, err);
-      //     localStorage.removeItem("user-token"); // If the request fails, remove any possible user
-      //     reject(err);
-      //   });
     });
   },
-  [AUTH_LOGOUT]: ({ commit }) => {
+  [AUTH_LOGOUT]: ({ commit, dispatch }) => {
     return new Promise(resolve => {
+      dispatch(ADMIN_LOGOUT);
       commit(AUTH_LOGOUT);
-      localStorage.removeItem("user-token"); // clear user's token from localstorage
       resolve();
     });
   }
@@ -93,17 +58,18 @@ const mutations = {
   [AUTH_REQUEST]: state => {
     state.status = "loading";
   },
-  [AUTH_SUCCESS]: (state, token) => {
+  [AUTH_SUCCESS]: (state) => {
     state.status = "success";
-    state.token = token;
+    state.authenticationStatus = true;
     state.hasLoadedOnce = true;
   },
   [AUTH_ERROR]: state => {
     state.status = "error";
     state.hasLoadedOnce = true;
   },
-  [AUTH_LOGOUT]: state => {
-    state.token = "";
+  [AUTH_LOGOUT]: (state) => {
+    state.status = "logged out";
+    state.authenticationStatus = false;
   },
   [AUTH_FAIL]: state => {
     state.status = "fail";
