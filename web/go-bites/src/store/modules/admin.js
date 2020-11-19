@@ -23,7 +23,7 @@ const mutations = {
   },
   [ADMIN_SUCCESS]: (state, admin) => {
     state.status = "success";
-    state.profileName = `${admin.adminTitle} ${admin.adminName}`;
+    state.profileName = `${admin.title} ${admin.firstName}`;
   },
   [ADMIN_ERROR]: state => {
     state.status = "error";

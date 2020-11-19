@@ -86,6 +86,7 @@ export default {
                 .then(
                     () => {
                         this.isLoading = false;
+                        alert("Login Success");
                         this.$router.push("/");
                     }
                 );

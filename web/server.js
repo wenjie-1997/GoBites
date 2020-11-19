@@ -17,21 +17,29 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const db = require("./app/models");
+
 // // Drop existing table and re-sync database
 // db.sequelize.sync({ force: true }).then(() => {
 //         console.log("Drop and re-sync db.");
 //     });
+
 db.sequelize.sync().then(() => {
-    console.log("sync db.");
+    console.log("sync db status: done");
 });
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to goBites application." });
+  res.json({ message: "goBites application database" });
 });
 
 require("./app/routes/user.routes")(app);
 require("./app/routes/admin.routes")(app);
+require("./app/routes/customer.routes")(app);
+require("./app/routes/deliveryDriver.routes")(app);
+require("./app/routes/restaurant.routes")(app);
+require("./app/routes/people.routes")(app);
+// require("./app/routes/menuItem.routes")(app);
+// require("./app/routes/menuList.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

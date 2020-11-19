@@ -6,5 +6,8 @@ module.exports = app => {
     // Retrieve a single user
     router.get("/", users.findOne);
 
+    // Retrieve multiple user
+    router.get("/type", users.findAllSame);
+
     app.use('/api/users', router);
 };

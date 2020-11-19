@@ -32,3 +32,25 @@ exports.findOne = (req, res) => {
             })
         });
 }
+
+// Retrieve multiple users with the same type
+exports.findAllSame = (req, res) => {
+    const type = req.query.type;
+
+    var condition = {
+        userType : {
+            [Op.eq]: type
+        }
+    }
+
+
+    User.findAll({ where: condition})
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || `Some errors occur while retrieving ${type} with id=${id}`
+            })
+        });
+}

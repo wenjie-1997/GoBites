@@ -26,8 +26,18 @@ db.deliveryDriver = require("./deliveryDriver.model.js")(sequelize, Sequelize);
 db.user = require("./user.model.js")(sequelize, Sequelize);
 db.menuList = require("./menuList.model.js")(sequelize, Sequelize);
 db.menuItem = require("./menuItem.model.js")(sequelize, Sequelize);
+db.address = require("./address.model.js")(sequelize, Sequelize);
+db.contact = require("./contact.model.js")(sequelize, Sequelize);
+db.person = require("./people.model.js")(sequelize, Sequelize);
 
-db.user.belongsTo(db.restaurant);
+db.person.hasOne(db.address);
+db.person.hasOne(db.contact);
+db.person.hasOne(db.user);
+
+db.restaurant.hasOne(db.address);
+db.restaurant.hasOne(db.contact);
+
+db.user.belongsTo(db.restaurant, {as: 'restaurantOwner'});
 db.user.belongsTo(db.customer);
 db.user.belongsTo(db.admin);
 db.user.belongsTo(db.deliveryDriver);

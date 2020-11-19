@@ -6,7 +6,7 @@ import {
   AUTH_FAIL
 } from "../actions/auth";
 import { ADMIN_REQUEST, ADMIN_LOGOUT } from "../actions/admin";
-import AdminDataService from "../../services/AdminDataService";
+import PeopleDataService from "../../services/PeopleDataService";
 
 const state = {
   status: "",
@@ -31,12 +31,11 @@ const actions = {
         return;
       }
       
-      AdminDataService.getAdminData(user.admin.adminId)
+      PeopleDataService.getAPersonInformation(user.admin.personId)
         .then(resp => {
           commit(AUTH_SUCCESS);
-          
           //log in user
-          dispatch(ADMIN_REQUEST, resp.data[0]);
+          dispatch(ADMIN_REQUEST, resp.data);
           resolve(resp);
         })
         .catch(err => {
