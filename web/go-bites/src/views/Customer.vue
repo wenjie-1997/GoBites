@@ -82,10 +82,25 @@ export default {
                 })
         },
         viewUserDetails: function (customer) {
-            this.$store.dispatch(SET_CUSTOMER_USER_STATE, {
-                customer
-            });
-            this.$router.push('/userDetails?id=' + customer.id + '&type=customer');
+            var personId = -1;
+            var userName = "";
+
+            for(var i = 0; i < this.users.length; i++) {
+                if(this.users[i].customerId === customer.id) {
+                    personId = this.users[i].personId;
+                    userName = this.users[i].userName;
+                }
+            }
+
+            if(personId != -1 && userName != "") {
+                this.$store.dispatch(SET_CUSTOMER_USER_STATE, {
+                    customer,
+                    personId,
+                    userName
+                });
+                this.$router.push('/userDetails?id=' + customer.id + '&type=customer');
+            }
+
         }
     },
     mounted() {

@@ -38,6 +38,8 @@ require("./app/routes/customer.routes")(app);
 require("./app/routes/deliveryDriver.routes")(app);
 require("./app/routes/restaurant.routes")(app);
 require("./app/routes/people.routes")(app);
+require("./app/routes/address.routes")(app);
+require("./app/routes/contact.routes")(app);
 // require("./app/routes/menuItem.routes")(app);
 // require("./app/routes/menuList.routes")(app);
 

@@ -12,42 +12,17 @@
 
                     <div class="form-group">
                         <label for="type">Type</label>
-                        <input type="text" name="type" :value="getCustomerType" readonly />
+                        <input type="text" name="type" :value="getCustomerPersonId" readonly />
                     </div>
 
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" name="name" :value="getCustomerName" :readonly="readOnlyStatus" />
+                        <input type="text" name="name" :value="contact" :readonly="readOnlyStatus" />
                     </div>
 
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input type="text" name="address" :value="getCustomerAddress" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" name="city" :value="getCustomerCity" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input type="text" name="state" :value="getCustomerState" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="zipCode">Zip Code</label>
-                        <input type="text" name="zipCode" :value="getCustomerZipCode" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" name="country" :value="getCustomerCountry" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="totalOrderMade">Total Order Made</label>
-                        <input type="text" name="totalOrderMade" :value="getCustomerTotalOrderMade" :readonly="readOnlyStatus" />
+                        <input type="text" name="address" :value="address" :readonly="readOnlyStatus" />
                     </div>
 
                     <div class="button-group">
@@ -184,6 +159,9 @@ import {
     mapGetters
 } from "vuex";
 
+import ContactDataService from "../services/ContactDataService";
+import AddressDataService from "../services/AddressDataService";
+
 export default {
     name: 'User-Details',
     data() {
@@ -192,6 +170,8 @@ export default {
             userId: '-1',
             userType: 'none',
             readOnlyStatus: true,
+            address: null,
+            contact: null,
         }
     },
     created() {
@@ -200,6 +180,8 @@ export default {
             this.userExist = true;
             this.userId = urlParams.get('id');
             this.userType = urlParams.get('type');
+            this.retrieveUserAddress();
+            this.retrieveUserContact();
         } else {
             this.userExist = false;
             this.userId = '-1';
@@ -218,6 +200,40 @@ export default {
         }
     },
     methods: {
+        retrieveUserAddress() {
+            if(this.userType.toLowerCase() === "customer") {
+                AddressDataService.getAAddressPersonInformation(this.getCustomerPersonId)
+                    .then(resp => {
+                        this.address = resp.data;
+                        console.log(this.address)
+                    })
+                    .catch(err => {
+                        console.log(`${err.message} from UserDetails.vue`);
+                    })  
+
+            }else if(this.userType.toLowerCase() === "delivery-driver") {
+                console.log("delivery-driver");
+            }else if(this.userType.toLowerCase() === "restaurant") {
+                console.log("restaurant");
+            }
+        },
+        retrieveUserContact() {
+            if(this.userType.toLowerCase() === "customer") {
+                ContactDataService.getAContactPersonInformation(this.getCustomerPersonId)
+                    .then(resp => {
+                        this.contact = resp.data;
+                        console.log(this.contact)
+                    })
+                    .catch(err => {
+                        console.log(`${err.message} from UserDetails.vue`);
+                    })
+
+            }else if(this.userType.toLowerCase() === "delivery-driver") {
+                console.log("delivery-driver");
+            }else if(this.userType.toLowerCase() === "restaurant") {
+                console.log("restaurant");
+            }
+        },
         editInfo: function () {
             this.readOnlyStatus = false;
         },
@@ -246,14 +262,8 @@ export default {
     computed: {
         ...mapGetters([
             "getCustomerId",
-            "getCustomerType",
-            "getCustomerName",
-            "getCustomerAddress",
-            "getCustomerCity",
-            "getCustomerState",
-            "getCustomerZipCode",
-            "getCustomerCountry",
-            "getCustomerTotalOrderMade",
+            "getCustomerPersonId",
+            "getCustomerUserName",
 
             "getRestaurantId",
             "getRestaurantType",

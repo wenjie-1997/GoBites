@@ -79,23 +79,23 @@ VALUES
 (3, "Motorcycle", "Tawau, Sabah"),
 (4, "Motorcycle", "Skudai, Johor");
 
-/* dummy data for menuLists has not initialized yet */
-INSERT INTO `go-bites_db`.`menulists`
-(`id`,
-`restaurantId`)
-VALUES
-(1, 1);
+-- /* dummy data for menuLists has not initialized yet */
+-- INSERT INTO `go-bites_db`.`menulists`
+-- (`id`,
+-- `restaurantId`)
+-- VALUES
+-- (1, 1);
 
-/* dummy data for menuItems has not initialized yet */
-INSERT INTO `go-bites_db`.`menuitems`
-(`id`,
-`itemName`,
-`itemPrice`,
-`itemPhoto`,
-`itemDescription`,
-`menuListId`)
-VALUES
-(1, "itemName", "itemPrice", "itemPhoto", "itemDescription", (SELECT `id` FROM menuLists WHERE `id` =  1));
+-- /* dummy data for menuItems has not initialized yet */
+-- INSERT INTO `go-bites_db`.`menuitems`
+-- (`id`,
+-- `itemName`,
+-- `itemPrice`,
+-- `itemPhoto`,
+-- `itemDescription`,
+-- `menuListId`)
+-- VALUES
+-- (1, "itemName", "itemPrice", "itemPhoto", "itemDescription", (SELECT `id` FROM menuLists WHERE `id` =  1));
 
 INSERT INTO `go-bites_db`.`users`
 (`id`, `userName`, `userPassword`, `userType`, `personId`, `restaurantOwnerId`, `customerId`, `adminId`, `deliveryDriverId`)
