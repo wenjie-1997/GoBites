@@ -8,7 +8,7 @@ router.get('/', (req,res) => {
 	res.status(200).json('Server on port 8000 and database is connected')
 })
 
-//showing user works
+//showing user 
 router.get('/:users', (req,res) => {
 	mysqlConnection.query('select * from User;', (error, rows, fields) => {
 		if(!error){
@@ -32,14 +32,28 @@ router.get('/:users/:uid', (req,res) => {
 	})
 })
 
-// register user
-router.post('/:users', (req, res) => {
-	const {username, password, usertype} = req.body
+// register customer
+router.post('/:customers', (req, res) => {
+	const { custname, birthdate, gender, address, email, telephoneNo } = req.body
 	console.log(req.body)
-	mysqlConnection.query('insert into User(username, password, usertype) values (?,?,?);',
-	[username, password, usertype], (error, rows, fields) =>{
+	mysqlConnection.query('insert into Customer( custname, birthdate, gender, address, email, telephoneNo) values (?,?,?,?,?,?);',
+	[custname, birthdate, gender, address, email, telephoneNo ], (error, rows, fields) =>{
 		if(!error){
-			res.json({Status: 'User saved'})
+			res.json({Status: 'Customer saved'})
+		} else{
+			console.log(error)
+		}
+	})
+})
+
+// register restaurant
+router.post('/:restaurants', (req, res) => {
+	const {restaurantname, ownername, address, restaurantstyle, email, telephoneNo} = req.body
+	console.log(req.body)
+	mysqlConnection.query('insert into Restaurant(restaurantname, ownername, address, restaurantstyle, email, telephoneNo) values (?,?,?,?,?,?);',
+	[restaurantname, ownername, address, restaurantstyle, email, telephoneNo], (error, rows, fields) =>{
+		if(!error){
+			res.json({Status: 'Restaurant saved'})
 		} else{
 			console.log(error)
 		}
