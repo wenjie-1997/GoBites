@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:ui';
 
+import 'package:demo/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/registration.dart';
+import 'package:demo/modules/user.dart';
 import 'package:demo/modules/http.dart';
+import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   @override
@@ -10,6 +14,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  Future<LoginResult> loginResult;
   final _username = TextEditingController();
   final _password = TextEditingController();
   bool _validateEmail = false;
@@ -46,23 +51,27 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    checkCredential() async {
-      var result = await http_post("login", {
-        "username": _username.text,
-        "password": _password.text,
-      });
-      if (result.statusCode == 200) {
-        return AlertDialog(
-          title: Text('Login Success'),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
+    Future checkCredential() async {
+      final msg =
+          jsonEncode({"username": _username.text, "password": _password.text});
+      final result = await http_post("/login", msg);
+      String status = jsonDecode(result.body);
+      //String status = loginResult.getStatus();
+      if (status == "Login Sucessful") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Home()));
+      } else {
+        // AlertDialog(
+        //   title: Text(status),
+        //   actions: <Widget>[
+        //     TextButton(
+        //       child: Text('Continue'),
+        //       onPressed: () {
+        //         Navigator.of(context).pop();
+        //       },
+        //     ),
+        //   ],
+        // );
       }
     }
 

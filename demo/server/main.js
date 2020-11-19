@@ -1,49 +1,38 @@
-const http = require("http");
 const express = require("express");
-const mysql = require("mysql2/promise");
-
+const mysql = require("mysql");
 let db = null;
+
+// create express app
 const app = express();
+app.use(express.json());
+// Setup server port
+const port = process.env.PORT || 8000;
 
-const hostname = '127.0.0.1';
-const port = 8000;
+app.post('/login', async(req, res)=>{
+  const username = req.body.username;
+  const password = req.body.password;
 
-app.use(express.json);
-
-app.post('login', async(req, res, next)=>{
-const username = req.body.username;
-const password = req.body.password;
-
-await db.query("SELECT * FROM `user` WHERE `username`='"+username+"';");
-if (error) {
-    res.send({
-      "code":400,
-      "failed":"error ocurred"
-    })
-  }else{
-    if(results.length > 0){
-      const comparision = await bcrypt.compare(password, results[0].password)
-      if(comparision){
-          res.send({
-            "code":200,
-            "success":"login sucessfull"
-          })
-      }
-      else{
-        res.send({
-             "code":204,
-             "success":"Email and password does not match"
-        })
-      }
+  await db.query("SELECT * FROM `user` WHERE `username`=? AND password = ?", [username, password] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
     }
     else{
-      res.send({
-        "code":206,
-        "success":"User does not exits"
-          });
-    }
-  }
-  next();
+      if(rows.length > 0){
+         console.log("Login Sucessful");
+          
+         res.json("Login Sucessful");
+          return;
+        }
+        else{
+          res.jsonEncode("Username and/or password is not valid");
+          return;
+        }
+      }
+    });
+  });
+
+  app.get('/', (req, res) => {
+    res.send("Hello World");
   });
 
 async function main(){
@@ -56,11 +45,13 @@ async function main(){
       charset: "utf8mb4_general_ci",
     });
 
-    db.connect((err)=>{
-      if(err){
-        console.log(err.message);
+    db.connect(function (error) {
+      if(error){
+          console.log(error);
+          return;
+      } else {
+          console.log('Database is connected');
       }
-      console.log('db '+ connection.state);
     });
 }
 
