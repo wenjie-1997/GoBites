@@ -1,12 +1,21 @@
-//import 'dart:html';
-import 'dart:ui';
-
 /// Flutter code sample for AppBar
 
 // This sample shows an [AppBar] with two simple actions. The first action
 // opens a [SnackBar], while the second action navigates to a new page.
-
+import 'dart:convert';
+import 'package:demo/pages/login.dart';
 import 'package:flutter/material.dart';
+import 'package:demo/modules/http.dart';
+
+String username;
+String password;
+String usertype;
+DateTime birthDate;
+String custname;
+String gender;
+String email;
+String address;
+String telephoneNo;
 
 class Register extends StatefulWidget {
   @override
@@ -60,7 +69,6 @@ class RegistrationFormState extends State<RegistrationForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  String usertype;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +91,11 @@ class RegistrationFormState extends State<RegistrationForm> {
                   }
                   return null;
                 },
+                onChanged: (String value) {
+                  setState(() {
+                    username = value;
+                  });
+                },
               ),
             ]),
           ),
@@ -99,6 +112,11 @@ class RegistrationFormState extends State<RegistrationForm> {
                     return 'The length of the password must be from 8 to 15.';
                   }
                   return null;
+                },
+                onChanged: (String value) {
+                  setState(() {
+                    password = value;
+                  });
                 },
               ),
             ]),
@@ -118,7 +136,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Radio(
-                    value: 'Customer',
+                    value: 'customer',
                     groupValue: usertype,
                     onChanged: (String value) {
                       setState(() {
@@ -128,7 +146,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                   ),
                   Text('Customer'),
                   Radio(
-                    value: 'Restaurant',
+                    value: 'restaurant',
                     groupValue: usertype,
                     onChanged: (String value) {
                       setState(() {
@@ -179,18 +197,59 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  DateTime selectedDate;
-  String gender;
+
+  Future customerRegister() async {
+    final msg = jsonEncode({
+      "username": username,
+      "password": password,
+      "usertype": usertype,
+      // "custname": custname,
+      // "birthDate": birthDate,
+      // "gender": gender,
+      // "address": address,
+      // "telephoneNo": telephoneNo,
+      // "email": email
+    });
+    final result = await http_post("/custregister", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Register Sucessful") {
+      AlertDialog(
+        title: Text("Resgister Successful"),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Continue'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: selectedDate != null ? selectedDate : DateTime.now(),
+        initialDate: birthDate != null ? birthDate : DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime.now());
-    if (picked != null && picked != selectedDate)
+    if (picked != null && picked != birthDate)
       setState(() {
-        selectedDate = picked;
+        birthDate = picked;
       });
   }
 
@@ -217,6 +276,11 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                           return 'Please enter your user name';
                         }
                         return null;
+                      },
+                      onChanged: (String value) {
+                        setState(() {
+                          custname = value;
+                        });
                       },
                     ),
                   ]),
@@ -271,9 +335,8 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                     ),
                     Row(children: [
-                      Text(
-                          "${selectedDate != null ? selectedDate.toLocal() : ''}"
-                              .split(' ')[0]),
+                      Text("${birthDate != null ? birthDate.toLocal() : ''}"
+                          .split(' ')[0]),
                       Material(
                         child: Center(
                           child: IconButton(
@@ -319,6 +382,11 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                         }
                         return null;
                       },
+                      onChanged: (String value) {
+                        setState(() {
+                          telephoneNo = value;
+                        });
+                      },
                     ),
                   ]),
                 ),
@@ -335,6 +403,11 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                         }
                         return null;
                       },
+                      onChanged: (String value) {
+                        setState(() {
+                          email = value;
+                        });
+                      },
                     ),
                   ]),
                 ),
@@ -343,7 +416,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState.validate()) {}
-                      Navigator.of(context).pop();
+                      customerRegister();
                     },
                     child: Text('Submit'),
                   ),

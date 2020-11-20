@@ -29,7 +29,22 @@ app.post('/login', async(req, res)=>{
         }
       }
     });
-  });
+});
+
+app.post('/custregister', async(req, res)=>{
+  const {username,password, usertype} = req.body;
+  //, custname, birthDate, gender, address, telephoneNo, email
+  await db.query("INSERT INTO `user`(`username`, `password`, `usertype`) VALUES (?, ?, ?); INSERT INTO `customer`(custname,birthdate,gender,address,email,telephoneNo) VALUES (?,?,?,?,?,?); "
+  , [username, password, usertype] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+    }
+    else{
+        console.log("Register Sucessful");
+        res.json("Register Sucessful");
+      }
+    });
+});
 
   app.get('/', (req, res) => {
     res.send("Hello World");
