@@ -16,6 +16,9 @@ String gender;
 String email;
 String address;
 String telephoneNo;
+String restaurantname;
+String ownername;
+String restaurantstyle;
 
 class Register extends StatefulWidget {
   @override
@@ -164,11 +167,11 @@ class RegistrationFormState extends State<RegistrationForm> {
             child: ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  if (usertype == "Customer") {
+                  if (usertype == "customer") {
                     // If the form is valid, display a Snackbar.
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => CusRegistrationForm()));
-                  } else if (usertype == "Restaurant") {
+                  } else if (usertype == "restaurant") {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => RestRegistrationForm()));
                   }
@@ -203,12 +206,12 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
       "username": username,
       "password": password,
       "usertype": usertype,
-      // "custname": custname,
-      // "birthDate": birthDate,
-      // "gender": gender,
-      // "address": address,
-      // "telephoneNo": telephoneNo,
-      // "email": email
+      "custname": custname,
+      "birthDate": birthDate,
+      "gender": gender,
+      "address": address,
+      "email": email,
+      "telephoneNo": telephoneNo,
     });
     final result = await http_post("/custregister", msg);
     String status = jsonDecode(result.body);
@@ -227,17 +230,17 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
       );
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
     } else {
-      // AlertDialog(
-      //   title: Text(status),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: Text('Continue'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
+      AlertDialog(
+        title: Text(status),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Continue'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
     }
   }
 
@@ -442,7 +445,49 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
   // Note: This is a GlobalKey<FormState>,
   // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
-  String rest_type;
+
+  Future restaurantRegister() async {
+    final msg = jsonEncode({
+      "username": username,
+      "password": password,
+      "usertype": usertype,
+      "restaurantname": restaurantname,
+      "ownername": ownername,
+      "address": address,
+      "restaurantstyle": restaurantstyle,
+      "email": email,
+      "telephoneNo": telephoneNo,
+    });
+    final result = await http_post("/restregister", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Register Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Resgister Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () => Navigator.of(context).pop()),
+                ],
+              ));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -466,8 +511,10 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                     }
                     return null;
                   },
-                  onSaved: (value) => {
-                    //
+                  onChanged: (String value) => {
+                    setState(() {
+                      restaurantname = value;
+                    })
                   },
                 ),
               ),
@@ -483,8 +530,10 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                     }
                     return null;
                   },
-                  onSaved: (value) => {
-                    //
+                  onChanged: (String value) => {
+                    setState(() {
+                      ownername = value;
+                    })
                   },
                 ),
               ),
@@ -501,8 +550,10 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                     }
                     return null;
                   },
-                  onSaved: (value) => {
-                    //
+                  onChanged: (String value) => {
+                    setState(() {
+                      address = value;
+                    })
                   },
                 ),
               ),
@@ -522,7 +573,7 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: DropdownButton<String>(
-                        value: rest_type,
+                        value: restaurantstyle,
                         //icon: Icon(Icons.arrow_downward),
                         //iconSize: 24,
                         //elevation: 16,
@@ -533,7 +584,7 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                         ),
                         onChanged: (String newValue) {
                           setState(() {
-                            rest_type = newValue;
+                            restaurantstyle = newValue;
                           });
                         },
                         items: <String>[
@@ -554,11 +605,55 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                   ],
                 ),
               ),
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: Column(children: <Widget>[
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Telephone No.',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    onChanged: (String value) {
+                      setState(() {
+                        telephoneNo = value;
+                      });
+                    },
+                  ),
+                ]),
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 20, bottom: 15),
+                child: Column(children: <Widget>[
+                  TextFormField(
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                    ),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      return null;
+                    },
+                    onChanged: (String value) {
+                      setState(() {
+                        email = value;
+                      });
+                    },
+                  ),
+                ]),
+              ),
               Padding(
                 padding: EdgeInsets.all(20),
                 child: ElevatedButton(
                   onPressed: () {
-                    if (_formKey.currentState.validate()) {}
+                    if (_formKey.currentState.validate()) {
+                      restaurantRegister();
+                    }
                   },
                   child: Text('Submit'),
                 ),

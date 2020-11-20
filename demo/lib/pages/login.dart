@@ -61,17 +61,18 @@ class _LoginState extends State<Login> {
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => Home()));
       } else {
-        // AlertDialog(
-        //   title: Text(status),
-        //   actions: <Widget>[
-        //     TextButton(
-        //       child: Text('Continue'),
-        //       onPressed: () {
-        //         Navigator.of(context).pop();
-        //       },
-        //     ),
-        //   ],
-        // );
+        showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => AlertDialog(
+                  title:
+                      Text("Invalid username or password, please try again."),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text('Continue'),
+                        onPressed: () => Navigator.of(context).pop()),
+                  ],
+                ));
       }
     }
 
