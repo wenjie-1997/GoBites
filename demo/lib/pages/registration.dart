@@ -6,11 +6,12 @@ import 'dart:convert';
 import 'package:demo/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
+import 'package:date_format/date_format.dart';
 
 String username;
 String password;
 String usertype;
-DateTime birthDate;
+DateTime birthdate;
 String custname;
 String gender;
 String email;
@@ -202,57 +203,58 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
   Future customerRegister() async {
+    final formattedbirthdate = formatDate(birthdate, [yyyy, '-', m, '-', dd]);
     final msg = jsonEncode({
       "username": username,
       "password": password,
       "usertype": usertype,
       "custname": custname,
-      "birthDate": birthDate,
+      "birthdate": formattedbirthdate,
       "gender": gender,
       "address": address,
       "email": email,
-      "telephoneNo": telephoneNo,
+      "telephoneNo": telephoneNo
     });
     final result = await http_post("/custregister", msg);
     String status = jsonDecode(result.body);
     //String status = loginResult.getStatus();
     if (status == "Register Sucessful") {
-      AlertDialog(
-        title: Text("Resgister Successful"),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Continue'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Resgister Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () => Navigator.of(context).pop()),
+                ],
+              ));
       Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
     } else {
-      AlertDialog(
-        title: Text(status),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Continue'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-        ],
-      );
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
     }
   }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
-        initialDate: birthDate != null ? birthDate : DateTime.now(),
+        initialDate: birthdate != null ? birthdate : DateTime.now(),
         firstDate: DateTime(1900),
         lastDate: DateTime.now());
-    if (picked != null && picked != birthDate)
+    if (picked != null && picked != birthdate)
       setState(() {
-        birthDate = picked;
+        birthdate = picked;
       });
   }
 
@@ -338,7 +340,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                     ),
                     Row(children: [
-                      Text("${birthDate != null ? birthDate.toLocal() : ''}"
+                      Text("${birthdate != null ? birthdate.toLocal() : ''}"
                           .split(' ')[0]),
                       Material(
                         child: Center(
@@ -367,6 +369,11 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                           return 'Please enter your address';
                         }
                         return null;
+                      },
+                      onChanged: (String value) {
+                        setState(() {
+                          address = value;
+                        });
                       },
                     ),
                   ]),
@@ -418,8 +425,9 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
                     onPressed: () {
-                      if (_formKey.currentState.validate()) {}
-                      customerRegister();
+                      if (_formKey.currentState.validate()) {
+                        customerRegister();
+                      }
                     },
                     child: Text('Submit'),
                   ),
@@ -648,7 +656,7 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                 ]),
               ),
               Padding(
-                padding: EdgeInsets.all(20),
+                padding: EdgeInsets.only(left: 20, bottom: 15),
                 child: ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState.validate()) {

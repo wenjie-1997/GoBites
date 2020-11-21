@@ -44,17 +44,19 @@ app.post('/custregister', async(req, res)=>{
   const {username,password, usertype, custname,birthdate,gender,address,email,telephoneNo} = req.body;
   let insertUsertable = "INSERT INTO `user`(`username`, `password`, `usertype`,`fk_cid`) VALUES (?, ?, ?, @last_id); ";
   let setLastInsertId = "SET @last_id = LAST_INSERT_ID(); ";
-  let insertCusttable = "INSERT INTO `customer`(custname,birthdate,gender,address,email,telephoneNo) VALUES (?,?,?,?,?,?); ";
+  let insertCusttable = "INSERT INTO `customer`(custname, birthdate, gender, address, email, telephoneNo) VALUES (?,?,?,?,?,?); ";
   //, custname, birthDate, gender, address, telephoneNo, email
   await db.query( insertCusttable+setLastInsertId+insertUsertable,
    [custname, birthdate, gender, address, email, telephoneNo, username, password, usertype] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Register Failed");
+        return;
     }
     else{
         console.log("Register Sucessful");
         res.json("Register Sucessful");
+        return;
       }
     });
 });

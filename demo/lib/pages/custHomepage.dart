@@ -107,6 +107,7 @@ class _CustHomePageState extends State<CustHomePage> {
         ));
 
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.yellow[200],
       body: Container(
         child: Padding(
