@@ -18,15 +18,24 @@ app.post('/login', async(req, res)=>{
     }
     else{
       if(rows.length > 0){
-         console.log("Login Sucessful");
+        if(rows[0].usertype == 'customer'){
+          console.log("Login Sucessful as Customer");
           
-         res.json("Login Sucessful");
-          return;
+          res.json("Login Sucessful as Customer");
+           return;
         }
-        else{
-          res.json("Username and/or password is not valid");
-          return;
+        else if(rows[0].usertype == 'restaurant'){
+          console.log("Login Sucessful as Restaurant");
+          
+          res.json("Login Sucessful as Restaurant");
+           return;
         }
+         
+      }
+      else{
+        res.json("Username and/or password is not valid");
+        return;
+      }
       }
     });
 });
@@ -38,7 +47,7 @@ app.post('/custregister', async(req, res)=>{
   let insertCusttable = "INSERT INTO `customer`(custname,birthdate,gender,address,email,telephoneNo) VALUES (?,?,?,?,?,?); ";
   //, custname, birthDate, gender, address, telephoneNo, email
   await db.query( insertCusttable+setLastInsertId+insertUsertable,
-   [custname, birthdate, gender, address, email, telephoneNo, username, password, usertype, ] , (error, rows, fields)=>{
+   [custname, birthdate, gender, address, email, telephoneNo, username, password, usertype] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Register Failed");

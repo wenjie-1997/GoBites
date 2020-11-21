@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:demo/pages/home.dart';
+import 'package:demo/pages/custHomepage.dart';
+import 'package:demo/pages/restHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/registration.dart';
 import 'package:demo/modules/user.dart';
 import 'package:demo/modules/http.dart';
-import 'package:http/http.dart' as http;
 
 class Login extends StatefulWidget {
   @override
@@ -57,9 +57,12 @@ class _LoginState extends State<Login> {
       final result = await http_post("/login", msg);
       String status = jsonDecode(result.body);
       //String status = loginResult.getStatus();
-      if (status == "Login Sucessful") {
+      if (status == "Login Sucessful as Customer") {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => CustomerHomePage()));
+      } else if (status == "Login Sucessful as Restaurant") {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Home()));
+            context, MaterialPageRoute(builder: (context) => RestHomePage()));
       } else {
         showDialog<void>(
             context: context,
@@ -101,10 +104,7 @@ class _LoginState extends State<Login> {
             "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.amber, 
-                fontSize: 20.0, 
-                letterSpacing: 3.0
-                ),
+                color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
           ),
         ));
 
@@ -136,9 +136,7 @@ class _LoginState extends State<Login> {
                         fontSize: 50.0,
                         letterSpacing: 3.0,
                         color: Colors.black,
-                        fontFamily: 'Vibur'
-                      )
-                ),
+                        fontFamily: 'Vibur')),
                 SizedBox(height: 45.0),
                 usernameField,
                 SizedBox(height: 25.0),
