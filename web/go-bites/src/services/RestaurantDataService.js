@@ -11,12 +11,12 @@ class RestaurantDataService {
         return http.get(`${url}/restaurant?rid=${id}`);
     }
 
-    updateARestaurantInformation(id) {
-        return http.put(`${url}?rid=${id}`);
+    updateARestaurantInformation(restaurant) {
+        return http.put(`${url}`, restaurant);
     }
 
-    deleteARestaurantInformation(id) {
-        return http.delete(`${url}?rid=${id}`);
+    deleteARestaurantInformation(restaurant) {
+        return http.delete(`${url}`, restaurant);
     }
 }
 

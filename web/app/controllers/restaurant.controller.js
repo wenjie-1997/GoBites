@@ -38,7 +38,7 @@ exports.findOne = (req, res) => {
 
 // Update a restaurant information with an id
 exports.updateOne = (req, res) => {
-    const id = req.query.rid;
+    const id = req.body.RID;
   
     Restaurant.update(req.body, {
         where: { RID: id }
@@ -63,7 +63,7 @@ exports.updateOne = (req, res) => {
 
 // Delete a Restaurant information with an id
 exports.deleteOne = (req, res) => {
-    const id = req.query.rid;
+    const id = req.body.RID;
   
     Restaurant.destroy({
         where: { RID: id }

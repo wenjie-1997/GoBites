@@ -11,12 +11,12 @@ class CustomerDataService {
         return http.get(`${url}/customer?cid=${id}`);
     }
 
-    updateACustomerInformation(id) {
-        return http.put(`${url}?cid=${id}`);
+    updateACustomerInformation(customer) {
+        return http.put(`${url}`, customer);
     }
 
-    deleteACustomerInformation(id) {
-        return http.delete(`${url}?cid=${id}`);
+    deleteACustomerInformation(customer) {
+        return http.delete(`${url}`, customer);
     }
 }
 

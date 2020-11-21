@@ -38,8 +38,8 @@ exports.findOne = (req, res) => {
 
 // Update a customer information
 exports.updateOne = (req, res) => {
-    const id = req.query.cid;
-    console.log(req);
+    const id = req.body.CID;
+    
     Customer.update(req.body, {
         where: { CID: id }
     })
@@ -63,8 +63,8 @@ exports.updateOne = (req, res) => {
 
 // Delete a customer information
 exports.deleteOne = (req, res) => {
-    const id = req.query.cid;
-  
+    const id = req.body.CID;
+    
     Customer.destroy({
         where: { CID: id }
     })
