@@ -101,7 +101,10 @@ class _LoginState extends State<Login> {
             "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                color: Colors.amber, 
+                fontSize: 20.0, 
+                letterSpacing: 3.0
+                ),
           ),
         ));
 
@@ -132,7 +135,10 @@ class _LoginState extends State<Login> {
                     style: TextStyle(
                         fontSize: 50.0,
                         letterSpacing: 3.0,
-                        color: Colors.black)),
+                        color: Colors.black,
+                        fontFamily: 'Vibur'
+                      )
+                ),
                 SizedBox(height: 45.0),
                 usernameField,
                 SizedBox(height: 25.0),
