@@ -1,47 +1,41 @@
-const db = require('../models');
+const db = require("../models");
 const Customer = db.customer;
-const Op = db.Sequelize.Op;
 
-// Retrieve all customers information
-exports.findAll = (req, res) => {
+// Retrieve all Customers from database.
+exports.findAll = (req, res) => {  
     Customer.findAll()
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving Customers information"
+                message:
+                  err.message || "Some error occurred while retrieving customers information."
             });
-        });
+         });
 };
 
-// Retrieve a customer information
+// Find a single Customer with an id
 exports.findOne = (req, res) => {
-    const id = req.query.cid;
-    
-    var condition = {
-            CID: {
-                [Op.eq]: id
-            }
-        }
-
-    Customer.findAll({ where : condition })
+    const id = req.query.id;
+  
+    Customer.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving customer with id=" + id
+                message: "Error retrieving Customer with id=" + id
             });
         });
 };
 
-// Update a customer information
+// Update a Customer by the id in the request
 exports.updateOne = (req, res) => {
-    const id = req.query.cid;
-    console.log(req);
+    const id = req.query.id;
+  
     Customer.update(req.body, {
-        where: { CID: id }
+        where: { id: id }
     })
       .then(num => {
           if (num == 1) {
@@ -50,7 +44,7 @@ exports.updateOne = (req, res) => {
               });
           } else {
               res.send({
-                  message: `Customer update information with id=${id}. Maybe Customer was not found or req.body is empty!`
+                  message: `Cannot update Tutorial with id=${id}. Maybe Customer was not found or req.body is empty!`
               });
           }
       })
@@ -61,27 +55,27 @@ exports.updateOne = (req, res) => {
       });
 };
 
-// Delete a customer information
+// Delete a Customer with the specified id
 exports.deleteOne = (req, res) => {
-    const id = req.query.cid;
+    const id = req.query.id;
   
     Customer.destroy({
-        where: { CID: id }
+        where: { id: id }
     })
       .then(num => {
           if (num == 1) {
               res.send({
-                  message: "Customer information was deleted successfully!"
+                  message: "Customer was deleted successfully!"
                });
           } else {
               res.send({
-                  message: `Cannot delete Customer information with id=${id}. Maybe Customer information was not found!`
+                  message: `Cannot delete Customer with id=${id}. Maybe Customer was not found!`
               });
           }
       })
       .catch(err => {
           res.status(500).send({
-              message: "Could not delete Customer information with id=" + id
+              message: "Could not delete Customer with id=" + id
           });
       });
 };

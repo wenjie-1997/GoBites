@@ -11,7 +11,7 @@
                 </tr>
                 <tr>
                     <th v-for="(value, propertyName, index) in customers[0]" :key="index" >
-                        {{ propertyName && propertyName !== "id" ? propertyName.substring(8): "No" }}                
+                        {{ propertyName }}                
                     </th>
                     <th>
                         More Details
@@ -20,12 +20,12 @@
             </thead>
 
             <tbody>
-                <tr v-for="customer in customers" :key="customer.id">
+                <tr v-for="customer in customers" :key="customer.CID">
                     <td v-for="(value, propertyName, index) in customer" :key="index" >
                         {{ value }}
                     </td>
                     <td>
-                        <input type="button" @click="viewUserDetails(customer)" value="More Details" />
+                        <input type="button" class="btn btn-primary" @click="viewUserDetails(customer)" value="More Details" />
                     </td>
                 </tr>
                 <tr>
@@ -38,12 +38,7 @@
 </template>
 
 <script>
-import {
-    SET_CUSTOMER_USER_STATE
-} from '../store/actions/customerUser'
-
 import CustomerDataService from '../services/CustomerDataService';
-import UserDataService from '../services/UserDataService';
 import loading from '../mixins/loading.vue'
 
 export default {
@@ -66,54 +61,37 @@ export default {
         retrieveAllCustomersInformation() {
             CustomerDataService.getAllCustomersInformation()
                 .then(response => {
+                    this.isLoading = false;
                     this.customers = response.data;
                 }).catch(err => {
                     this.isLoading = false;
                     alert(err.message);
                 })
         },
-        retrieveAllCustomerUsername() {
-            UserDataService.getAllCustomerUsernameWithTheSameType("customer")
-                .then(response => {
-                    this.users = response.data;
-                }).catch(err => {
-                    this.isLoading = false;
-                    alert(err.message);
-                })
-        },
         viewUserDetails: function (customer) {
-            var personId = -1;
-            var userName = "";
-
-            for(var i = 0; i < this.users.length; i++) {
-                if(this.users[i].customerId === customer.id) {
-                    personId = this.users[i].personId;
-                    userName = this.users[i].userName;
-                }
-            }
-
-            if(personId != -1 && userName != "") {
-                this.$store.dispatch(SET_CUSTOMER_USER_STATE, {
-                    customer,
-                    personId,
-                    userName
-                });
-                this.$router.push('/userDetails?id=' + customer.id + '&type=customer');
-            }
-
+            this.$router.push('/userDetails?id=' + customer.CID + '&type=customer');
         }
     },
     mounted() {
         this.isLoading = true;
         this.retrieveAllCustomersInformation();
-        this.retrieveAllCustomerUsername();
-        this.isLoading = false;
     },
 }
 </script>
 
 <style lang="scss">
-.customers-list {
+#Customer {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    /* IE 9 */
+    -webkit-transform: translate(-50%, -50%);
+    /* Chrome, Safari, Opera */
+
+    .customers-list {
     text-align: center;
 
     table {
@@ -136,5 +114,6 @@ export default {
             border-top: 1px solid black;
         }
     }
+}
 }
 </style>

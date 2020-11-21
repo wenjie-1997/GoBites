@@ -10,8 +10,8 @@
                     </th>
                 </tr>
                 <tr>
-                    <th v-for="(value, propertyName, index) in restaurants[0]" :key="index" >
-                        {{ propertyName && propertyName !== "id"? propertyName.substring(10): "No" }}
+                    <th v-for="(value, propertyName, index) in restaurants[0]" :key="index" v-show="value">
+                        {{ propertyName }}
                     </th>
                     <th>
                         More Details
@@ -20,12 +20,12 @@
             </thead>
 
             <tbody>
-                <tr v-for="restaurant in restaurants" :key="restaurant.id">
-                    <td v-for="(value, propertyName, index) in restaurant" :key="index" >
-                        {{ value }}
+                <tr v-for="restaurant in restaurants" :key="restaurant.RID">
+                    <td v-for="(value, propertyName, index) in restaurant" :key="index" v-show="value">
+                        {{ value && value.length > 12 ? value.substring(0, 12) + "..." : value}}
                     </td>
                     <td>
-                        <input type="button" @click="viewUserDetails(restaurant)" value="More Details" />
+                        <input type="button" class="btn btn-primary" @click="viewUserDetails(restaurant)" value="More Details" />
                     </td>
                 </tr>
                 <tr>
@@ -38,10 +38,6 @@
 </template>
 
 <script>
-import {
-    SET_RESTAURANT_USER_STATE
-} from "../store/actions/restaurantUser"
-
 import RestaurantDataService from '../services/RestaurantDataService';
 import loading from '../mixins/loading.vue'
 
@@ -68,13 +64,10 @@ export default {
                     this.restaurants = response.data;
                 }).catch(err => {
                     alert(err.message);
-                })
+                });
         },
         viewUserDetails: function (restaurant) {
-            this.$store.dispatch(SET_RESTAURANT_USER_STATE, {
-                restaurant
-            });
-            this.$router.push('/userDetails?id=' + restaurant.id + '&type=' + restaurant.type.toLowerCase());
+            this.$router.push('/userDetails?id=' + restaurant.RID + '&type=restaurant');
         }
     },
     mounted() {
@@ -85,7 +78,18 @@ export default {
 </script>
 
 <style lang="scss">
-.restaurants-list {
+#restaurant {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    /* IE 9 */
+    -webkit-transform: translate(-50%, -50%);
+    /* Chrome, Safari, Opera */
+
+    .restaurants-list {
     text-align: center;
 
     table {
@@ -109,4 +113,6 @@ export default {
         }
     }
 }
+}
+
 </style>

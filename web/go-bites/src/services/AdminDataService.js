@@ -1,8 +1,8 @@
 import http from "../http/common/http-common";
 
 class AdminDataService {
-    getAdminData(id) {
-        return http.get(`/admins?id=${id}`);
+    getAdminData() {
+        return http.get(`/admin`);
     }
 }
 

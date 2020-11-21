@@ -32,16 +32,23 @@ app.get("/", (req, res) => {
   res.json({ message: "goBites application database" });
 });
 
-require("./app/routes/user.routes")(app);
-require("./app/routes/admin.routes")(app);
-require("./app/routes/customer.routes")(app);
-require("./app/routes/deliveryDriver.routes")(app);
-require("./app/routes/restaurant.routes")(app);
-require("./app/routes/people.routes")(app);
-require("./app/routes/address.routes")(app);
-require("./app/routes/contact.routes")(app);
+// require("./app/routes/user.routes")(app);
+// require("./app/routes/admin.routes")(app);
+// require("./app/routes/customer.routes")(app);
+// require("./app/routes/deliveryDriver.routes")(app);
+// require("./app/routes/restaurant.routes")(app);
+// require("./app/routes/people.routes")(app);
+// require("./app/routes/address.routes")(app);
+// require("./app/routes/contact.routes")(app);
 // require("./app/routes/menuItem.routes")(app);
 // require("./app/routes/menuList.routes")(app);
+
+require("./app/routes/user.routes")(app);
+require("./app/routes/admin.routes")(app);
+require("./app/routes/restaurant.routes")(app);
+require("./app/routes/customer.routes")(app);
+require("./app/routes/menuItem.routes")(app);
+require("./app/routes/menuList.routes")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

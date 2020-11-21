@@ -8,15 +8,15 @@ class CustomerDataService {
     }
 
     getACustomerInformation(id) {
-        return http.get(`${url}/customer?id=${id}`);
+        return http.get(`${url}/customer?cid=${id}`);
     }
 
     updateACustomerInformation(id) {
-        return http.put(`${url}?id=${id}`);
+        return http.put(`${url}?cid=${id}`);
     }
 
     deleteACustomerInformation(id) {
-        return http.delete(`${url}?id=${id}`);
+        return http.delete(`${url}?cid=${id}`);
     }
 }
 

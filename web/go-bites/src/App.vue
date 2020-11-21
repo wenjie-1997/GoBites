@@ -1,12 +1,20 @@
 <template>
-<div id="app">
-    <Nav />
-    <div class="auth-wrapper">
-        <div class="auth-inner">
-            <router-view />
+<div id="app" class="d-flex flex-column min-vh-100">
+    <header>
+        <Nav />
+    </header>
+
+    <content>
+        <div class="auth-wrapper">
+            <div class="auth-inner">
+                <router-view />
+            </div>
         </div>
-    </div>
-    <Footer />
+    </content>
+
+    <footer class="mt-auto">
+        <Footer />
+    </footer>
 </div>
 </template>
 
@@ -78,6 +86,7 @@ html,
 }
 
 .auth-wrapper {
+    height: 800px;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -119,7 +128,7 @@ html,
 
 .auth-inner {
     width: 99%;
-    height: 85%;
+    height: 99%;
     margin: auto;
     background: #ffffff;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);

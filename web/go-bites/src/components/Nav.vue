@@ -25,10 +25,6 @@
                                 <li>
                                     <router-link class="nav-link" to="/customer"><img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" /> Customer</router-link>
                                 </li>
-
-                                <li>
-                                    <router-link class="nav-link" to="/deliveryDriver"><img class="img" src="../assets/icon/icon-delivery.png" width="35px" alt="customer-icon" /> Delivery Driver</router-link>
-                                </li>
                             </ul>
 
                         </div>

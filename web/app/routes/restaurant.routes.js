@@ -1,19 +1,15 @@
 module.exports = app => {
-    const restaurants = require('../controllers/restaurant.controller.js');
+    const restaurant = require('../controllers/restaurant.controller.js');
 
     var router = require("express").Router();
 
-    // Retrieve all delivery drivers information
-    router.get("/", restaurants.findAll);
+    router.get("/", restaurant.findAll);
 
-    // Retrieve a delivery driver information with an id
-    router.get("/restaurant", restaurants.findOne);
+    router.get("/restaurant", restaurant.findOne);
 
-    // Update a delivery driver information with an id
-    router.put("/", restaurants.updateOne);
+    router.put("/", restaurant.updateOne);
 
-    // Delete a delivery driver information with an id
-    router.delete("/", restaurants.deleteOne);
+    router.delete("/", restaurant.deleteOne);
 
     app.use("/api/restaurants", router);
 }

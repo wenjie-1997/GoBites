@@ -6,7 +6,6 @@ import {
   AUTH_FAIL
 } from "../actions/auth";
 import { ADMIN_REQUEST, ADMIN_LOGOUT } from "../actions/admin";
-import PeopleDataService from "../../services/PeopleDataService";
 
 const state = {
   status: "",
@@ -21,27 +20,21 @@ const getters = {
 
 const actions = {
   [AUTH_REQUEST]: ({ commit, dispatch }, user) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       commit(AUTH_REQUEST);
-
+      
       // Check username and password credential
-      if(user.admin.userName !== user.username || user.admin.userPassword !== user.password) {
+      if(user.admin.username !== user.username || user.admin.password !== user.password) {
         console.log("Invalid credential");
         commit(AUTH_FAIL);
         return;
       }
       
-      PeopleDataService.getAPersonInformation(user.admin.personId)
-        .then(resp => {
-          commit(AUTH_SUCCESS);
-          //log in user
-          dispatch(ADMIN_REQUEST, resp.data);
-          resolve(resp);
-        })
-        .catch(err => {
-          commit(AUTH_ERROR, err);
-          reject(err);
-        });
+      commit(AUTH_SUCCESS);
+      
+      //log in user
+      dispatch(ADMIN_REQUEST);
+      resolve();
     });
   },
   [AUTH_LOGOUT]: ({ commit, dispatch }) => {

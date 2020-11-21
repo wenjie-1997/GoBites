@@ -1,11 +1,11 @@
 import http from "../http/common/http-common";
 
 class UserDataService {
-    getAllUsersOfSameType(type, id) {
-        return http.get(`/users?id=${id}&type=${type}`);
+    getAllUsersOfSameType(type) {
+        return http.get(`/users?type=${type}`);
     }
-    getAllCustomerUsernameWithTheSameType(type) {
-        return http.get(`/users/type?type=${type}`);
+    getAUser(id) {
+        return http.get(`/users?uid=${id}`);
     }
 }
 

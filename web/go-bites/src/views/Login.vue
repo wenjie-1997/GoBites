@@ -1,26 +1,28 @@
 <template>
 <div id="login">
-    <form class="login-form" method="post" @submit.prevent="login">
-        <div class="form-content">
-            <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-            <h3>Login</h3>
+    <content>
+        <form class="login-form" method="post" @submit.prevent="login">
+            <div class="form-content">
+                <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+                <h3>Login</h3>
 
-            <div class="form-group">
-                <label>username</label>
-                <input type="text" v-model="username" class="form-control" placeholder="Username" required />
+                <div class="form-group">
+                    <label>username</label>
+                    <input type="text" v-model="username" class="form-control" placeholder="Username" required />
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="off" required />
+                </div>
+
+                <div class="login-btn">
+                    <button type="submit" class="btn btn-primary btn-block" :disabled="isLoading">Login</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="off" required />
-            </div>
-
-            <div class="login-btn">
-                <button type="submit" class="btn btn-primary btn-block" :disabled="isLoading">Login</button>
-            </div>
-        </div>
-
-    </form>
+        </form>
+    </content>
 </div>
 </template>
 
@@ -55,11 +57,9 @@ export default {
     methods: {
         async getAdminInformation() {
             const type = "admin";
-            const id = 1;
-            await UserDataService.getAllUsersOfSameType(type, id)
+            await UserDataService.getAllUsersOfSameType(type)
                 .then((response) => {
-                    this.admin = response.data;
-                    this.admin = this.admin[0];
+                    this.admin = response.data[0];
                 })
                 .catch((e) => {
                     console.log(e);
@@ -86,7 +86,6 @@ export default {
                 .then(
                     () => {
                         this.isLoading = false;
-                        alert("Login Success");
                         this.$router.push("/");
                     }
                 );

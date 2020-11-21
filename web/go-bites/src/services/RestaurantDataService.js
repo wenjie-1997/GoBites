@@ -8,15 +8,15 @@ class RestaurantDataService {
     }
 
     getARestaurantInformation(id) {
-        return http.get(`${url}/restaurant?id=${id}`);
+        return http.get(`${url}/restaurant?rid=${id}`);
     }
 
     updateARestaurantInformation(id) {
-        return http.put(`${url}?id=${id}`);
+        return http.put(`${url}?rid=${id}`);
     }
 
     deleteARestaurantInformation(id) {
-        return http.delete(`${url}?id=${id}`);
+        return http.delete(`${url}?rid=${id}`);
     }
 }
 

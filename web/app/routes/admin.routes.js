@@ -1,10 +1,9 @@
 module.exports = app => {
-    const admin = require("../controllers/admin.controller.js");
+    const admin = require('../controllers/admin.controller.js');
 
     var router = require("express").Router();
 
-    // Retrieve admin information
-    router.get("/", admin.findAll);
+    router.get("/", admin.findOne);
 
-    app.use('/api/admins', router);
-};
+    app.use("/api/admin", router);
+}

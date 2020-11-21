@@ -1,56 +1,53 @@
-const db = require('../models');
+db = require('../models');
 const Restaurant = db.restaurant;
-const Op = db.Sequelize.Op;
 
 // Retrieve all restaurants information
 exports.findAll = (req, res) => {
     Restaurant.findAll()
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving restaurants information"
-            });
-        });
+        .then(
+            data => {
+                res.send(data);
+            }
+        ).catch(
+            err => {
+                res.status(500).send({
+                    message:
+                        err.message || "Some error occurred while retrieving Restaurants information."
+                });
+            }
+        );
 };
 
 // Retrieve a restaurant information with an id
 exports.findOne = (req, res) => {
-    const id = req.query.rid;
-    
-    var condition = {
-            RID: {
-                [Op.eq]: id
-            }
-        }
-
-    Restaurant.findAll({ where : condition })
+    const id = req.query.id;
+  
+    Restaurant.findByPk(id)
         .then(data => {
             res.send(data);
         })
         .catch(err => {
             res.status(500).send({
-                message: "Error retrieving restaurant with id=" + id
+                message: "Error retrieving Restaurant with id=" + id
             });
         });
 };
 
 // Update a restaurant information with an id
 exports.updateOne = (req, res) => {
-    const id = req.query.rid;
+    const id = req.query.id;
   
     Restaurant.update(req.body, {
-        where: { RID: id }
+        where: { id: id }
     })
       .then(num => {
           if (num == 1) {
               res.send({
-                  message: "Restaurant information was updated successfully."
+                  message: "Restaurant was updated successfully."
               });
           } else {
               res.send({
-                  message: `Restaurant update information with id=${id}. Maybe restaurant was not found or req.body is empty!`
+                  message: `Restaurant update Tutorial with id=${id}. Maybe Restaurant was not found or req.body is empty!`
               });
           }
       })
@@ -61,12 +58,12 @@ exports.updateOne = (req, res) => {
       });
 };
 
-// Delete a Restaurant information with an id
+// Delete a restaurant information with an id
 exports.deleteOne = (req, res) => {
-    const id = req.query.rid;
+    const id = req.query.id;
   
     Restaurant.destroy({
-        where: { RID: id }
+        where: { id: id }
     })
       .then(num => {
           if (num == 1) {
