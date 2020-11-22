@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class RestaurantPersonalInfo extends StatelessWidget {
+/*class RestaurantPersonalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -8,7 +8,7 @@ class RestaurantPersonalInfo extends StatelessWidget {
       home: RestaurantPersonalInfoPage(),
     );
   }
-}
+}*/
 
 class RestaurantPersonalInfoPage extends StatefulWidget {
   @override
@@ -21,6 +21,10 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+          ),
         title: Text('Restaurant Info'),
         centerTitle: true,
         backgroundColor: Colors.red,

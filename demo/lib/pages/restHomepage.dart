@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'restMenupage.dart';
+import 'restaurantInfo.dart';
 
 class RestaurantHomePage extends StatelessWidget {
   @override
@@ -25,7 +27,11 @@ class _RestHomePageState extends State<RestHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => RestMenuPage())
+            );
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.restaurant_menu),
@@ -47,7 +53,11 @@ class _RestHomePageState extends State<RestHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => RestaurantPersonalInfoPage())
+            );
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.storefront),

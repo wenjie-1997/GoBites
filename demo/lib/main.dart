@@ -19,13 +19,13 @@ void main() {
       '/loading': (context) => Loading(),
       '/home': (context) => Home(),
       '/registration': (context) => Register(),
-      '/personalInfo': (context) => PersonalInfo(),
-      '/restaurantPersonalInfo': (context) => RestaurantPersonalInfo(),
+      '/personalInfo': (context) => PersonalInfoPage(),
+      '/restaurantPersonalInfo': (context) => RestaurantPersonalInfoPage(),
       '/customerHomePage': (context) => CustomerHomePage(),
       '/restaurantHomePage': (context) => RestaurantHomePage(),
-      '/customerMenuPage': (context) => CustomerMenuPage(),
-      '/customerRestaurantPage': (context) => CustomerRestaurantPage(),
-      '/restaurantMenuPage': (context) => RestaurantMenuPage(),
+      '/customerMenuPage': (context) => CustMenuPage(),
+      '/customerRestaurantPage': (context) => CustRestaurantPage(),
+      '/restaurantMenuPage': (context) => RestMenuPage(),
     },
   ));
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CustomerMenuPage extends StatelessWidget {
+/*class CustomerMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -8,7 +8,7 @@ class CustomerMenuPage extends StatelessWidget {
       home: CustMenuPage(),
     );
   }
-}
+}*/
 
 class CustMenuPage extends StatefulWidget {
   @override
@@ -23,6 +23,10 @@ class _CustMenuPageState extends State<CustMenuPage> {
       child: Scaffold(
         backgroundColor: Colors.yellow[200],
         appBar: AppBar(
+          leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+          ), 
           title: Text('Make an Order'),
           centerTitle: true,
           backgroundColor: Colors.red,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'custMenupage.dart';
 
-class CustomerRestaurantPage extends StatelessWidget {
+/*class CustomerRestaurantPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -8,7 +9,7 @@ class CustomerRestaurantPage extends StatelessWidget {
       home: CustRestaurantPage(),
     );
   }
-}
+}*/
 
 class CustRestaurantPage extends StatefulWidget {
   @override
@@ -21,6 +22,10 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ), 
         backgroundColor: Colors.red,
         title: Text('Pick a Restaurant'),
         centerTitle: true,
@@ -31,7 +36,11 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
         child: ListView(
             children: <Widget>[
               OutlineButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(builder: 
+                            (context) => CustMenuPage())
+                            );
+                          },
                           padding: EdgeInsets.all(10.0),
                           child: Row(
                             children: <Widget>[

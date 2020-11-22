@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PersonalInfo extends StatelessWidget {
+/*class PersonalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -8,7 +8,7 @@ class PersonalInfo extends StatelessWidget {
       home: PersonalInfoPage(),
     );
   }
-}
+}*/
 
 class PersonalInfoPage extends StatefulWidget {
   @override
@@ -21,6 +21,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: Text('Personal Info'),
         centerTitle: true,
         backgroundColor: Colors.red,

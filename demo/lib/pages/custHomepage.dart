@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'custRestaurantpage.dart';
+import 'personalInfo.dart';
 
 class CustomerHomePage extends StatelessWidget {
   @override
@@ -25,7 +27,11 @@ class _CustHomePageState extends State<CustHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => CustRestaurantPage())
+            );
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.fastfood),
@@ -47,7 +53,11 @@ class _CustHomePageState extends State<CustHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => PersonalInfoPage())
+            );
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.person),
