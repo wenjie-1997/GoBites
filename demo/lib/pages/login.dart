@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:demo/pages/custHomepage.dart';
 import 'package:demo/pages/restHomepage.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +12,10 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+String login_id;
+
 class _LoginState extends State<Login> {
-  Future<LoginResult> loginResult;
+  LoginResult loginResult;
   final _username = TextEditingController();
   final _password = TextEditingController();
   bool _validateEmail = false;
@@ -55,12 +56,13 @@ class _LoginState extends State<Login> {
       final msg =
           jsonEncode({"username": _username.text, "password": _password.text});
       final result = await http_post("/login", msg);
-      String status = jsonDecode(result.body);
-      //String status = loginResult.getStatus();
-      if (status == "Login Sucessful as Customer") {
+      loginResult = LoginResult.fromJson(jsonDecode(result.body));
+      if (loginResult.status == "Login Sucessful as Customer") {
+        login_id = loginResult.id;
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => CustomerHomePage()));
-      } else if (status == "Login Sucessful as Restaurant") {
+      } else if (loginResult.status == "Login Sucessful as Restaurant") {
+        login_id = loginResult.id;
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => RestHomePage()));
       } else {

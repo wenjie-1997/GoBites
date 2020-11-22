@@ -1,0 +1,32 @@
+class CustDetail {
+  final String username;
+  final String password;
+  final String custname;
+  final String birthdate;
+  final String gender;
+  final String address;
+  final String email;
+  final String telephoneNo;
+
+  CustDetail(
+      {this.username,
+      this.password,
+      this.custname,
+      this.birthdate,
+      this.gender,
+      this.address,
+      this.email,
+      this.telephoneNo});
+
+  factory CustDetail.fromJson(Map<String, dynamic> json) {
+    return CustDetail(
+        username: json['username'],
+        password: json['password'],
+        custname: json['custname'],
+        birthdate: json['birthdate'],
+        gender: json['gender'],
+        address: json['address'],
+        email: json['email'],
+        telephoneNo: json['telephoneNo']);
+  }
+}

@@ -1,5 +1,9 @@
+import 'dart:convert';
+import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'package:demo/pages/login.dart' as login;
 
+import 'package:demo/modules/custdetail.dart';
 /*class PersonalInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -10,12 +14,35 @@ import 'package:flutter/material.dart';
   }
 }*/
 
+Future<CustDetail> fetchCustDetail() async {
+  final response = await http_get('/customer/' + login.login_id);
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return CustDetail.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
+  }
+}
+
 class PersonalInfoPage extends StatefulWidget {
   @override
   _PersonalInfoPageState createState() => _PersonalInfoPageState();
 }
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
+  Future<CustDetail> futureCustDetail;
+
+  @override
+  void initState() {
+    super.initState();
+    futureCustDetail = fetchCustDetail();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,139 +56,149 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         centerTitle: true,
         backgroundColor: Colors.red,
       ),
-      body: Padding(
-        padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
-        child: ListView(
-          children: <Widget>[
-            Center(
-              child: CircleAvatar(
-                backgroundImage: AssetImage('assets/default.png'),
-                radius: 50.0,
-              ),
-            ),
-            Divider(
-              height: 60.0,
-              color: Colors.red,
-            ),
-            Text(
-              'Username:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXXXXXXXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Password:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXXXXXXXXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Name:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXX XXX XXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Email Address:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXXXXX@XXX.com',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Gender:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Birthday:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XX-XX-XXXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              'Address:',
-            ),
-            SizedBox(
-              height: 10.0,
-            ),
-            Text(
-              'XXXXXXXXX',
-              style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-      ),
-       bottomNavigationBar: BottomNavigationBar(
+      body: FutureBuilder<CustDetail>(
+          future: futureCustDetail,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+                child: ListView(
+                  children: <Widget>[
+                    Center(
+                      child: CircleAvatar(
+                        backgroundImage: AssetImage('assets/default.png'),
+                        radius: 50.0,
+                      ),
+                    ),
+                    Divider(
+                      height: 60.0,
+                      color: Colors.red,
+                    ),
+                    Text(
+                      'Username:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.username,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Password:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.password,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Name:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.custname,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Email Address:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.email,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Gender:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.gender,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Birthday:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.birthdate,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    Text(
+                      'Address:',
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    Text(
+                      snapshot.data.address,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
+
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
+          }),
+      bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.red,
         selectedItemColor: Colors.black,
         unselectedItemColor: Colors.yellow[200],
         items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
               icon: Icon(Icons.person), label: 'Personal Info'),
         ],

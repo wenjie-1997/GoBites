@@ -21,19 +21,19 @@ app.post('/login', async(req, res)=>{
         if(rows[0].usertype == 'customer'){
           console.log("Login Sucessful as Customer");
           
-          res.json("Login Sucessful as Customer");
+          res.send({status:"Login Sucessful as Customer",id: rows[0].UID.toString()});
            return;
         }
         else if(rows[0].usertype == 'restaurant'){
           console.log("Login Sucessful as Restaurant");
           
-          res.json("Login Sucessful as Restaurant");
+          res.send({status:"Login Sucessful as Restaurant",id: rows[0].UID.toString()});
            return;
         }
          
       }
       else{
-        res.json("Username and/or password is not valid");
+        res.send({status:"Fail to Login",id:null});
         return;
       }
       }
@@ -79,9 +79,49 @@ app.post('/restregister', async(req, res)=>{
     });
 });
 
-  app.get('/', (req, res) => {
-    res.send("Hello World");
+app.get('/customer/:customerId', async(req, res) => {
+  const cid = req.params.customerId;
+  await db.query(`SELECT user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo
+  FROM customer
+  INNER JOIN user ON  user.fk_cid=customer.CID
+  WHERE user.UID = ?`
+  , [cid], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive data Sucessful");
+      res.json(rows[0]);
+      return;
+    }
   });
+});
+
+app.get('/restaurant/:restaurantId', async(req, res) => {
+  const rid = req.params.restaurantId;
+  await db.query(`SELECT user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  FROM restaurant
+  INNER JOIN user ON  user.fk_rid=restaurant.RID
+  WHERE user.UID = ?`
+  , [rid], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive data Sucessful");
+      res.json(rows[0]);
+      return;
+    }
+  });
+});
+
+app.get('/', (req, res) => {
+  res.send("Hello World");
+});
 
 async function main(){
     db = await mysql.createConnection({

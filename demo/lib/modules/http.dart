@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:http/http.dart' as http;
 
 class RequestResult {
@@ -11,11 +9,11 @@ class RequestResult {
 const PROTOCOL = 'http';
 const DOMAIN = '10.0.2.2:8000';
 
-Future<RequestResult> http_get(String route, [dynamic data]) async {
-  var dataStr = jsonEncode(data);
-  var url = "$PROTOCOL://$DOMAIN/$route?data=$dataStr";
+Future<http.Response> http_get(String route) async {
+  //var dataStr = jsonEncode(data);
+  var url = "http://$DOMAIN$route";
   var result = await http.get(url);
-  return RequestResult(true, jsonDecode(result.body));
+  return result;
 }
 
 Future<http.Response> http_post(String route, [dynamic data]) async {
