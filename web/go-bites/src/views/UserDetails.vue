@@ -3,7 +3,8 @@
     <div class="user-form-details" v-if="userExist && userId!='-1'">
         <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
         <div class="customer-details" v-if="user">
-            <h1>User Info</h1>
+            <h1 v-if="!isLoading">User Info</h1>
+            <h1 v-if="isLoading">Processing...</h1>
             <form action="#" v-if="userType == 'customer'">
                 <div class="form-content" v-if='!isLoading'>
                     <div  class="form-group">
@@ -23,8 +24,14 @@
 
                     <div class="form-group">
                         <label>Gender</label>
-                        <label>Male <input type="radio" value="Male" v-model="customer.gender" :disabled="readOnlyStatus" /></label>
-                        <label>Female <input type="radio" value="Female" v-model="customer.gender" :disabled="readOnlyStatus" /></label>
+                        <div class="custom-control custom-radio custom-control-inline" >
+                            <input type="radio" class="custom-control-input" value="Female" name="gender" id="female" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="custom-control-label" for="female">Female</label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" value="Male" name="gender" id="male" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="custom-control-label" for="male">Male</label>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -392,11 +399,6 @@ export default {
                 }
             }
 
-            input[type=radio] {
-                margin-right: 40px;
-                border: 1px solid black;
-            }
-
             textarea {
                 resize: none;
             }
@@ -405,6 +407,12 @@ export default {
                 text-align: left;
                 margin-left: 0;
                 width: 35%;
+
+                input {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                }
             }
         }
 
