@@ -5,16 +5,13 @@
         <table v-if="customers">
             <thead>
                 <tr>
-                    <th :colspan="Object.keys(this.customers[0]).length + 2">
+                    <th :colspan="customerLabels.length">
                         <h3>Customer Page</h3>
                     </th>
                 </tr>
                 <tr>
-                    <th v-for="(value, propertyName, index) in customers[0]" :key="index" >
-                        {{ propertyName }}                
-                    </th>
-                    <th>
-                        More Details
+                    <th v-for="label in customerLabels" :key="label.label" >
+                        {{ label.label }}                
                     </th>
                 </tr>
             </thead>
@@ -25,7 +22,7 @@
                         {{ value }}
                     </td>
                     <td>
-                        <input type="button" class="btn btn-primary" @click="viewUserDetails(customer)" value="More Details" />
+                        <input type="button" class="btn btn-primary" @click="viewUserDetails(customer)" value="Manage" />
                     </td>
                 </tr>
                 <tr>
@@ -55,6 +52,17 @@ export default {
             isLoading: false,
             fullPage: true,
             loader: 'bars',
+
+            customerLabels: [
+                {label :"Customer ID"},
+                {label :"Customer Name"},
+                {label :"Birth Date (YYYY-MM-DD)"},
+                {label :"Gender"},
+                {label :"Address"},
+                {label :"Email"},
+                {label :"Contact Number"},
+                {label :"Manage User"}
+            ],
         }
     },
     methods: {

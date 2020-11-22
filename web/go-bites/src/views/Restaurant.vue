@@ -5,27 +5,24 @@
         <table v-if="restaurants">
             <thead>
                 <tr>
-                    <th :colspan="Object.keys(this.restaurants[0]).length + 1">
+                    <th :colspan="restaurantLabels.length">
                         <h3>Restaurant Page</h3>
                     </th>
                 </tr>
                 <tr>
-                    <th v-for="(value, propertyName, index) in restaurants[0]" :key="index" v-show="value">
-                        {{ propertyName }}
-                    </th>
-                    <th>
-                        More Details
+                    <th v-for="label in restaurantLabels" :key="label.label">
+                        {{ label.label }}
                     </th>
                 </tr>
             </thead>
 
             <tbody>
                 <tr v-for="restaurant in restaurants" :key="restaurant.RID">
-                    <td v-for="(value, propertyName, index) in restaurant" :key="index" v-show="value">
+                    <td v-for="(value, propertyName, index) in restaurant" :key="index" v-show="value && value !== 'fk_mlid' ">
                         {{ value && value.length > 12 ? value.substring(0, 12) + "..." : value}}
                     </td>
                     <td>
-                        <input type="button" class="btn btn-primary" @click="viewUserDetails(restaurant)" value="More Details" />
+                        <input type="button" class="btn btn-primary" @click="viewUserDetails(restaurant)" value="Manage" />
                     </td>
                 </tr>
                 <tr>
@@ -54,6 +51,17 @@ export default {
             isLoading: false,
             fullPage: true,
             loader: 'bars',
+
+            restaurantLabels: [
+                {label: "ID"},
+                {label: "Name"},
+                {label: "Owner"},
+                {label: "Address"},
+                {label: "Style"},
+                {label: "Email"},
+                {label: "Contact Number"},
+                {label: "Manage User"},
+            ]
         }
     },
     methods: {
