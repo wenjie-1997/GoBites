@@ -119,6 +119,41 @@ app.get('/restaurant/:restaurantId', async(req, res) => {
   });
 });
 
+app.get('/restaurants', async(req, res) => {
+  await db.query(`SELECT RID,restaurantname
+  FROM restaurant`
+  , [], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive data Sucessful");
+      res.json(rows);
+      return;
+    }
+  });
+});
+
+app.get('/restaurants/:rid', async(req, res) => {
+  const rid = req.params.restaurantId;
+  await db.query(`SELECT restaurantname, ownername, address, restaurantstyle, email, telephoneNo
+  FROM restaurant WHERE RID = ?`
+  , [rid], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive data Sucessful");
+      res.json(rows);
+      return;
+    }
+  });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

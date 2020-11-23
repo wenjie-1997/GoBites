@@ -1,15 +1,30 @@
+import 'package:demo/modules/restdetail.dart';
+import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'custMenupage.dart';
 
-/*class CustomerRestaurantPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Customer Restaurant Page',
-      home: CustRestaurantPage(),
-    );
+List<RestList> parseRestaurants(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<RestList>((json) => RestList.fromJson(json)).toList();
+}
+
+Future<List<RestList>> fetchRestaurantList() async {
+  final response = await http_get('/restaurants');
+
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return compute(parseRestaurants, response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
   }
-}*/
+}
 
 class CustRestaurantPage extends StatefulWidget {
   @override
@@ -17,56 +32,123 @@ class CustRestaurantPage extends StatefulWidget {
 }
 
 class _CustRestaurantPageState extends State<CustRestaurantPage> {
+  Future<List<RestList>> restaurants;
+
+  @override
+  void initState() {
+    super.initState();
+    restaurants = fetchRestaurantList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ), 
-        backgroundColor: Colors.red,
-        title: Text('Pick a Restaurant'),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: 
-          EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-        child: ListView(
-            children: <Widget>[
-              OutlineButton(
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: 
-                            (context) => CustMenuPage())
-                            );
-                          },
-                          padding: EdgeInsets.all(10.0),
-                          child: Row(
+        backgroundColor: Colors.yellow[200],
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          backgroundColor: Colors.red,
+          title: Text('Pick a Restaurant'),
+          centerTitle: true,
+        ),
+        body: FutureBuilder<List<RestList>>(
+          future: restaurants,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                  child: ListView.builder(
+                      padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                      itemCount: snapshot.data.length,
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (BuildContext context, int index) {
+                        //return Text('${snapshot.data[index].restaurantname}');
+                        return Card(
+                          elevation: 10.0,
+                          child: Column(
                             children: <Widget>[
-                              Expanded(
-                                flex: 1,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      AssetImage('assets/default.png'),
-                                  radius: 30.0,
+                              OutlineButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              CustMenuPage()));
+                                },
+                                padding: EdgeInsets.all(10.0),
+                                child: Row(
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 1,
+                                      child: CircleAvatar(
+                                        backgroundImage:
+                                            AssetImage('assets/default.png'),
+                                        radius: 30.0,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text(
+                                        snapshot.data[index].restaurantname,
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Text('Mc Donald\'s',
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),),
-                              ),
+                              )
                             ],
                           ),
-                        )
-            ],
-          ),
-        ),
+                        );
+                      }));
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}");
+            }
 
-    );
+            // By default, show a loading spinner.
+            return CircularProgressIndicator();
+          },
+        ));
   }
 }
+// Padding(
+//     padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+//     child: ListView(
+//       children: <Widget>[
+//         OutlineButton(
+//           onPressed: () {
+//             Navigator.push(context,
+//                 MaterialPageRoute(builder: (context) => CustMenuPage()));
+//           },
+//           padding: EdgeInsets.all(10.0),
+//           child: Row(
+//             children: <Widget>[
+//               Expanded(
+//                 flex: 1,
+//                 child: CircleAvatar(
+//                   backgroundImage: AssetImage('assets/default.png'),
+//                   radius: 30.0,
+//                 ),
+//               ),
+//               Expanded(
+//                 flex: 3,
+//                 child: Text(
+//                   'Mc Donald\'s',
+//                   style: TextStyle(
+//                     fontSize: 20.0,
+//                     fontWeight: FontWeight.bold,
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         )
+//       ],
+//     ),
+//   ),
+//     );
+//   }
+// }

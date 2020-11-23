@@ -24,9 +24,9 @@ class _CustMenuPageState extends State<CustMenuPage> {
         backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-          ), 
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
           title: Text('Make an Order'),
           centerTitle: true,
           backgroundColor: Colors.red,
@@ -65,8 +65,10 @@ class _CustMenuPageState extends State<CustMenuPage> {
                 bottom: TabBar(
                   tabs: [
                     Tab(
-                      child: Text('Menu List',
-                      style: TextStyle(fontSize: 20.0),),
+                      child: Text(
+                        'Menu List',
+                        style: TextStyle(fontSize: 20.0),
+                      ),
                     ),
                     //Tab(child: Text('Drinks'),),
                   ],
@@ -154,8 +156,10 @@ class _CustMenuPageState extends State<CustMenuPage> {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-          backgroundColor: Colors.amber[100],
-              title: new Text("Restaurant Details",),
+              backgroundColor: Colors.amber[100],
+              title: new Text(
+                "Restaurant Details",
+              ),
               content: new Container(
                 height: 300.0,
                 width: 200.0,
