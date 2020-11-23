@@ -1,16 +1,16 @@
 <template>
 <div id="Customer">
-    <div class="customers-list">
+    <div class="table-responsive-sm">
         <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-        <table v-if="customers">
-            <thead>
+        <table v-if="customers" class="table">
+            <thead class="thead-dark">
                 <tr>
-                    <th :colspan="customerLabels.length">
+                    <th :colspan="customerLabels.length" scope="col">
                         <h3>Customer Page</h3>
                     </th>
                 </tr>
                 <tr>
-                    <th v-for="label in customerLabels" :key="label.label" >
+                    <th v-for="label in customerLabels" :key="label.label" scope="col">
                         {{ label.label }}                
                     </th>
                 </tr>
@@ -18,15 +18,12 @@
 
             <tbody>
                 <tr v-for="customer in customers" :key="customer.CID">
-                    <td v-for="(value, propertyName, index) in customer" :key="index" >
-                        {{ value }}
+                    <td v-for="(value, propertyName, index) in customer" :key="index" scope="row">
+                        {{ value &&  value.length > 20 ? value.substring(0, 20) + "..." : value}}
                     </td>
                     <td>
-                        <input type="button" class="btn btn-primary" @click="viewUserDetails(customer)" value="Manage" />
+                        <input type="button" class="btn btn-primary form-control" @click="viewUserDetails(customer)" value="Manage" />
                     </td>
-                </tr>
-                <tr>
-                    <th class="last-cell" :colspan="Object.keys(this.customers[0]).length + 2"></th>
                 </tr>
             </tbody>
         </table>
@@ -54,9 +51,9 @@ export default {
             loader: 'bars',
 
             customerLabels: [
-                {label :"Customer ID"},
+                {label :"ID"},
                 {label :"Customer Name"},
-                {label :"Birth Date (YYYY-MM-DD)"},
+                {label :"Birth Date"},
                 {label :"Gender"},
                 {label :"Address"},
                 {label :"Email"},
@@ -90,7 +87,7 @@ export default {
 <style lang="scss">
 #Customer {
     width: 80%;
-    position: absolute;
+    position: relative;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -98,30 +95,5 @@ export default {
     /* IE 9 */
     -webkit-transform: translate(-50%, -50%);
     /* Chrome, Safari, Opera */
-
-    .customers-list {
-    text-align: center;
-
-    table {
-        margin-left: auto;
-        margin-right: auto;
-
-        td,
-        th {
-            padding: 10px 10px 10px 10px;
-            border: 1px solid black;
-        }
-
-        td {
-            border-bottom: none;
-            border-top: none;
-        }
-
-        .last-cell {
-            border: none;
-            border-top: 1px solid black;
-        }
-    }
-}
 }
 </style>

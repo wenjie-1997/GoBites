@@ -10,6 +10,18 @@
                 </span>
             </button>
 
+            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
+                <span class="caret">
+                    <router-link class="top-menu" to="/viewMenuList"> Menu List </router-link>
+                </span>
+            </button>
+
+            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
+                <span class="caret">
+                    <router-link class="top-menu" to="/restaurantList"> Restaurant List </router-link>
+                </span>
+            </button>
+
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" v-if="isAuthenticated">
@@ -88,11 +100,15 @@ export default {
 }
 
 .top-menu {
-    color: #ddcfcf;
+    color: #ffffff;
 
     &:hover {
-        color: #ffffff;
         text-decoration: none;
+        color: #ffffff;
+    }
+
+    &:selected {
+        background-color: #ffffff;
     }
 }
 
