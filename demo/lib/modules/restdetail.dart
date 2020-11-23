@@ -32,13 +32,14 @@ class RestDetail {
 }
 
 class RestList {
-  final String rid;
+  final int RID;
   final String restaurantname;
 
-  RestList({this.rid, this.restaurantname});
+  RestList({this.RID, this.restaurantname});
 
   factory RestList.fromJson(Map<String, dynamic> json) {
-    return RestList(rid: json['rid'], restaurantname: json['restaurantname']);
+    return RestList(
+        RID: json['RID'] as int, restaurantname: json['restaurantname']);
   }
 }
 

@@ -137,7 +137,7 @@ app.get('/restaurants', async(req, res) => {
 });
 
 app.get('/restaurants/:rid', async(req, res) => {
-  const rid = req.params.restaurantId;
+  const rid = req.params.rid;
   await db.query(`SELECT restaurantname, ownername, address, restaurantstyle, email, telephoneNo
   FROM restaurant WHERE RID = ?`
   , [rid], (error, rows, fields) => {
@@ -148,7 +148,7 @@ app.get('/restaurants/:rid', async(req, res) => {
   ``}
     else{
       console.log("Retreive data Sucessful");
-      res.json(rows);
+      res.send(rows[0]);
       return;
     }
   });

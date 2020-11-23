@@ -1,9 +1,12 @@
+import 'dart:async';
+import 'dart:core';
+
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
-import 'custMenupage.dart';
+import 'package:demo/pages/custMenupage.dart';
 
 List<RestList> parseRestaurants(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -17,7 +20,7 @@ Future<List<RestList>> fetchRestaurantList() async {
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return compute(parseRestaurants, response.body);
+    return parseRestaurants(response.body);
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -57,61 +60,65 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
           future: restaurants,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Container(
-                  child: ListView.builder(
-                      padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-                      itemCount: snapshot.data.length,
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (BuildContext context, int index) {
-                        //return Text('${snapshot.data[index].restaurantname}');
-                        return Card(
-                          elevation: 10.0,
-                          child: Column(
-                            children: <Widget>[
-                              OutlineButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              CustMenuPage()));
-                                },
-                                padding: EdgeInsets.all(10.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 1,
-                                      child: CircleAvatar(
-                                        backgroundImage:
-                                            AssetImage('assets/default.png'),
-                                        radius: 30.0,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Text(
-                                        snapshot.data[index].restaurantname,
-                                        style: TextStyle(
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      }));
+              return restaurantListView(context, snapshot);
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }
 
             // By default, show a loading spinner.
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           },
         ));
+  }
+
+  Widget restaurantListView(BuildContext context, AsyncSnapshot snapshot) {
+    List<RestList> restaurants = snapshot.data;
+    return ListView.builder(
+        padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+        itemCount: snapshot.data.length,
+        scrollDirection: Axis.vertical,
+        itemBuilder: (context, index) {
+          return Card(
+            elevation: 10.0,
+            child: Column(
+              children: <Widget>[
+                OutlineButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                CustMenuPage(rest: restaurants[index])));
+                  },
+                  padding: EdgeInsets.all(10.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage('assets/default.png'),
+                          radius: 30.0,
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Text(
+                          restaurants[index].RID.toString() +
+                              " " +
+                              restaurants[index].restaurantname,
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }
 // Padding(
