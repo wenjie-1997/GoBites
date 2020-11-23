@@ -34,29 +34,104 @@ class _CustMenuPageState extends State<CustMenuPage> {
         body: Column(
           children: <Widget>[
             SizedBox(
-                height: 100.0,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                      child: Container(
-                        padding: EdgeInsets.all(10.0),
+                height: 200.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView(
+                    //crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Center(
                         child: Text(
                           'Mc Donald\'s',
                           style: TextStyle(
-                            fontSize: 20.0,
+                            fontSize: 30.0,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: IconButton(
-                        icon: Icon(Icons.info),
-                        onPressed: _showRestaurantDetail,
+                      SizedBox(
+                        height: 20.0,
                       ),
-                    ),
-                  ],
+                      Text(
+                        'Details',
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        'Mc Donald\'s is....',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        'Operating Hours',
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Text(
+                        'All Day',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5.0,
+                      ),
+                      Text(
+                        '9am to 9pm',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Text(
+                        'Contact Us',
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.phone),
+                          Text(
+                            '0X-XXXXXXX',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20.0,
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(Icons.email),
+                          Text(
+                            'XXXXXX@XXX.com',
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 )),
             SizedBox(
               height: 50.0,
@@ -152,7 +227,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
     );
   }
 
-  _showRestaurantDetail() {
+  /*_showRestaurantDetail() {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
@@ -271,5 +346,5 @@ class _CustMenuPageState extends State<CustMenuPage> {
                 )
               ],
             ));
-  }
+  }*/
 }
