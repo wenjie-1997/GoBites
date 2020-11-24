@@ -154,6 +154,24 @@ app.get('/restaurants/:rid', async(req, res) => {
   });
 });
 
+app.get('/menu/:rid', async(req, res) => {
+  const rid = req.params.rid;
+  await db.query(`SELECT itemName, itemPrice, itemPhoto, itemDesc
+  FROM menuitem WHERE fk_rid = ?`
+  , [rid], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive data Sucessful");
+      res.send(rows);
+      return;
+    }
+  });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

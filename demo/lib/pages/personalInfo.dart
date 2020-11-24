@@ -191,7 +191,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             }
 
             // By default, show a loading spinner.
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           }),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.red,
