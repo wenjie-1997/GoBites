@@ -3,6 +3,7 @@
 // This sample shows an [AppBar] with two simple actions. The first action
 // opens a [SnackBar], while the second action navigates to a new page.
 import 'dart:convert';
+import 'dart:ui';
 import 'package:demo/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
@@ -34,6 +35,10 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: _title,
+      theme: ThemeData(
+        primaryColor: Colors.yellow[800],
+        accentColor: Colors.yellow[600],
+      ),
       home: MyStatelessWidget(),
     );
   }
@@ -50,8 +55,12 @@ class MyStatelessWidget extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: const Text('Register an Account'),
+        title: const Text(
+          'Register an Account',
+          style: TextStyle(color: Colors.black),
+        ),
       ),
+      backgroundColor: Colors.yellow[200],
       body: RegistrationForm(),
     );
   }
@@ -64,14 +73,7 @@ class RegistrationForm extends StatefulWidget {
   }
 }
 
-// Create a corresponding State class.
-// This class holds data related to the form.
 class RegistrationFormState extends State<RegistrationForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -131,8 +133,12 @@ class RegistrationFormState extends State<RegistrationForm> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Container(
+                  padding: EdgeInsets.only(top: 10),
                   child: Text(
                     'User Type:',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -166,6 +172,15 @@ class RegistrationFormState extends State<RegistrationForm> {
           Padding(
             padding: EdgeInsets.only(left: 20, bottom: 10),
             child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    if (states.contains(MaterialState.pressed))
+                      return Colors.yellow[800].withOpacity(0.5);
+                    return Colors.yellow[800]; // Use the component's default.
+                  },
+                ),
+              ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   if (usertype == "customer") {
@@ -263,6 +278,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
         appBar: AppBar(title: Text('Customer Registration')),
+        backgroundColor: Colors.yellow[200],
         body: SingleChildScrollView(
           child: Form(
             key: _formKey,
@@ -340,10 +356,13 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                       ),
                     ),
                     Row(children: [
-                      Text("${birthdate != null ? birthdate.toLocal() : ''}"
-                          .split(' ')[0]),
+                      Text(
+                          "${birthdate != null ? birthdate.toLocal() : 'Please Select the date'}"
+                              .split(' ')[0]),
                       Material(
                         child: Center(
+                            child: Container(
+                          color: Colors.yellow[200],
                           child: IconButton(
                             icon: Icon(
                               Icons.calendar_today_sharp,
@@ -351,7 +370,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                             color: Colors.black,
                             onPressed: () => _selectDate(context),
                           ),
-                        ),
+                        )),
                       ),
                     ]),
                   ]),
@@ -424,6 +443,16 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                 Padding(
                   padding: EdgeInsets.all(20),
                   child: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed))
+                            return Colors.yellow[800].withOpacity(0.5);
+                          return Colors
+                              .yellow[800]; // Use the component's default.
+                        },
+                      ),
+                    ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         customerRegister();
@@ -501,11 +530,13 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
     return Scaffold(
-      appBar: AppBar(title: Text('Customer Registration')),
+      appBar: AppBar(title: Text('Restaurant Registration')),
+      backgroundColor: Colors.yellow[200],
       body: SingleChildScrollView(
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 padding: EdgeInsets.only(left: 20, bottom: 15),
@@ -658,6 +689,16 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
               Padding(
                 padding: EdgeInsets.only(left: 20, bottom: 15),
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.yellow[800].withOpacity(0.5);
+                        return Colors
+                            .yellow[800]; // Use the component's default.
+                      },
+                    ),
+                  ),
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       restaurantRegister();
