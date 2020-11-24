@@ -1,53 +1,30 @@
 <template>
 <div id="restaurant">
-    <div class="table-responsive-sm">
-        <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-        <table v-if="restaurants" class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th :colspan="restaurantLabels.length" scope="col">
-                        <h3>Restaurant Page</h3>
-                    </th>
-                </tr>
-                <tr>
-                    <th v-for="label in restaurantLabels" :key="label.label" scope="col">
-                        {{ label.label }}
-                    </th>
-                </tr>
-            </thead>
+    <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
 
-            <tbody>
-                <tr v-for="restaurant in restaurants" :key="restaurant.RID" scope="row">
-                    <td v-for="(value, propertyName, index) in restaurant" :key="index" v-show="value && value !== 'fk_mlid' ">
-                        {{ value && value.length > 15 ? value.substring(0, 15) + "..." : value}}
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-primary form-control" @click="viewUserDetails(restaurant)" value="Manage" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <UserInformation v-if="restaurants" @viewUserDetails="viewUserDetails" :userType="userType" :users="restaurants" :userLabels="restaurantLabels" :unWantedProperty="unWantedProperty" />
 </div>
 </template>
 
 <script>
 import RestaurantDataService from '../services/RestaurantDataService';
-import loading from '../mixins/loading.vue'
+import loading from '../mixins/loading.vue';
+import UserInformation from '../components/UserInformation.vue';
 
 export default {
     name: 'Restaurant',
     components: {
-        loading
+        loading,
+        UserInformation
     },
     data() {
         return {
             restaurants: null,
-            urlPath: '/userDetails',
-            userId: '',
             isLoading: false,
             fullPage: true,
             loader: 'bars',
+            unWantedProperty: 'fk_mlid',
+            userType: 'restaurant',
 
             restaurantLabels: [
                 {label: "ID"},
@@ -62,8 +39,8 @@ export default {
         }
     },
     methods: {
-        retrieveAllRestaurantsInformation() {
-            RestaurantDataService.getAllRestaurantsInformation()
+        async retrieveAllRestaurantsInformation() {
+            await RestaurantDataService.getAllRestaurantsInformation()
                 .then(response => {
                     this.isLoading = false;
                     this.restaurants = response.data;

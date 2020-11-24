@@ -2,8 +2,8 @@
 <div id="login">
     <content>
         <form class="login-form" method="post" @submit.prevent="login">
-            <div class="form-content form-custom">
-                <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+            <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+            <div class="form-content form-custom" v-if="admin">
                 <h3>Login</h3>
 
                 <div class="form-group">

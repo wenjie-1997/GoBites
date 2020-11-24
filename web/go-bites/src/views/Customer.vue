@@ -1,54 +1,30 @@
 <template>
 <div id="Customer">
-    <div class="table-responsive-sm">
-        <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-        <table v-if="customers" class="table">
-            <thead class="thead-dark">
-                <tr>
-                    <th :colspan="customerLabels.length" scope="col">
-                        <h3>Customer Page</h3>
-                    </th>
-                </tr>
-                <tr>
-                    <th v-for="label in customerLabels" :key="label.label" scope="col">
-                        {{ label.label }}                
-                    </th>
-                </tr>
-            </thead>
+    <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
 
-            <tbody>
-                <tr v-for="customer in customers" :key="customer.CID">
-                    <td v-for="(value, propertyName, index) in customer" :key="index" scope="row">
-                        {{ value &&  value.length > 20 ? value.substring(0, 20) + "..." : value}}
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-primary form-control" @click="viewUserDetails(customer)" value="Manage" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <UserInformation v-if='customers' @viewUserDetails="viewUserDetails" :userType="userType" :users="customers" :userLabels="customerLabels" :unWantedProperty="unWantedProperty" />
 </div>
 </template>
 
 <script>
 import CustomerDataService from '../services/CustomerDataService';
 import loading from '../mixins/loading.vue'
+import UserInformation from '../components/UserInformation.vue'
 
 export default {
     name: 'customer',
     components: {
-        loading
+        loading,
+        UserInformation,
     },
     data() {
         return {
             customers: null,
-            users: null,
-            urlPath: '/userDetails',
-            userId: '',
             isLoading: false,
             fullPage: true,
             loader: 'bars',
+            userType: "customer",
+            unWantedProperty: "none",
 
             customerLabels: [
                 {label :"ID"},
@@ -63,8 +39,8 @@ export default {
         }
     },
     methods: {
-        retrieveAllCustomersInformation() {
-            CustomerDataService.getAllCustomersInformation()
+        async retrieveAllCustomersInformation() {
+            await CustomerDataService.getAllCustomersInformation()
                 .then(response => {
                     this.isLoading = false;
                     this.customers = response.data;

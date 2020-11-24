@@ -86,7 +86,8 @@ html,
 }
 
 .auth-wrapper {
-    min-height: 1200px;
+    min-height: 100vh;
+    min-width: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
