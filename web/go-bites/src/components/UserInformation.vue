@@ -10,7 +10,7 @@
                     </tr>
                     <tr>
                         <th v-for="label in userLabels" :key="label.label" scope="col">
-                            {{ label.label }}                
+                            {{ label.label }}
                         </th>
                     </tr>
                 </thead>
