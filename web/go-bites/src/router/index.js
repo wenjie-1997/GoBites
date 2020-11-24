@@ -94,6 +94,6 @@ export default new Router({
           path: '/restaurantList',
           component: RestaurantList,
           beforeEnter: ifAuthenticated
-        }
+        },
     ],
 })

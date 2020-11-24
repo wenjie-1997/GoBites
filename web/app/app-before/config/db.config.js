@@ -1,7 +1,7 @@
 // module.exports = {
 //     HOST: "johnny.heliohost.org",
-//     USER: "ainalfa_ainal",
-//     PASSWORD: "ainal@123",
+//     USER: "ainalfa_ridzwan",
+//     PASSWORD: "ridzwan@123",
 //     DB: "ainalfa_go-bites-db",
 //     dialect: "mysql",
 //     pool: {

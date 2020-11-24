@@ -25,19 +25,19 @@
                                 <li>
                                     <router-link class="nav-link" to="/customer"><img class="img" src="../assets/icon/icon-customer.png" width="35px" alt="customer-icon" /> Customer</router-link>
                                 </li>
+
+                                <li>
+                                  <router-link class="nav-link" to="/viewMenuList"> Menu List</router-link>
+                                </li>
+
+                                <li>
+                                <router-link class="nav-link" to="/restaurantList"> Restaurant List</router-link>
+                                </li>
+                                
                             </ul>
 
                         </div>
                       </li>
-
-                    <li>
-                      <router-link class="top-menu" to="/viewMenuList"> Menu List </router-link>
-                    </li>
-
-                    <li>
-                    <router-link class="top-menu" to="/restaurantList"> Restaurant List </router-link>
-                    </li>
-
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
                         <button class="btn btn-primary top-menu" type="button" data-toggle="dropdown">
                             <span class="caret">Logout</span>

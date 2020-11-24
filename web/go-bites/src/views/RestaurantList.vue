@@ -1,7 +1,7 @@
 <template>
      <div>
       <div class="container">
-        <div class="jumbotron" style="background-image: url('foodpic.jpg'); background-repeat: no-repeat; color: white">
+        <div class="jumbotron" style="background-image: url('../assets/menu/foodpic.jpg'); background-repeat: no-repeat; color: black">
           <h1>GoBites Restaurant</h1>
           <p>The following page show the restaurant list that registered into GoBites.</p>
         </div>
@@ -54,6 +54,7 @@
             <p>Restaurant type/style: Thailand Style</p>
             <p>Phone number: 0191321723</p>
             <p>Email:parallax123@gmail.com</p>
+          </div>
           </div>
         </div>
       </div>

@@ -46,13 +46,6 @@
                   <p>Delivery time:</p>
                   <p>Add ons:</p>
               </div>
-              <div class="w3-third">
-                <h2>Menu 4</h2>
-                  <p>Price:</p>
-                  <p>Location:</p>
-                  <p>Delivery time:</p>
-                  <p>Add ons:</p>
-              </div>
           </div>
      </div>
 </template>
