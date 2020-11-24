@@ -1,6 +1,6 @@
 <template>
 <div id="restaurant">
-    <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+    <loading v-if='isLoading' />
 
     <UserInformation v-if="restaurants" @viewUserDetails="viewUserDetails" :userType="userType" :users="restaurants" :userLabels="restaurantLabels" :unWantedProperty="unWantedProperty" />
 </div>
@@ -21,8 +21,6 @@ export default {
         return {
             restaurants: null,
             isLoading: false,
-            fullPage: true,
-            loader: 'bars',
             unWantedProperty: 'fk_mlid',
             userType: 'restaurant',
 

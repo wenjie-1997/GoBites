@@ -11,5 +11,5 @@ module.exports = app => {
 
     router.delete("/", menuItem.deleteOne);
 
-    app.use("/api/menuItem", router);
+    app.use("/api/menuItems", router);
 }

@@ -12,7 +12,6 @@ import BreakfastMenu from '../views/BreakfastMenu.vue';
 import DinnerMenu from '../views/DinnerMenu.vue';
 import LunchMenu from '../views/LunchMenu.vue';
 import TeatimeMenu from '../views/TeatimeMenu.vue';
-import RestaurantList from '../views/RestaurantList.vue';
 
 Vue.use(Router)
 
@@ -88,11 +87,6 @@ export default new Router({
         {
           path: '/teatimeMenu',
           component: TeatimeMenu,
-          beforeEnter: ifAuthenticated
-        },
-        {
-          path: '/restaurantList',
-          component: RestaurantList,
           beforeEnter: ifAuthenticated
         },
     ],

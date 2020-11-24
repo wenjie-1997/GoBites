@@ -2,7 +2,7 @@
 <div id="login">
     <content>
         <form class="login-form" method="post" @submit.prevent="login">
-            <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+            <loading v-if='isLoading' />
             <div class="form-content form-custom" v-if="admin">
                 <h3>Login</h3>
 
@@ -47,10 +47,8 @@ export default {
         return {
             username: '',
             password: '',
-            message: "Either password or username is invalid \nHint: \n    username: admin \n    password: 1234",
+            message: "Either password or username is invalid",
             isLoading: false,
-            fullPage: false,
-            loader: 'bars',
             admin: null,
         }
     },
@@ -59,6 +57,7 @@ export default {
             const type = "admin";
             await UserDataService.getAllUsersOfSameType(type)
                 .then((response) => {
+                    this.isLoading = false;
                     this.admin = response.data[0];
                 })
                 .catch((e) => {
@@ -105,6 +104,7 @@ export default {
         })
     },
     mounted() {
+        this.isLoading = true;
         this.getAdminInformation();
     }
 }

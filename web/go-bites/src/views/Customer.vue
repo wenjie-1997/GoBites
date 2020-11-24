@@ -1,6 +1,6 @@
 <template>
 <div id="Customer">
-    <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+    <loading v-if='isLoading' />
 
     <UserInformation v-if='customers' @viewUserDetails="viewUserDetails" :userType="userType" :users="customers" :userLabels="customerLabels" :unWantedProperty="unWantedProperty" />
 </div>
@@ -21,8 +21,6 @@ export default {
         return {
             customers: null,
             isLoading: false,
-            fullPage: true,
-            loader: 'bars',
             userType: "customer",
             unWantedProperty: "none",
 

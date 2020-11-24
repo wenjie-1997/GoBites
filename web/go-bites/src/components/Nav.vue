@@ -10,18 +10,6 @@
                 </span>
             </button>
 
-            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
-                <span class="caret">
-                    <router-link class="top-menu" to="/viewMenuList"> Menu List </router-link>
-                </span>
-            </button>
-
-            <button class="btn btn-primary" type="button" v-if="isAuthenticated">
-                <span class="caret">
-                    <router-link class="top-menu" to="/restaurantList"> Restaurant List </router-link>
-                </span>
-            </button>
-
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item" v-if="isAuthenticated">
@@ -40,6 +28,14 @@
                             </ul>
 
                         </div>
+                    </li>
+
+                    <li class="nav-item" v-if="isAuthenticated">
+                        <button class="btn btn-primary" type="button" v-if="isAuthenticated">
+                            <span class="caret">
+                                <router-link class="top-menu" to="/viewMenuList"> Menu List </router-link>
+                            </span>
+                        </button>
                     </li>
 
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
