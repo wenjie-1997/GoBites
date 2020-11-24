@@ -86,37 +86,12 @@ html,
 }
 
 .auth-wrapper {
-    height: 1000px;
+    min-height: 100vh;
+    min-width: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
     text-align: left;
-
-    .form-control {
-        border-radius: 24px;
-        box-shadow: 10px 5px 5px rgb(76, 194, 214);
-
-        &:focus {
-            border-color: #167bff;
-            box-shadow: none;
-        }
-    }
-
-    .login-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        button {
-            border-radius: 24px;
-            width: 100px;
-
-            &:hover {
-                border-color: #167bff;
-                box-shadow: 10px 5px 5px rgb(76, 194, 214);
-            }
-        }
-    }
 
     h3 {
         text-align: center;

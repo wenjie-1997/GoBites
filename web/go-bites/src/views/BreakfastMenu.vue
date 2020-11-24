@@ -1,69 +1,63 @@
 <template>
-     <div>
-      <div class="w3-container w3-blue">
-        <h1>GoBites</h1>
-          <p>Breakfast</p>
+     <div id="breakfast">
+      <div class="jumbotron">
+        <h1 class="display-4" >Breakfast</h1>
+        <hr class="my-4">
+
+        <loading v-if='isLoading' />
+        <MenuItem v-if="menuItems" :menuItems="menuItems" :startIndex="startIndex" :endIndex="endIndex" />
       </div>
-
-      <div class="w3-row-padding">
-        <h2>Popular</h2>
-          <div class="w3-four">
-            <h2>Menu 1</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-
-        <h2>Recommended</h2>
-          <div class="w3-third">
-            <h2>Menu 2</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-          <div class="w3-third">
-            <h2>Menu 3</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-          <div class="w3-third">
-            <h2>Menu 4</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-
-        <h2>Browse All</h2>
-          <div class="w3-third">
-            <h2>Menu 1</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-          <div class="w3-third">
-            <h2>Menu 2</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-          <div class="w3-third">
-            <h2>Menu 3</h2>
-              <p>Price:</p>
-              <p>Location:</p>
-              <p>Delivery time:</p>
-              <p>Add ons:</p>
-          </div>
-        </div>
-     </div>
+    </div>
 </template>
 
-<style>
-    @import 'https://www.w3schools.com/w3css/4/w3.css';
+<script>
+import MenuItem from '../components/MenuItem.vue';
+import MenuItemDataService from '../services/MenuItemDataService.js';
+import loading from '../mixins/loading.vue';
+
+export default {
+  name: 'Breakfast',
+  components: {
+    MenuItem,
+    loading,
+  },
+  data() {
+    return {
+      menuItems: null,
+      isLoading: false,
+      startIndex: 0,
+      endIndex: 5
+    }
+  }, 
+  methods: {
+    async getAllMenuItems() {
+      MenuItemDataService.getAllMenuItems()
+        .then(resp => {
+          this.menuItems = resp.data;
+          this.isLoading = false;
+        })
+        .catch(err => {
+          console.log(err.message);
+        })
+    }
+  },
+  mounted() {
+    this.isLoading = true;
+    this.getAllMenuItems();
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import url(https://fonts.googleapis.com/css?family=Vibur);
+
+#breakfast {
+  margin-top: 2%;
+  margin-bottom: 1%;
+  padding-bottom: 20px;
+
+  h1 {
+    font-family: 'Vibur', cursive;
+  }
+}
 </style>

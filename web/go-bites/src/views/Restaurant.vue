@@ -1,56 +1,28 @@
 <template>
 <div id="restaurant">
-    <div class="restaurants-list">
-        <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-        <table v-if="restaurants">
-            <thead>
-                <tr>
-                    <th :colspan="restaurantLabels.length">
-                        <h3>Restaurant Page</h3>
-                    </th>
-                </tr>
-                <tr>
-                    <th v-for="label in restaurantLabels" :key="label.label">
-                        {{ label.label }}
-                    </th>
-                </tr>
-            </thead>
+    <loading v-if='isLoading' />
 
-            <tbody>
-                <tr v-for="restaurant in restaurants" :key="restaurant.RID">
-                    <td v-for="(value, propertyName, index) in restaurant" :key="index" v-show="value && value !== 'fk_mlid' ">
-                        {{ value && value.length > 12 ? value.substring(0, 12) + "..." : value}}
-                    </td>
-                    <td>
-                        <input type="button" class="btn btn-primary" @click="viewUserDetails(restaurant)" value="Manage" />
-                    </td>
-                </tr>
-                <tr>
-                    <th class="last-cell" :colspan="Object.keys(this.restaurants[0]).length + 1"></th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <UserInformation v-if="restaurants" @viewUserDetails="viewUserDetails" :userType="userType" :users="restaurants" :userLabels="restaurantLabels" :unWantedProperty="unWantedProperty" />
 </div>
 </template>
 
 <script>
 import RestaurantDataService from '../services/RestaurantDataService';
-import loading from '../mixins/loading.vue'
+import loading from '../mixins/loading.vue';
+import UserInformation from '../components/UserInformation.vue';
 
 export default {
     name: 'Restaurant',
     components: {
-        loading
+        loading,
+        UserInformation
     },
     data() {
         return {
             restaurants: null,
-            urlPath: '/userDetails',
-            userId: '',
             isLoading: false,
-            fullPage: true,
-            loader: 'bars',
+            unWantedProperty: 'fk_mlid',
+            userType: 'restaurant',
 
             restaurantLabels: [
                 {label: "ID"},
@@ -65,8 +37,8 @@ export default {
         }
     },
     methods: {
-        retrieveAllRestaurantsInformation() {
-            RestaurantDataService.getAllRestaurantsInformation()
+        async retrieveAllRestaurantsInformation() {
+            await RestaurantDataService.getAllRestaurantsInformation()
                 .then(response => {
                     this.isLoading = false;
                     this.restaurants = response.data;
@@ -96,31 +68,6 @@ export default {
     /* IE 9 */
     -webkit-transform: translate(-50%, -50%);
     /* Chrome, Safari, Opera */
-
-    .restaurants-list {
-    text-align: center;
-
-    table {
-        margin-left: auto;
-        margin-right: auto;
-
-        td,
-        th {
-            padding: 10px 10px 10px 10px;
-            border: 1px solid black;
-        }
-
-        td {
-            border-bottom: none;
-            border-top: none;
-        }
-
-        .last-cell {
-            border: none;
-            border-top: 1px solid black;
-        }
-    }
-}
 }
 
 </style>

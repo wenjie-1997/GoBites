@@ -2,95 +2,103 @@
 <div id="user-details">
     <div class="user-form-details" v-if="userExist && userId!='-1'">
         <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-        <div class="customer-details" v-if="user">
+        <div v-if="user">
             <h1 v-if="!isLoading">User Info</h1>
             <h1 v-if="isLoading">Processing...</h1>
-            <form action="#" v-if="userType == 'customer'">
-                <div class="form-content" v-if='!isLoading'>
-                    <div  class="form-group">
-                        <label>Customer Id</label>
-                        <input type="number" v-model="user.CID" readonly />
+            <form action="#" v-if="userType == 'customer' && !isLoading">
+                <div class="form-row">
+                    <div class="col-md-2 mb-3">
+                        <label for="cid">ID</label>
+                        <input type="number" id="cid" class="form-control" v-model="user.CID" readonly />
                     </div>
 
-                    <div  class="form-group">
-                        <label>Customer Name</label>
-                        <input type="text" v-model="customer.custname" :readonly="readOnlyStatus" required />
+                    <div  class="col-md-10 mb-3">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" class="form-control" id="customerName" v-model="customer.custname" :readonly="readOnlyStatus" required />
                     </div>
-                    
-                    <div class="form-group">
-                        <label>Birth Date (YYYY-MM-DD)</label>
-                        <input type="text" v-model="customer.birthdate" :readonly="readOnlyStatus" required />
-                    </div>
-
-                    <div class="form-group">
-                        <label>Gender</label>
-                        <div class="custom-control custom-radio custom-control-inline" >
-                            <input type="radio" class="custom-control-input" value="Female" name="gender" id="female" v-model="customer.gender" :disabled="readOnlyStatus">
-                            <label class="custom-control-label" for="female">Female</label>
-                        </div>
-                        <div class="custom-control custom-radio custom-control-inline">
-                            <input type="radio" class="custom-control-input" value="Male" name="gender" id="male" v-model="customer.gender" :disabled="readOnlyStatus">
-                            <label class="custom-control-label" for="male">Male</label>
-                        </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label>Birth Date</label>
+                        <input type="date" class="form-control"  v-model="customer.birthdate" :readonly="readOnlyStatus" required />
                     </div>
 
-                    <div class="form-group">
+                    <div class="col-md-6 mb-3">
                         <label>Email</label>
-                        <input type="email" v-model="customer.email" :readonly="readOnlyStatus" required />
+                        <input type="email" class="form-control" v-model="customer.email" :readonly="readOnlyStatus" required />
                     </div>
+                </div>
 
-                    <div class="form-group">
-                        <label>Address</label>
-                        <textarea rows="3" type="text" v-model="customer.address" :readonly="readOnlyStatus" required />
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div>
+                        <div class="form-check form-check-inline" >
+                            <input type="radio" class="form-check-input" value="Female" name="gender" id="female" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" value="Male" name="gender" id="male" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
                     </div>
+                </div>
 
-                    <div class="button-group">
-                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
-                    </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea rows="4" type="text" class="form-control" v-model="customer.address" :readonly="readOnlyStatus" required />
+                </div>
+
+                <div class="button-group">
+                    <input class="btn btn-primary btn-custom" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                 </div>
             </form>
             <form action="#" v-if="userType == 'restaurant'">
-                <div class="form-content" v-if='!isLoading'>
-                    <div  class="form-group">
-                        <label>Restaurant Id</label>
-                        <input type="number" v-model="restaurant.RID" readonly />
+                <div v-if='!isLoading'>
+                    <div class="form-row">
+                        <div class="col-md-2 mb-3">
+                            <label for="rid">ID</label>
+                            <input type="number" id="rid" class="form-control" v-model="restaurant.RID" readonly />
+                        </div>
+
+                        <div  class="col-md-10 mb-3">
+                            <label for="restaurantName">Restaurant Name</label>
+                            <input type="text" class="form-control" id="restaurantName" v-model="restaurant.restaurantname" :readonly="readOnlyStatus" required />
+                        </div>
                     </div>
 
-                    <div  class="form-group">
-                        <label>Restaurant Name</label>
-                        <input type="text" v-model="restaurant.restaurantname" :readonly="readOnlyStatus" required />
-                    </div>
+                    <div class="form-row">
+                        <div class="col-md-2 mb-3">
+                            <label for="restaurantStyle">Restaurant Style</label>
+                            <input type="text" id="restaurantStyle" class="form-control" v-model="restaurant.restaurantstyle" :readonly="readOnlyStatus" />
+                        </div>
 
-                    <div  class="form-group">
-                        <label>Owner Name</label>
-                        <input type="text" v-model="restaurant.ownername" :readonly="readOnlyStatus" required />
-                    </div>
-
-                    <div  class="form-group">
-                        <label>Restaurant Style</label>
-                        <input type="text" v-model="restaurant.restaurantstyle" :readonly="readOnlyStatus" required />
+                        <div  class="col-md-10 mb-3">
+                            <label for="restaurantOwner">Restaurant Owner</label>
+                            <input type="text" class="form-control" id="restaurantOwner" v-model="restaurant.ownername" :readonly="readOnlyStatus" required />
+                        </div>
                     </div>
 
                     <div  class="form-group">
                         <label>Address</label>
-                        <textarea rows="3" type="text" v-model="restaurant.address" :readonly="readOnlyStatus" required />
+                        <textarea rows="4" type="text" class="form-control" v-model="restaurant.address" :readonly="readOnlyStatus" required />
                     </div>
 
                     <div  class="form-group">
                         <label>Telephone No</label>
-                        <input type="text" v-model="restaurant.telephoneNo" :readonly="readOnlyStatus" required />
+                        <input type="text" class="form-control" v-model="restaurant.telephoneNo" :readonly="readOnlyStatus" required />
                     </div>
 
                     <div class="button-group">
-                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                     </div>
                 </div>
             </form>
@@ -352,13 +360,9 @@ export default {
 </script>
 
 <style lang="scss">
-.customer-details,
-.restaurant-details{
-    text-align: center;
-}
 
 .user-form-details {
-    width: 70%;
+    width: 60%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -369,68 +373,20 @@ export default {
     /* Chrome, Safari, Opera */
     background-color: rgba(151, 38, 38, 0);
 
-    .form-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: rgba(184, 20, 20, 0);
-        border: 10px inset rgb(117, 207, 235);
-        padding: 10px 10px 10px 10px;
-        box-shadow: inset 0 0 10px;
-        transition: 0.2s;
+    h1 {
+        text-align: center;
+    }
 
-        .form-group {
-            display: flex;
-            flex-direction: row;
-            width: 90%;
-            height: 90%;
+    .button-group {
+        text-align: center;
+    }
 
-            input, textarea {
-                width: 65%;
+    .btn-custom {
+        margin: 10px;
+    }
 
-                &:read-only {
-                    background-color: rgb(226, 219, 219);
-                    border: 2px outset rgb(226, 219, 219);
-                }
-
-                &:read-write {
-                    background-color: rgb(255, 255, 255);
-                    border: 2px inset rgb(226, 219, 219);
-                }
-            }
-
-            textarea {
-                resize: none;
-            }
-
-            label {
-                text-align: left;
-                margin-left: 0;
-                width: 35%;
-
-                input {
-                    display: flex;
-                    flex-direction: row;
-                    align-items: center;
-                }
-            }
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: row;
-
-            input[type=button] {
-                margin: 10px 10px 10px 10px;
-            }
-        }
-
-        &:hover {
-            border: 10px outset rgb(117, 207, 235);
-            padding: 20px 20px 20px 20px;
-            box-shadow: 5px 5px 10px;
-            transition: 0.2s;
-        }
+    textarea {
+        resize: none;
     }
 }
 </style>
