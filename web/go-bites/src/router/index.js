@@ -66,28 +66,34 @@ export default new Router({
           beforeEnter: ifAuthenticated
         },
         {
-          path: '/ViewMenuList',
+          path: '/viewMenuList',
           component: ViewMenuList,
+          beforeEnter: ifAuthenticated
         },
         {
-          path: '/BreakfastMenu',
+          path: '/breakfastMenu',
           component: BreakfastMenu,
+          beforeEnter: ifAuthenticated
         },
         {
-          path: '/DinnerMenu',
+          path: '/dinnerMenu',
           component: DinnerMenu,
+          beforeEnter: ifAuthenticated
         },
         {
-          path: '/LunchMenu',
+          path: '/lunchMenu',
           component: LunchMenu,
+          beforeEnter: ifAuthenticated
         },
         {
-          path: '/TeatimeMenu',
+          path: '/teatimeMenu',
           component: TeatimeMenu,
+          beforeEnter: ifAuthenticated
         },
         {
-          path: '/RestaurantList',
+          path: '/restaurantList',
           component: RestaurantList,
+          beforeEnter: ifAuthenticated
         }
     ],
 })

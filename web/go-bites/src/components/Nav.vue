@@ -31,10 +31,11 @@
                       </li>
 
                     <li>
-                      <router-link class="top-menu" to="/ViewMenuList"> Menu List </router-link>
+                      <router-link class="top-menu" to="/viewMenuList"> Menu List </router-link>
                     </li>
+
                     <li>
-                    <router-link class="top-menu" to="/restaurantList"> RestaurantList </router-link>
+                    <router-link class="top-menu" to="/restaurantList"> Restaurant List </router-link>
                     </li>
 
                     <li class="nav-item" v-if="isAuthenticated" @click="logout">
