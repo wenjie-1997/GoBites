@@ -2,7 +2,7 @@
     <div id="menuItem">
         <div class="row" v-if="menuItems">
             <div class="col-md-4" v-for="(menuItem, id) in menuItems" :key="id">
-                <div class="card custom-card" v-if="id >= startIndex && id < endIndex">
+                <div class="card custom-card">
                     <img :src="require(`@/${menuItem.itemPhoto}`)" class="card-img-top" :alt="menuItem.itemPhoto">
                     <div class="card-body">
                     <h5 class="card-title">{{ menuItem.itemName }}</h5>
@@ -24,12 +24,6 @@ export default {
         menuItems: {
             type: Array,
         },
-        startIndex: {
-            type: Number,
-        },
-        endIndex: {
-            type: Number,
-        }
     }
 }
 </script>

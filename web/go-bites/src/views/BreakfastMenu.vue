@@ -5,7 +5,7 @@
         <hr class="my-4">
 
         <loading v-if='isLoading' />
-        <MenuItem v-if="menuItems" :menuItems="menuItems" :startIndex="startIndex" :endIndex="endIndex" />
+        <MenuItem v-if="menuItems" :menuItems="menuItems" />
       </div>
     </div>
 </template>
@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      menuItems: null,
+      menuItems: [],
       isLoading: false,
       startIndex: 0,
       endIndex: 5
@@ -33,7 +33,9 @@ export default {
     async getAllMenuItems() {
       MenuItemDataService.getAllMenuItems()
         .then(resp => {
-          this.menuItems = resp.data;
+          for(var i = this.startIndex; i < this.endIndex; i++) {
+            this.menuItems.push(resp.data[i]);
+          }
           this.isLoading = false;
         })
         .catch(err => {
