@@ -6,8 +6,12 @@ import Login from '../views/Login.vue'
 import Restaurant from '../views/Restaurant.vue';
 import Customer from '../views/Customer.vue';
 import Profile from '../views/Profile.vue';
-import DeliveryDriver from '../views/DeliveryDriver.vue';
 import UserDetails from '../views/UserDetails.vue';
+import ViewMenuList from '../views/ViewMenuList.vue';
+import BreakfastMenu from '../views/BreakfastMenu.vue';
+import DinnerMenu from '../views/DinnerMenu.vue';
+import LunchMenu from '../views/LunchMenu.vue';
+import TeatimeMenu from '../views/TeatimeMenu.vue';
 
 Vue.use(Router)
 
@@ -54,16 +58,36 @@ export default new Router({
           path: '/profile',
           component: Profile,
           beforeEnter: ifAuthenticated
-        }, 
-        {
-          path: '/deliveryDriver',
-          component: DeliveryDriver,
-          beforeEnter: ifAuthenticated
-        }, 
+        },
         {
           path: '/userDetails',
           component: UserDetails,
           beforeEnter: ifAuthenticated
-        }
+        },
+        {
+          path: '/viewMenuList',
+          component: ViewMenuList,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/breakfastMenu',
+          component: BreakfastMenu,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/dinnerMenu',
+          component: DinnerMenu,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/lunchMenu',
+          component: LunchMenu,
+          beforeEnter: ifAuthenticated
+        },
+        {
+          path: '/teatimeMenu',
+          component: TeatimeMenu,
+          beforeEnter: ifAuthenticated
+        },
     ],
 })

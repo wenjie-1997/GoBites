@@ -1,82 +1,73 @@
 <template>
 <div id="restaurant">
-    <h3>Restaurant Page</h3>
-    <div class="restaurants-list">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Rating</th>
-                <th>Total Customer</th>
-                <th>More Details</th>
-            </tr>
-            <tr v-for="restaurant in restaurants" :key="restaurant.id">
-                <td>{{ restaurant.name }}</td>
-                <td>{{ restaurant.rating }}</td>
-                <td>{{ restaurant.totalCustomer }}</td>
-                <td>
-                    <input type="button" @click="viewUserDetails(restaurant)" value="More Details" />
-                </td>
-            </tr>
-            <tr>
-                <th class="last-cell" colspan="10"></th>
-            </tr>
-        </table>
-    </div>
+    <loading v-if='isLoading' />
+
+    <UserInformation v-if="restaurants" @viewUserDetails="viewUserDetails" :userType="userType" :users="restaurants" :userLabels="restaurantLabels" :unWantedProperty="unWantedProperty" />
 </div>
 </template>
 
 <script>
-import {
-    restaurants
-} from '../assets/users/restaurants'
-
-import {
-    SET_RESTAURANT_USER_STATE
-} from "../store/actions/restaurantUser"
+import RestaurantDataService from '../services/RestaurantDataService';
+import loading from '../mixins/loading.vue';
+import UserInformation from '../components/UserInformation.vue';
 
 export default {
     name: 'Restaurant',
+    components: {
+        loading,
+        UserInformation
+    },
     data() {
         return {
-            restaurants,
-            urlPath: '/userDetails',
-            userId: ''
+            restaurants: null,
+            isLoading: false,
+            unWantedProperty: 'fk_mlid',
+            userType: 'restaurant',
+
+            restaurantLabels: [
+                {label: "ID"},
+                {label: "Name"},
+                {label: "Owner"},
+                {label: "Address"},
+                {label: "Style"},
+                {label: "Email"},
+                {label: "Contact Number"},
+                {label: "Manage User"},
+            ]
         }
     },
     methods: {
+        async retrieveAllRestaurantsInformation() {
+            await RestaurantDataService.getAllRestaurantsInformation()
+                .then(response => {
+                    this.isLoading = false;
+                    this.restaurants = response.data;
+                }).catch(err => {
+                    alert(err.message);
+                });
+        },
         viewUserDetails: function (restaurant) {
-            this.$store.dispatch(SET_RESTAURANT_USER_STATE, {
-                restaurant
-            });
-            this.$router.push('/userDetails?id=' + restaurant.id + '&type=' + restaurant.type.toLowerCase());
+            this.$router.push('/userDetails?id=' + restaurant.RID + '&type=restaurant');
         }
-    }
+    },
+    mounted() {
+        this.isLoading = true;
+        this.retrieveAllRestaurantsInformation();
+    },
 }
 </script>
 
 <style lang="scss">
-.restaurants-list {
-    text-align: center;
-
-    table {
-        margin-left: auto;
-        margin-right: auto;
-
-        td,
-        th {
-            padding: 10px 10px 10px 10px;
-            border: 1px solid black;
-        }
-
-        td {
-            border-bottom: none;
-            border-top: none;
-        }
-
-        .last-cell {
-            border: none;
-            border-top: 1px solid black;
-        }
-    }
+#restaurant {
+    width: 80%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    /* IE 9 */
+    -webkit-transform: translate(-50%, -50%);
+    /* Chrome, Safari, Opera */
 }
+
 </style>

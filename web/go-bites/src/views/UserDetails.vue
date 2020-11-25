@@ -1,176 +1,104 @@
 <template>
 <div id="user-details">
     <div class="user-form-details" v-if="userExist && userId!='-1'">
-        <div class="customer-details" v-if="userType.toLowerCase() === 'customer'">
-            <h1>Customer Info</h1>
-            <form action="#">
-                <div class="form-content">
-                    <div class="form-group">
-                        <label for="id">Id</label>
-                        <input type="text" name="id" :value="getCustomerId" readonly />
+        <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
+        <div v-if="user">
+            <h1 v-if="!isLoading">User Info</h1>
+            <h1 v-if="isLoading">Processing...</h1>
+            <form action="#" v-if="userType == 'customer' && !isLoading">
+                <div class="form-row">
+                    <div class="col-md-2 mb-3">
+                        <label for="cid">ID</label>
+                        <input type="number" id="cid" class="form-control" v-model="user.CID" readonly />
                     </div>
 
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" name="type" :value="getCustomerType" readonly />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" :value="getCustomerName" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text" name="address" :value="getCustomerAddress" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" name="city" :value="getCustomerCity" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input type="text" name="state" :value="getCustomerState" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="zipCode">Zip Code</label>
-                        <input type="text" name="zipCode" :value="getCustomerZipCode" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" name="country" :value="getCustomerCountry" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="totalOrderMade">Total Order Made</label>
-                        <input type="text" name="totalOrderMade" :value="getCustomerTotalOrderMade" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="button-group">
-                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
+                    <div  class="col-md-10 mb-3">
+                        <label for="customerName">Customer Name</label>
+                        <input type="text" class="form-control" id="customerName" v-model="customer.custname" :readonly="readOnlyStatus" required />
                     </div>
                 </div>
-            </form>
-        </div>
-
-        <div class="restaurant-details" v-if="userType.toLowerCase() === 'restaurant'">
-            <h1>Restaurant Info</h1>
-            <form action="#">
-                <div class="form-content">
-                    <div class="form-group">
-                        <label for="id">Id</label>
-                        <input type="text" name="id" :value="getRestaurantId" readonly />
+                
+                <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                        <label>Birth Date</label>
+                        <input type="date" class="form-control"  v-model="customer.birthdate" :readonly="readOnlyStatus" required />
                     </div>
 
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" name="type" :value="getRestaurantType" readonly />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" :value="getRestaurantName" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="address">Address</label>
-                        <input type="text" name="address" :value="getRestaurantAddress" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="city">City</label>
-                        <input type="text" name="city" :value="getRestaurantCity" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="state">State</label>
-                        <input type="text" name="state" :value="getRestaurantState" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="zipCode">Zip Code</label>
-                        <input type="text" name="zipCode" :value="getRestaurantZipCode" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="country">Country</label>
-                        <input type="text" name="country" :value="getRestaurantCountry" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="totalOrderMade">Rating</label>
-                        <input type="text" name="totalOrderMade" :value="getRestaurantRating" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="totalCustomer">Total Customer</label>
-                        <input type="text" name="totalCustomer" :value="getRestaurantTotalCustomer" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="button-group">
-                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
+                    <div class="col-md-6 mb-3">
+                        <label>Email</label>
+                        <input type="email" class="form-control" v-model="customer.email" :readonly="readOnlyStatus" required />
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label>Gender</label>
+                    <div>
+                        <div class="form-check form-check-inline" >
+                            <input type="radio" class="form-check-input" value="Female" name="gender" id="female" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input type="radio" class="form-check-input" value="Male" name="gender" id="male" v-model="customer.gender" :disabled="readOnlyStatus">
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea rows="4" type="text" class="form-control" v-model="customer.address" :readonly="readOnlyStatus" required />
+                </div>
+
+                <div class="button-group">
+                    <input class="btn btn-primary btn-custom" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                    <input class="btn btn-primary btn-custom" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
+                </div>
             </form>
-        </div>
+            <form action="#" v-if="userType == 'restaurant'">
+                <div v-if='!isLoading'>
+                    <div class="form-row">
+                        <div class="col-md-2 mb-3">
+                            <label for="rid">ID</label>
+                            <input type="number" id="rid" class="form-control" v-model="restaurant.RID" readonly />
+                        </div>
 
-        <div class="delivery-driver-details" v-if="userType.toLowerCase() === 'delivery-driver'">
-            <h1>Delivery Driver Info</h1>
-            <form action="#">
-                <div class="form-content">
-                    <div class="form-group">
-                        <label for="id">Id</label>
-                        <input type="text" name="id" :value="getDeliveryDriverId" readonly />
+                        <div  class="col-md-10 mb-3">
+                            <label for="restaurantName">Restaurant Name</label>
+                            <input type="text" class="form-control" id="restaurantName" v-model="restaurant.restaurantname" :readonly="readOnlyStatus" required />
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="type">Type</label>
-                        <input type="text" name="type" :value="getDeliveryDriverType" readonly />
+                    <div class="form-row">
+                        <div class="col-md-2 mb-3">
+                            <label for="restaurantStyle">Restaurant Style</label>
+                            <input type="text" id="restaurantStyle" class="form-control" v-model="restaurant.restaurantstyle" :readonly="readOnlyStatus" />
+                        </div>
+
+                        <div  class="col-md-10 mb-3">
+                            <label for="restaurantOwner">Restaurant Owner</label>
+                            <input type="text" class="form-control" id="restaurantOwner" v-model="restaurant.ownername" :readonly="readOnlyStatus" required />
+                        </div>
                     </div>
 
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" name="name" :value="getDeliveryDriverName" :readonly="readOnlyStatus" />
+                    <div  class="form-group">
+                        <label>Address</label>
+                        <textarea rows="4" type="text" class="form-control" v-model="restaurant.address" :readonly="readOnlyStatus" required />
                     </div>
 
-                    <div class="form-group">
-                        <label for="age">Age</label>
-                        <input type="text" name="address" :value="getDeliveryDriverAge" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="gender">Gender</label>
-                        <input type="text" name="gender" :value="getDeliveryDriverGender" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="deliveryMethod">Delivery Method</label>
-                        <input type="text" name="deliveryMethod" :value="getDeliveryDriverDeliveryMethod" :readonly="readOnlyStatus" />
-                    </div>
-
-                    <div class="form-group">
-                        <label for="workArea">Work Area</label>
-                        <input type="text" name="workArea" :value="getDeliveryDriverWorkArea" :readonly="readOnlyStatus" />
+                    <div  class="form-group">
+                        <label>Telephone No</label>
+                        <input type="text" class="form-control" v-model="restaurant.telephoneNo" :readonly="readOnlyStatus" required />
                     </div>
 
                     <div class="button-group">
-                        <input class="btn btn-primary" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
-                        <input class="btn btn-primary" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="editInfo" value="Edit" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="saveInfo" value="Save" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="cancelEditInfo" value="Cancel" v-if="!readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="back" value="Back" v-if="readOnlyStatus" />
+                        <input class="btn btn-primary btn-custom" type="button" @click="deleteUser" value="Delete" v-if="readOnlyStatus" />
                     </div>
                 </div>
             </form>
@@ -180,113 +108,261 @@
 </template>
 
 <script>
-import {
-    mapGetters
-} from "vuex";
+import CustomerDataService from '../services/CustomerDataService';
+import RestaurantDataService from '../services/RestaurantDataService';
+
+import loading from '../mixins/loading.vue'
 
 export default {
     name: 'User-Details',
+    components: {
+        loading
+    },
     data() {
         return {
             userExist: false,
             userId: '-1',
             userType: 'none',
             readOnlyStatus: true,
+            user: null,
+            isLoading: false,
+            fullPage: true,
+            loader: 'bars',
+
+            customer: {
+                CID: '',
+                custname: '',
+                birthdate: '',
+                gender: '',
+                email: '',
+                address: '',
+            },
+
+            restaurant: {
+                RID: '',
+                restaurantname: '',
+                ownername: '',
+                address: '',
+                restaurantstyle: '',
+                telephoneNo: '',
+            },
         }
     },
     created() {
+        this.isLoading = true;
         let urlParams = new URLSearchParams(window.location.search);
-        if (urlParams.has('id')) {
-            this.userExist = true;
+        if (urlParams.has('id') && urlParams.has('type') ) {
             this.userId = urlParams.get('id');
             this.userType = urlParams.get('type');
+            this.userExist = true;
+
+            if(this.userType.toLowerCase() === "customer") {
+                this.retrieveACustomerInformation();
+            } else if(this.userType.toLowerCase() === "restaurant") {
+                this.retrieveARestaurantInformation();
+            } else {
+                if (this.getCustomerId == "" && this.userType.toLowerCase() === "customer") {
+                    this.$router.push('/customer');
+                    return;
+                } else if (this.getRestaurantId == "" && this.userType.toLowerCase() === "restaurant") {
+                    this.$router.push('/restaurant');
+                    return;
+                }
+            }
         } else {
             this.userExist = false;
             this.userId = '-1';
             this.$router.back();
         }
-
-        if (this.getCustomerId == "" && this.userType.toLowerCase() === "customer") {
-            this.$router.push('/customer');
-            return;
-        } else if (this.getRestaurantId == "" && this.userType.toLowerCase() === "restaurant") {
-            this.$router.push('/restaurant');
-            return;
-        } else if (this.getDeliveryDriverId == "" && this.userType.toLowerCase() === "delivery-driver") {
-            this.$router.push('/deliveryDriver');
-            return;
-        }
     },
     methods: {
+        retrieveACustomerInformation() {
+            this.isLoading = true;
+            this.user = null;
+            CustomerDataService.getACustomerInformation(this.userId)
+                .then(resp => {
+                    this.isLoading = false;
+                    this.user = resp.data[0];
+
+                    this.customer.CID = this.user.CID;
+                    this.customer.custname = this.user.custname;
+                    this.customer.gender = this.user.gender;
+                    this.customer.birthdate = this.user.birthdate;
+                    this.customer.email = this.user.email;
+                    this.customer.address = this.user.address;
+                })
+                .catch( err => {
+                    this.isLoading = false;
+                    console.log(err);
+                });
+        },
+        retrieveARestaurantInformation() {
+            this.isLoading = true;
+            this.user = null;
+            RestaurantDataService.getARestaurantInformation(this.userId)
+                .then(resp => {
+                    this.isLoading = false;
+                    this.user = resp.data[0];
+
+                    this.restaurant.RID = this.user.RID;
+                    this.restaurant.restaurantname = this.user.restaurantname;
+                    this.restaurant.ownername = this.user.ownername;
+                    this.restaurant.restaurantstyle = this.user.restaurantstyle;
+                    this.restaurant.telephoneNo = this.user.telephoneNo;
+                    this.restaurant.address = this.user.address;
+                })
+                .catch( err => {
+                    this.isLoading = false;
+                    console.log(err);
+                });
+        },
         editInfo: function () {
             this.readOnlyStatus = false;
         },
-        saveInfo: function () {
+        saveInfo: async function () {
             this.readOnlyStatus = true;
+            this.isLoading = true;
+            if (this.userType.toLowerCase() === "customer") {
+                const cid = this.user.CID;
+                const custname = this.user.custname;
+                const gender = this.user.gender;
+                const birthdate = this.user.birthdate;
+                const email = this.user.email;
+                const address = this.user.address;
+                
+                this.user.CID = this.customer.CID;
+                this.user.custname = this.customer.custname;
+                this.user.gender = this.customer.gender;
+                this.user.birthdate = this.customer.birthdate;
+                this.user.email = this.customer.email;
+                this.user.address = this.customer.address;
+
+                await CustomerDataService.updateACustomerInformation(this.user)
+                    .then(() => {
+                        this.isLoading = false;
+                        this.retrieveACustomerInformation();
+                        alert("Successfully update");
+                    })
+                    .catch(err => {
+                        this.isLoading = false;
+                        console.log(err.message);
+
+                        this.user.CID = cid;
+                        this.user.custname = custname;
+                        this.user.gender = gender;
+                        this.user.birthdate = birthdate;
+                        this.user.email = email;
+                        this.user.address = address;
+
+                        this.revertUserInformation();
+                        alert("Fail to update");
+                    })
+                
+            } else if (this.userType.toLowerCase() === "restaurant") {
+                const rid = this.user.RID;
+                const restaurantname = this.user.restaurantname;
+                const ownername = this.user.ownername;
+                const restaurantstyle = this.user.restaurantstyle;
+                const telephoneNo = this.user.telephoneNo;
+                const address = this.user.address;
+
+                this.user.RID = this.restaurant.RID;
+                this.user.restaurantname = this.restaurant.restaurantname;
+                this.user.ownername = this.restaurant.ownername;
+                this.user.restaurantstyle = this.restaurant.restaurantstyle;
+                this.user.telephoneNo = this.restaurant.telephoneNo;
+                this.user.address = this.restaurant.address;
+                console.log(this.user.ownername);
+                await RestaurantDataService.updateARestaurantInformation(this.user)
+                    .then(() => {
+                        this.isLoading = false;
+                        this.retrieveARestaurantInformation();
+                        alert("Successfully update");
+                    })
+                    .catch(err => {
+                        this.isLoading = false;
+                        console.log(err.message);
+                        
+                        this.user.RID = this.restaurant.RID = rid;
+                        this.user.restaurantname = restaurantname;
+                        this.user.ownername = ownername;
+                        this.user.restaurantstyle = restaurantstyle;
+                        this.user.telephoneNo = telephoneNo;
+                        this.user.address = address;
+
+                        this.revertUserInformation();
+                        alert("Fail to update");
+                    })                
+            }
         },
         cancelEditInfo: function () {
+            this.revertUserInformation();
             this.readOnlyStatus = true;
+        },
+        revertUserInformation() {
+            if(this.userType == "customer") {
+                this.customer.CID = this.user.CID;
+                this.customer.custname = this.user.custname;
+                this.customer.gender = this.user.gender;
+                this.customer.birthdate = this.user.birthdate;
+                this.customer.email = this.user.email;
+                this.customer.address = this.user.address;
+
+            } else if(this.userType == "restaurant") {
+                this.restaurant.RID = this.user.RID;
+                this.restaurant.restaurantname = this.user.restaurantname;
+                this.restaurant.ownername = this.user.ownername;
+                this.restaurant.restaurantstyle = this.user.restaurantstyle;
+                this.restaurant.telephoneNo = this.user.telephoneNo;
+                this.restaurant.address = this.user.address;
+            }
         },
         back: function () {
             if (this.userType.toLowerCase() === "restaurant") {
                 this.$router.push('/restaurant');
             } else if (this.userType.toLowerCase() === "customer") {
                 this.$router.push('/customer');
-            } else if (this.userType.toLowerCase() === "delivery-driver") {
-                this.$router.push('/deliveryDriver');
             }
-
         },
-        deleteUser: function () {
-            if (window.confirm(`Delete user with id ${this.userId}`)) {
-                console.log("Deleting user");
+        deleteUser: async function () {
+            if (this.userType.toLowerCase() === "restaurant") {
+                if (window.confirm(`Delete user with id ${this.user.RID}`)) {
+                    this.isLoading = true;
+                    await RestaurantDataService.deleteARestaurantInformation(this.user)
+                        .then(() => {
+                            alert("Delete Successfully");
+                            this.back();
+                        })
+                        .catch(err => {
+                            alert("Failed to delete");
+                            console.log(err.message);
+                            this.isLoading = false;
+                        })
+                }
+            } else if (this.userType.toLowerCase() === "customer") {
+                if (window.confirm(`Delete user with id ${this.user.CID}`)) {
+                    this.isLoading = true;
+                    await CustomerDataService.deleteACustomerInformation(this.user)
+                        .then(() => {
+                            alert("Delete Successfully");
+                            this.back();
+                        })
+                        .catch(err => {
+                            alert("Failed to delete");
+                            console.log(err.message);
+                            this.isLoading = false;
+                        })
+                }
             }
         }
-    },
-    computed: {
-        ...mapGetters([
-            "getCustomerId",
-            "getCustomerType",
-            "getCustomerName",
-            "getCustomerAddress",
-            "getCustomerCity",
-            "getCustomerState",
-            "getCustomerZipCode",
-            "getCustomerCountry",
-            "getCustomerTotalOrderMade",
-
-            "getRestaurantId",
-            "getRestaurantType",
-            "getRestaurantName",
-            "getRestaurantAddress",
-            "getRestaurantCity",
-            "getRestaurantState",
-            "getRestaurantZipCode",
-            "getRestaurantCountry",
-            "getRestaurantRating",
-            "getRestaurantTotalCustomer",
-
-            "getDeliveryDriverId",
-            "getDeliveryDriverType",
-            "getDeliveryDriverName",
-            "getDeliveryDriverAge",
-            "getDeliveryDriverGender",
-            "getDeliveryDriverDeliveryMethod",
-            "getDeliveryDriverWorkArea",
-        ])
     }
 }
 </script>
 
 <style lang="scss">
-.customer-details,
-.restaurant-details,
-.delivery-driver-details {
-    text-align: center;
-}
 
 .user-form-details {
-    width: 450px;
+    width: 60%;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -297,57 +373,20 @@ export default {
     /* Chrome, Safari, Opera */
     background-color: rgba(151, 38, 38, 0);
 
-    .form-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-color: rgba(184, 20, 20, 0);
-        border: 10px inset rgb(117, 207, 235);
-        padding: 5px 5px 5px 5px;
-        box-shadow: inset 0 0 10px;
-        transition: 0.2s;
+    h1 {
+        text-align: center;
+    }
 
-        .form-group {
-            display: flex;
-            flex-direction: row;
-            width: 90%;
-            height: 90%;
+    .button-group {
+        text-align: center;
+    }
 
-            input {
-                width: 65%;
+    .btn-custom {
+        margin: 10px;
+    }
 
-                &:read-only {
-                    background-color: rgb(226, 219, 219);
-                    border: 2px outset rgb(226, 219, 219);
-                }
-
-                &:read-write {
-                    background-color: rgb(255, 255, 255);
-                    border: 2px inset rgb(226, 219, 219);
-                }
-            }
-
-            label {
-                text-align: left;
-                width: 35%;
-            }
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: row;
-
-            input[type=button] {
-                margin: 5px 5px 5px 5px;
-            }
-        }
-
-        &:hover {
-            border: 10px outset rgb(117, 207, 235);
-            padding: 10px 10px 10px 10px;
-            box-shadow: 5px 5px 10px;
-            transition: 0.2s;
-        }
+    textarea {
+        resize: none;
     }
 }
 </style>

@@ -1,26 +1,28 @@
 <template>
 <div id="login">
-    <form class="login-form" method="post" @submit.prevent="login">
-        <div class="form-content">
-            <loading v-if='isLoading' :is-full-page="fullPage" :loader='loader' />
-            <h3>Login</h3>
+    <content>
+        <form class="login-form" method="post" @submit.prevent="login">
+            <loading v-if='isLoading' />
+            <div class="form-content form-custom" v-if="admin">
+                <h3>Login</h3>
 
-            <div class="form-group">
-                <label>username</label>
-                <input type="text" v-model="username" class="form-control" placeholder="Username" required />
+                <div class="form-group">
+                    <label for="userName">username</label>
+                    <input type="text" id="userName" v-model="username" class="form-control" placeholder="Username" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="userPassword">Password</label>
+                    <input type="password" id="userPassword" v-model="password" class="form-control" placeholder="Password" autocomplete="off" required />
+                </div>
+
+                <div class="login-btn">
+                    <button type="submit" class="btn btn-primary btn-block" :disabled="isLoading">Login</button>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" v-model="password" class="form-control" placeholder="Password" autocomplete="off" required />
-            </div>
-
-            <div class="login-btn">
-                <button type="submit" class="btn btn-primary btn-block">Login</button>
-            </div>
-        </div>
-
-    </form>
+        </form>
+    </content>
 </div>
 </template>
 
@@ -34,6 +36,7 @@ import {
 } from 'vuex';
 
 import loading from '../mixins/loading.vue'
+import UserDataService from "../services/UserDataService";
 
 export default {
     name: 'Login',
@@ -44,24 +47,40 @@ export default {
         return {
             username: '',
             password: '',
-            message: "Either password or username is invalid \nHint: \n    username: admin \n    password: 1234",
+            message: "Either password or username is invalid",
             isLoading: false,
-            fullPage: false,
-            loader: 'bars'
+            admin: null,
         }
     },
     methods: {
+        async getAdminInformation() {
+            const type = "admin";
+            await UserDataService.getAllUsersOfSameType(type)
+                .then((response) => {
+                    this.isLoading = false;
+                    this.admin = response.data[0];
+                })
+                .catch((e) => {
+                    console.log(e);
+                });
+        },
         login: function () {
-            this.isLoading = true;
+            if(this.admin === null) {
+                alert("Error! Check your database connection");
+                return;
+            }
 
+            this.isLoading = true;
             const {
                 username,
-                password
+                password,
+                admin
             } = this;
 
             this.$store.dispatch(AUTH_REQUEST, {
                     username,
-                    password
+                    password,
+                    admin
                 })
                 .then(
                     () => {
@@ -83,6 +102,10 @@ export default {
         ...mapState({
             loginStatus: state => state.auth.status
         })
+    },
+    mounted() {
+        this.isLoading = true;
+        this.getAdminInformation();
     }
 }
 </script>
@@ -100,7 +123,7 @@ export default {
     /* Chrome, Safari, Opera */
     background-color: rgba(151, 38, 38, 0);
 
-    .form-content {
+    .form-custom {
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -109,6 +132,32 @@ export default {
         padding: 5px 5px 5px 5px;
         box-shadow: inset 0 0 10px;
         transition: 0.2s;
+
+        .form-control {
+            border-radius: 24px;
+            box-shadow: 10px 5px 5px rgb(76, 194, 214);
+
+            &:focus {
+                border-color: #167bff;
+                box-shadow: none;
+            }
+        }
+
+        .login-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            button {
+                border-radius: 24px;
+                width: 100px;
+
+                &:hover {
+                    border-color: #167bff;
+                    box-shadow: 10px 5px 5px rgb(76, 194, 214);
+                }
+            }
+        }
 
         &:hover {
             border: 10px outset rgb(117, 207, 235);

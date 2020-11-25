@@ -1,12 +1,20 @@
 <template>
-<div id="app">
-    <Nav />
-    <div class="auth-wrapper">
-        <div class="auth-inner">
-            <router-view />
+<div id="app" class="d-flex flex-column min-vh-100">
+    <header>
+        <Nav />
+    </header>
+
+    <content>
+        <div class="auth-wrapper">
+            <div class="auth-inner">
+                <router-view />
+            </div>
         </div>
-    </div>
-    <Footer />
+    </content>
+
+    <footer class="mt-auto">
+        <Footer />
+    </footer>
 </div>
 </template>
 
@@ -78,36 +86,12 @@ html,
 }
 
 .auth-wrapper {
+    min-height: 100vh;
+    min-width: 100%;
     display: flex;
     justify-content: center;
     flex-direction: column;
     text-align: left;
-
-    .form-control {
-        border-radius: 24px;
-        box-shadow: 10px 5px 5px rgb(76, 194, 214);
-
-        &:focus {
-            border-color: #167bff;
-            box-shadow: none;
-        }
-    }
-
-    .login-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        button {
-            border-radius: 24px;
-            width: 100px;
-
-            &:hover {
-                border-color: #167bff;
-                box-shadow: 10px 5px 5px rgb(76, 194, 214);
-            }
-        }
-    }
 
     h3 {
         text-align: center;
@@ -119,7 +103,7 @@ html,
 
 .auth-inner {
     width: 99%;
-    height: 85%;
+    height: 99%;
     margin: auto;
     background: #ffffff;
     box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);

@@ -1,81 +1,73 @@
 <template>
 <div id="Customer">
-    <h3>Customer Page</h3>
-    <div class="customers-list">
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Total Order Made</th>
-                <th>More Details</th>
-            </tr>
-            <tr v-for="customer in customers" :key="customer.id">
-                <td>{{ customer.name }}</td>
-                <td>{{ customer.totalOrderMade }}</td>
-                <td>
-                    <input type="button" @click="viewUserDetails(customer)" value="More Details" />
-                </td>
-            </tr>
+    <loading v-if='isLoading' />
 
-            <tr>
-                <th class="last-cell" colspan="9"></th>
-            </tr>
-        </table>
-    </div>
+    <UserInformation v-if='customers' @viewUserDetails="viewUserDetails" :userType="userType" :users="customers" :userLabels="customerLabels" :unWantedProperty="unWantedProperty" />
 </div>
 </template>
 
 <script>
-import {
-    customers
-} from '../assets/users/customers'
-
-import {
-    SET_CUSTOMER_USER_STATE
-} from '../store/actions/customerUser'
+import CustomerDataService from '../services/CustomerDataService';
+import loading from '../mixins/loading.vue'
+import UserInformation from '../components/UserInformation.vue'
 
 export default {
     name: 'customer',
+    components: {
+        loading,
+        UserInformation,
+    },
     data() {
         return {
-            customers,
-            urlPath: '/userDetails',
-            userId: ''
+            customers: null,
+            isLoading: false,
+            userType: "customer",
+            unWantedProperty: "none",
+
+            customerLabels: [
+                {label :"ID"},
+                {label :"Customer Name"},
+                {label :"Birth Date"},
+                {label :"Gender"},
+                {label :"Address"},
+                {label :"Email"},
+                {label :"Contact Number"},
+                {label :"Manage User"}
+            ],
         }
     },
     methods: {
+        async retrieveAllCustomersInformation() {
+            await CustomerDataService.getAllCustomersInformation()
+                .then(response => {
+                    this.isLoading = false;
+                    this.customers = response.data;
+                }).catch(err => {
+                    this.isLoading = false;
+                    alert(err.message);
+                })
+        },
         viewUserDetails: function (customer) {
-            this.$store.dispatch(SET_CUSTOMER_USER_STATE, {
-                customer
-            });
-            this.$router.push('/userDetails?id=' + customer.id + '&type=' + customer.type.toLowerCase());
+            this.$router.push('/userDetails?id=' + customer.CID + '&type=customer');
         }
-    }
+    },
+    mounted() {
+        this.isLoading = true;
+        this.retrieveAllCustomersInformation();
+    },
 }
 </script>
 
 <style lang="scss">
-.customers-list {
-    text-align: center;
-
-    table {
-        margin-left: auto;
-        margin-right: auto;
-
-        td,
-        th {
-            padding: 10px 10px 10px 10px;
-            border: 1px solid black;
-        }
-
-        td {
-            border-bottom: none;
-            border-top: none;
-        }
-
-        .last-cell {
-            border: none;
-            border-top: 1px solid black;
-        }
-    }
+#Customer {
+    width: 80%;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    /* IE 9 */
+    -webkit-transform: translate(-50%, -50%);
+    /* Chrome, Safari, Opera */
 }
 </style>

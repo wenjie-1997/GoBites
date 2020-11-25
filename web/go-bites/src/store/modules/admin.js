@@ -1,27 +1,27 @@
-import { ADMIN_REQUEST, ADMIN_ERROR, ADMIN_SUCCESS } from "../actions/admin";
-import apiCall from "../../utils/api";
-import Vue from "vue";
-import { AUTH_LOGOUT } from "../actions/auth";
+import { ADMIN_REQUEST, ADMIN_ERROR, ADMIN_SUCCESS, ADMIN_LOGOUT } from "../actions/admin";
 
-const state = { status: "", profile: {} };
+import AdminDataService from '../../services/AdminDataService';
+
+const state = { status: "", profileName: "", profileIsLoaded: false};
 
 const getters = {
-  getProfile: state => state.profile,
-  isProfileLoaded: state => !!state.profile.name
+  getProfile: state => state.profileName,
+  isProfileLoaded: state => state.profileIsLoaded
 };
 
 const actions = {
-  [ADMIN_REQUEST]: ({ commit, dispatch }) => {
-    commit(ADMIN_REQUEST);
-    apiCall({ url: "admin/me" })
+  [ADMIN_REQUEST]: ({ commit }) => {
+    AdminDataService.getAdminData()
       .then(resp => {
-        commit(ADMIN_SUCCESS, resp);
+        commit(ADMIN_REQUEST)
+        commit(ADMIN_SUCCESS, resp.data[0]);
       })
-      .catch(() => {
-        commit(ADMIN_ERROR);
-        // if resp is unauthorized, logout, to
-        dispatch(AUTH_LOGOUT);
-      });
+      .catch(err => {
+        console.log(err);
+      })
+  },
+  [ADMIN_LOGOUT]: ({ commit }) => {
+    commit(ADMIN_LOGOUT);
   }
 };
 
@@ -29,15 +29,18 @@ const mutations = {
   [ADMIN_REQUEST]: state => {
     state.status = "loading";
   },
-  [ADMIN_SUCCESS]: (state, resp) => {
+  [ADMIN_SUCCESS]: (state, admin) => {
     state.status = "success";
-    Vue.set(state, "profile", resp);
+    state.profileName = `${admin.adminTitle} ${admin.adminName}`;
+    state.profileIsLoaded = true;
   },
   [ADMIN_ERROR]: state => {
     state.status = "error";
   },
-  [AUTH_LOGOUT]: state => {
-    state.profile = {};
+  [ADMIN_LOGOUT]: state => {
+    state.status = "log out";
+    state.profileIsLoaded = false;
+    state.profileName = "";
   }
 };
 

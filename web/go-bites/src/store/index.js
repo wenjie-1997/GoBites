@@ -4,7 +4,6 @@ import admin from "./modules/admin";
 import auth from "./modules/auth";
 import customerUser from "./modules/customerUser";
 import restaurantUser from "./modules/restaurantUser";
-import deliveryDriverUser from "./modules/deliveryDriverUser";
 
 Vue.use(Vuex);
 
@@ -16,7 +15,6 @@ export default new Vuex.Store({
     auth,
     customerUser,
     restaurantUser,
-    deliveryDriverUser
   },
   strict: debug
 });
