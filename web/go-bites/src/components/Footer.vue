@@ -3,20 +3,41 @@
     <footer id="footer" class="footer-1">
         <div class="main-footer widgets-dark typo-light">
             <div class="container">
-                <div class="row">
 
-                    <div class="col-xs-12">
+                <div class="widget subscribe no-box">
+                    <h5 class="widget-title">GoBites<span></span></h5>
+                    <p> GoBites Malaysia started with one goal in mind: to be the most convenient food delivery service in the country. Using the easy smartphone app, anyone can find their favorite restaurants near you and order their favorite dish, or even snacks, beverages and more. Whether it is breakfast delivery, lunch or dinner delivery, GoBites is your ultimate place to order food from any kind of restaurant and shops anywhere in Malaysia. We believe food is a pleasure and food ordering should be a fast and fun experience.</p>
+                    <hr>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-3">
                         <div class="widget subscribe no-box">
-                            <h5 class="widget-title">GoBites<span></span></h5>
-                            <p> GoBites Malaysia started with one goal in mind: to be the most convenient food delivery service in the country. Using the easy smartphone app, anyone can find their favorite restaurants near you and order their favorite dish, or even snacks, beverages and more. Whether it is breakfast delivery, lunch or dinner delivery, GoBites is your ultimate place to order food from any kind of restaurant and shops anywhere in Malaysia. We believe food is a pleasure and food ordering should be a fast and fun experience.
-                                ✓ More cities: GoBites is available in Kuala Lumpur, Petaling Jaya, Penang and in many more Malaysian cities.
-                                ✓ More restaurants: Enjoy food delivery from over 100 restaurants in Malaysia.
-                                ✓ More cuisines: With a wide range of cuisines, one can order fast food, pizza delivery, drinks, desserts, cake or daily items.
-                                ✓ More than just food delivery: Wake up to the smell of freshly brewed coffee & drinks from your favorite cafes at your home.
-                            </p>
+                            <h5 class="widget-title">✓ More cities<span></span></h5>
+                            <p> GoBites is available in Kuala Lumpur, Petaling Jaya, Penang and in many more Malaysian cities.</p>
                         </div>
                     </div>
 
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget subscribe no-box">
+                            <h5 class="widget-title">✓ More restaurants<span></span></h5>
+                            <p> Enjoy food delivery from over 100 restaurants in Malaysia.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget subscribe no-box">
+                            <h5 class="widget-title">✓ More cuisines<span></span></h5>
+                            <p> With a wide range of cuisines, one can order fast food, pizza delivery, drinks, desserts, cake or daily items.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget subscribe no-box">
+                            <h5 class="widget-title">✓ Not just food delivery<span></span></h5>
+                            <p> Wake up to the smell of freshly brewed coffee & drinks from your favorite cafes at your home.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
