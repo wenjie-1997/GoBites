@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'restAddMenupage.dart';
 
 /*class RestaurantMenuPage extends StatelessWidget {
   @override
@@ -61,7 +62,15 @@ class _RestMenuPageState extends State<RestMenuPage> {
             ],
           ),
         ),
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: 
+            (context) => RestAddMenuPage())
+            );
+        },
+        child: Icon(Icons.add),
+        backgroundColor: Colors.red,
+        ),
     );
   }
 }

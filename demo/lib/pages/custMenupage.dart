@@ -3,6 +3,7 @@ import 'package:demo/modules/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
+import 'cartpage.dart';
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);
@@ -70,6 +71,19 @@ class _CustMenuPageState extends State<CustMenuPage> {
               title: Text('Make an Order'),
               centerTitle: true,
               backgroundColor: Colors.red,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.shopping_cart,
+                    color: Colors.black,
+                  ),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: 
+                    (context) => CartPage())
+                    );
+                  },
+                  ),
+              ],
             ),
             body: Column(children: <Widget>[
               SizedBox(
