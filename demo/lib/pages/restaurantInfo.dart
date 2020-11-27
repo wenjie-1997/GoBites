@@ -3,6 +3,7 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/restdetail.dart';
+import 'restInfoUpdatepage.dart';
 
 Future<RestDetail> fetchRestDetail() async {
   print("Im here");
@@ -48,6 +49,20 @@ class _RestaurantPersonalInfoPageState
         title: Text('Restaurant Info'),
         centerTitle: true,
         backgroundColor: Colors.red,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => RestInfoUpdatePage()));
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<RestDetail>(
           future: futureRestDetail,

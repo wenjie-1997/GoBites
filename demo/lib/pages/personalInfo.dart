@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
+import 'personalInfoUpdatepage.dart';
 
 import 'package:demo/modules/custdetail.dart';
 /*class PersonalInfo extends StatelessWidget {
@@ -55,6 +56,20 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
         title: Text('Personal Info'),
         centerTitle: true,
         backgroundColor: Colors.red,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.black,
+            ),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PersonalInfoUpdatePage()));
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<CustDetail>(
           future: futureCustDetail,
