@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
+import '../modules/custdetail.dart';
 import 'personalInfoUpdatepage.dart';
 
 import 'package:demo/modules/custdetail.dart';
@@ -49,32 +50,36 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text('Personal Info'),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.edit,
-              color: Colors.black,
-            ),
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PersonalInfoUpdatePage()));
-            },
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        ],
-      ),
+          title: Text('Personal Info'),
+          centerTitle: true,
+          backgroundColor: Colors.red,
+          actions: <Widget>[
+            FutureBuilder<CustDetail>(
+                future: futureCustDetail,
+                builder: (context, snapshot) {
+                  return IconButton(
+                      icon: Icon(
+                        Icons.edit,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PersonalInfoUpdatePage(
+                                    cust: snapshot.data)));
+                      });
+                })
+          ]),
       body: FutureBuilder<CustDetail>(
           future: futureCustDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              CustDetail cust = snapshot.data;
               return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                 child: ListView(
@@ -96,7 +101,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.username,
+                      cust.username,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -112,7 +117,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.password,
+                      cust.password,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -128,7 +133,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.custname,
+                      cust.custname,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -144,7 +149,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.email,
+                      cust.email,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -160,7 +165,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.gender,
+                      cust.gender,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -176,7 +181,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.birthdate,
+                      cust.birthdate,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -192,7 +197,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.address,
+                      cust.address,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
