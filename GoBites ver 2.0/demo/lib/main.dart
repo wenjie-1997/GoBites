@@ -23,7 +23,9 @@ void main() {
       '/restaurantPersonalInfo': (context) => RestaurantPersonalInfoPage(),
       '/customerHomePage': (context) => CustomerHomePage(),
       '/restaurantHomePage': (context) => RestaurantHomePage(),
-      '/customerMenuPage': (context) => CustMenuPage(),
+      '/customerMenuPage': (context) => CustMenuPage(
+            rest: null,
+          ),
       '/customerRestaurantPage': (context) => CustRestaurantPage(),
       '/restaurantMenuPage': (context) => RestMenuPage(),
     },

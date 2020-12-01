@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'custRestaurantpage.dart';
 import 'personalInfo.dart';
+import 'pageSizing.dart';
 
 class CustomerHomePage extends StatelessWidget {
   @override
@@ -20,6 +21,8 @@ class CustHomePage extends StatefulWidget {
 class _CustHomePageState extends State<CustHomePage> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     final orderButton = Material(
         elevation: 5.0,
         color: Colors.red,
@@ -28,9 +31,8 @@ class _CustHomePageState extends State<CustHomePage> {
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: 
-            (context) => CustRestaurantPage())
-            );
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CustRestaurantPage()));
           },
           child: Column(
             children: <Widget>[
@@ -54,9 +56,8 @@ class _CustHomePageState extends State<CustHomePage> {
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: 
-            (context) => PersonalInfoPage())
-            );
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PersonalInfoPage()));
           },
           child: Column(
             children: <Widget>[
@@ -120,6 +121,7 @@ class _CustHomePageState extends State<CustHomePage> {
       resizeToAvoidBottomPadding: false,
       backgroundColor: Colors.yellow[200],
       body: Container(
+        height: SizeConfig.safeBlockVertical * 100,
         child: Padding(
           padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
           child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'restMenupage.dart';
 import 'restaurantInfo.dart';
+import 'pageSizing.dart';
 
 class RestaurantHomePage extends StatelessWidget {
   @override
@@ -20,6 +21,8 @@ class RestHomePage extends StatefulWidget {
 class _RestHomePageState extends State<RestHomePage> {
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
+
     final menuButton = Material(
         elevation: 5.0,
         color: Colors.red,
@@ -28,9 +31,8 @@ class _RestHomePageState extends State<RestHomePage> {
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: 
-            (context) => RestMenuPage())
-            );
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => RestMenuPage()));
           },
           child: Column(
             children: <Widget>[
@@ -54,9 +56,10 @@ class _RestHomePageState extends State<RestHomePage> {
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: 
-            (context) => RestaurantPersonalInfoPage())
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantPersonalInfoPage()));
           },
           child: Column(
             children: <Widget>[
@@ -119,6 +122,7 @@ class _RestHomePageState extends State<RestHomePage> {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       body: Container(
+        height: SizeConfig.safeBlockVertical * 100,
         child: Padding(
           padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
           child: Column(
