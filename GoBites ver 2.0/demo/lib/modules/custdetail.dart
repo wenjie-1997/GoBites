@@ -1,4 +1,5 @@
 class CustDetail {
+  final int CID;
   final String username;
   final String password;
   final String custname;
@@ -9,7 +10,8 @@ class CustDetail {
   final String telephoneNo;
 
   CustDetail(
-      {this.username,
+      {this.CID,
+      this.username,
       this.password,
       this.custname,
       this.birthdate,
@@ -20,6 +22,7 @@ class CustDetail {
 
   factory CustDetail.fromJson(Map<String, dynamic> json) {
     return CustDetail(
+        CID: json['CID'],
         username: json['username'],
         password: json['password'],
         custname: json['custname'],

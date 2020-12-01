@@ -28,7 +28,7 @@ class _CustHomePageState extends State<CustHomePage> {
         color: Colors.red,
         child: MaterialButton(
           height: 100.0,
-          minWidth: 250.0,
+          minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
             Navigator.push(context,
@@ -53,7 +53,7 @@ class _CustHomePageState extends State<CustHomePage> {
         color: Colors.red,
         child: MaterialButton(
           height: 100.0,
-          minWidth: 250.0,
+          minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
             Navigator.push(context,
@@ -78,7 +78,7 @@ class _CustHomePageState extends State<CustHomePage> {
         color: Colors.red,
         child: MaterialButton(
           height: 100.0,
-          minWidth: 250.0,
+          minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {},
           child: Column(
@@ -100,7 +100,7 @@ class _CustHomePageState extends State<CustHomePage> {
         color: Colors.red,
         child: MaterialButton(
           height: 100.0,
-          minWidth: 250.0,
+          minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {},
           child: Column(
@@ -134,13 +134,13 @@ class _CustHomePageState extends State<CustHomePage> {
                         color: Colors.black,
                         fontFamily: 'Vibur')),
               ),
-              SizedBox(height: 50.0),
+              SizedBox(height: SizeConfig.safeBlockVertical * 4),
               orderButton,
-              SizedBox(height: 50.0),
+              SizedBox(height: SizeConfig.safeBlockVertical * 4),
               personalDetailButton,
-              SizedBox(height: 50.0),
+              SizedBox(height: SizeConfig.safeBlockVertical * 4),
               viewOrderButton,
-              SizedBox(height: 50.0),
+              SizedBox(height: SizeConfig.safeBlockVertical * 4),
               giveFeedbackButton,
             ],
           ),

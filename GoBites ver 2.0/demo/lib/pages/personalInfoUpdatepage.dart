@@ -5,11 +5,9 @@ import 'package:flutter/material.dart';
 import '../modules/custdetail.dart';
 import '../modules/http.dart';
 import 'personalInfo.dart';
-import 'registration.dart';
 
 String username;
 String password;
-String usertype;
 DateTime birthdate;
 String custname;
 String gender;
@@ -30,33 +28,33 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
 
   Future custUpdate() async {
     final msg = jsonEncode({
+      "CID": widget.cust.CID,
       "username": username,
       "password": password,
-      "usertype": usertype,
-      "restaurantname": restaurantname,
-      "ownername": ownername,
+      "custname": custname,
       "address": address,
-      "restaurantstyle": restaurantstyle,
       "email": email,
       "telephoneNo": telephoneNo,
     });
-    final result = await http_post("/restregister", msg);
+    final result = await http_post("/custupdate", msg);
     String status = jsonDecode(result.body);
     //String status = loginResult.getStatus();
-    if (status == "Register Sucessful") {
+    if (status == "Update Sucessful") {
       showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
-                title: Text("Resgister Successful"),
+                title: Text("Update Successful"),
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
                       onPressed: () => Navigator.of(context).pop()),
                 ],
               ));
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => PersonalInfoPage()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => new PersonalInfoPage()));
     } else {
       // AlertDialog(
       //   title: Text(status),
@@ -105,6 +103,11 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     }
                     return null;
                   },
+                  onChanged: (String value) {
+                    setState(() {
+                      username = value;
+                    });
+                  },
                 ),
               ]),
             ),
@@ -122,6 +125,11 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     }
                     return null;
                   },
+                  onChanged: (String value) {
+                    setState(() {
+                      password = value;
+                    });
+                  },
                 ),
               ]),
             ),
@@ -129,7 +137,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
-                  initialValue: widget.cust.username,
+                  initialValue: widget.cust.custname,
                   decoration: const InputDecoration(
                     labelText: 'Name',
                   ),
@@ -138,6 +146,11 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                       return 'Please enter some text';
                     }
                     return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      custname = value;
+                    });
                   },
                 ),
               ]),
@@ -156,6 +169,11 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     }
                     return null;
                   },
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
                 ),
               ]),
             ),
@@ -173,6 +191,33 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                       return 'Please enter some text';
                     }
                     return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      address = value;
+                    });
+                  },
+                ),
+              ]),
+            ),
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Column(children: <Widget>[
+                TextFormField(
+                  initialValue: widget.cust.telephoneNo,
+                  decoration: const InputDecoration(
+                    labelText: 'Telephone No.',
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter some text';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      telephoneNo = value;
+                    });
                   },
                 ),
               ]),

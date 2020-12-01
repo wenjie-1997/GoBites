@@ -16,6 +16,8 @@ import 'package:demo/modules/custdetail.dart';
   }
 }*/
 
+CustDetail cust = null;
+
 Future<CustDetail> fetchCustDetail() async {
   final response = await http_get('/customer/' + login.login_id);
 
@@ -58,28 +60,24 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
           centerTitle: true,
           backgroundColor: Colors.red,
           actions: <Widget>[
-            FutureBuilder<CustDetail>(
-                future: futureCustDetail,
-                builder: (context, snapshot) {
-                  return IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                      ),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PersonalInfoUpdatePage(
-                                    cust: snapshot.data)));
-                      });
+            IconButton(
+                icon: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              new PersonalInfoUpdatePage(cust: cust)));
                 })
           ]),
       body: FutureBuilder<CustDetail>(
           future: futureCustDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              CustDetail cust = snapshot.data;
+              cust = snapshot.data;
               return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                 child: ListView(

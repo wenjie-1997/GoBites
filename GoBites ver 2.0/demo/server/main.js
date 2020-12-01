@@ -81,7 +81,7 @@ app.post('/restregister', async(req, res)=>{
 
 app.get('/customer/:customerId', async(req, res) => {
   const cid = req.params.customerId;
-  await db.query(`SELECT user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo
+  await db.query(`SELECT customer.CID,user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo
   FROM customer
   INNER JOIN user ON  user.fk_cid=customer.CID
   WHERE user.UID = ?`
@@ -170,6 +170,25 @@ app.get('/menu/:rid', async(req, res) => {
       return;
     }
   });
+});
+
+app.post('/custupdate', async(req, res)=>{
+  const {CID, username,password, custname,address,email,telephoneNo} = req.body;
+  let updateCusttable = "UPDATE `customer` SET `custname`=?, `address`=?,`email`=?,`telephoneNo`=? WHERE CID = ?;";
+  let updateUsertable = "UPDATE `user` SET `username`=? , `password` = ? WHERE fk_cid = ?";
+  await db.query( updateCusttable + updateUsertable,
+   [custname, address, email, telephoneNo, CID, username, password, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
 });
 
 app.get('/', (req, res) => {
