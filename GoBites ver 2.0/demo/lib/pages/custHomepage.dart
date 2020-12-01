@@ -118,34 +118,35 @@ class _CustHomePageState extends State<CustHomePage> {
         ));
 
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      backgroundColor: Colors.yellow[200],
-      body: Container(
-        height: SizeConfig.safeBlockVertical * 100,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text('GoBites',
-                    style: TextStyle(
-                        fontSize: 50.0,
-                        letterSpacing: 3.0,
-                        color: Colors.black,
-                        fontFamily: 'Vibur')),
+        resizeToAvoidBottomPadding: false,
+        backgroundColor: Colors.yellow[200],
+        body: Center(
+          child: Container(
+            height: SizeConfig.safeBlockVertical * 100,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('GoBites',
+                        style: TextStyle(
+                            fontSize: 50.0,
+                            letterSpacing: 3.0,
+                            color: Colors.black,
+                            fontFamily: 'Vibur')),
+                  ),
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  orderButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  personalDetailButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  viewOrderButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  giveFeedbackButton,
+                ],
               ),
-              SizedBox(height: SizeConfig.safeBlockVertical * 4),
-              orderButton,
-              SizedBox(height: SizeConfig.safeBlockVertical * 4),
-              personalDetailButton,
-              SizedBox(height: SizeConfig.safeBlockVertical * 4),
-              viewOrderButton,
-              SizedBox(height: SizeConfig.safeBlockVertical * 4),
-              giveFeedbackButton,
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
