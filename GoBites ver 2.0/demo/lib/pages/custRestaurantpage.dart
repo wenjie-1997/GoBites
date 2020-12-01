@@ -103,9 +103,7 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
                       Expanded(
                         flex: 3,
                         child: Text(
-                          restaurants[index].RID.toString() +
-                              " " +
-                              restaurants[index].restaurantname,
+                          restaurants[index].restaurantname,
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,

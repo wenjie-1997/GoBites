@@ -77,7 +77,10 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new PersonalInfoPage())),
         ),
         backgroundColor: Colors.red,
         title: Text('Update Detail'),
