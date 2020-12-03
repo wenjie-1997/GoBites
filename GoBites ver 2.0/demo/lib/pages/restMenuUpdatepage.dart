@@ -5,8 +5,6 @@ import 'package:demo/modules/menu.dart';
 import 'package:demo/pages/restMenupage.dart';
 import 'package:flutter/material.dart';
 
-
-
 class RestMenuUpdatePage extends StatefulWidget {
   final Menu menu;
   RestMenuUpdatePage({Key key, @required this.menu}) : super(key: key);
@@ -19,7 +17,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   String itemName;
   double itemPrice;
   String itemDesc;
-  
+
   Future menuUpdate() async {
     final msg = jsonEncode({
       "itemName": itemName,
