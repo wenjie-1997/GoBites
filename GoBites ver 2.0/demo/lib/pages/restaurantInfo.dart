@@ -5,6 +5,8 @@ import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/restdetail.dart';
 import 'restInfoUpdatepage.dart';
 
+RestDetail rest = null;
+
 Future<RestDetail> fetchRestDetail() async {
   print("Im here");
   final response = await http_get('/restaurant/' + login.login_id);
@@ -43,7 +45,7 @@ class _RestaurantPersonalInfoPageState
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('Restaurant Info'),
@@ -53,13 +55,14 @@ class _RestaurantPersonalInfoPageState
           IconButton(
             icon: Icon(
               Icons.edit,
-              color: Colors.black,
+              color: Colors.white,
             ),
             onPressed: () {
-              Navigator.push(
+              Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => RestInfoUpdatePage()));
+                      builder: (context) =>
+                          new RestInfoUpdatePage(rest: rest)));
             },
           ),
         ],
@@ -68,6 +71,7 @@ class _RestaurantPersonalInfoPageState
           future: futureRestDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              rest = snapshot.data;
               return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                 child: ListView(

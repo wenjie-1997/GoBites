@@ -1,4 +1,5 @@
 class RestDetail {
+  final int RID;
   final String username;
   final String password;
   final String restaurantname;
@@ -9,7 +10,8 @@ class RestDetail {
   final String telephoneNo;
 
   RestDetail(
-      {this.username,
+      {this.RID,
+      this.username,
       this.password,
       this.restaurantname,
       this.ownername,
@@ -20,6 +22,7 @@ class RestDetail {
 
   factory RestDetail.fromJson(Map<String, dynamic> json) {
     return RestDetail(
+        RID: json['RID'],
         username: json['username'],
         password: json['password'],
         restaurantname: json['restaurantname'],

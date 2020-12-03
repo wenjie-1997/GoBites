@@ -20,7 +20,6 @@ app.post('/login', async(req, res)=>{
       if(rows.length > 0){
         if(rows[0].usertype == 'customer'){
           console.log("Login Sucessful as Customer");
-          
           res.send({status:"Login Sucessful as Customer",id: rows[0].UID.toString()});
            return;
         }
@@ -101,7 +100,7 @@ app.get('/customer/:customerId', async(req, res) => {
 
 app.get('/restaurant/:restaurantId', async(req, res) => {
   const rid = req.params.restaurantId;
-  await db.query(`SELECT user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  await db.query(`SELECT restaurant.RID,user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
   FROM restaurant
   INNER JOIN user ON  user.fk_rid=restaurant.RID
   WHERE user.UID = ?`
@@ -190,6 +189,43 @@ app.post('/custupdate', async(req, res)=>{
       }
     });
 });
+
+app.post('/restupdate', async(req, res)=>{
+  const {RID, username, password, restaurantname, ownername, restaurantstyle, address, email, telephoneNo} = req.body;
+  let updateCusttable = "UPDATE `restaurant` SET `restaurantname`=?,`ownername`=?,`restaurantstyle`=?, `address`=?,`email`=?,`telephoneNo`=? WHERE RID = ?;";
+  let updateUsertable = "UPDATE `user` SET `username`=? , `password` = ? WHERE fk_rid = ?";
+  await db.query( updateCusttable + updateUsertable,
+   [restaurantname, ownername, restaurantstyle, address, email, telephoneNo, RID, username, password, RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/addmenu', async(req, res)=>{
+  const {itemName, itemPrice, itemPhoto, itemDesc, RID} = req.body;
+  await db.query("INSERT INTO `menuitem`(`itemName`, `itemPrice`, `itemPhoto`, `itemDesc`,`fk_rid`) VALUES (?,?,?,?,?)",
+   [itemName, itemPrice, itemPhoto, itemDesc,RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Insert Failed");
+        return;
+    }
+    else{
+        console.log("Insert Sucessful");
+        res.json("Insert Sucessful");
+        return;
+      }
+    });
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");
