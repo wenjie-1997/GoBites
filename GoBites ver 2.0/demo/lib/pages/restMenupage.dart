@@ -17,7 +17,6 @@ class _RestMenuPageState extends State<RestMenuPage> {
   Future<RestDetail> futureRestDetail;
   Future<List<Menu>> futureMenuList;
   Future<RestDetail> fetchRestDetail() async {
-    print("Im here");
     final response = await http_get('/restaurant/' + login.login_id);
 
     if (response.statusCode == 200) {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
+import 'package:demo/pages/restAddMenupage.dart';
 import 'package:demo/pages/restMenupage.dart';
 import 'package:flutter/material.dart';
 
@@ -14,11 +15,11 @@ class RestMenuUpdatePage extends StatefulWidget {
 }
 
 class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
-  String itemName;
-  double itemPrice;
-  String itemDesc;
-
   Future menuUpdate() async {
+    print(itemName +
+        itemPrice.toString() +
+        itemDesc +
+        widget.menu.MID.toString());
     final msg = jsonEncode({
       "itemName": itemName,
       "itemPrice": itemPrice,
@@ -60,15 +61,8 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    itemName = widget.menu.itemName;
-    itemPrice = widget.menu.itemPrice;
-    itemDesc = widget.menu.itemDesc;
-  }
-
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,7 +86,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
-                  initialValue: itemName,
+                  initialValue: widget.menu.itemName,
                   decoration: const InputDecoration(
                     labelText: 'Menu name',
                   ),
@@ -114,7 +108,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
-                  initialValue: itemPrice.toStringAsFixed(2),
+                  initialValue: widget.menu.itemPrice.toStringAsPrecision(2),
                   decoration: const InputDecoration(
                     labelText: 'Price (RM)',
                   ),
@@ -136,8 +130,8 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
+                  initialValue: widget.menu.itemDesc,
                   maxLines: 3,
-                  initialValue: itemDesc,
                   decoration: const InputDecoration(
                     labelText: 'Description',
                   ),
@@ -162,7 +156,18 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
                   primary: Colors.red,
                 ),
                 onPressed: () {
-                  menuUpdate();
+                  if (_formKey.currentState.validate()) {
+                    if (itemName == null) {
+                      itemName = widget.menu.itemName;
+                    }
+                    if (itemPrice == null) {
+                      itemPrice = widget.menu.itemPrice;
+                    }
+                    if (itemDesc == null) {
+                      itemDesc = widget.menu.itemDesc;
+                    }
+                    menuUpdate();
+                  }
                 },
                 child: Text('Update'),
               ),

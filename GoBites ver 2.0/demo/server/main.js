@@ -155,7 +155,7 @@ app.get('/restaurants/:rid', async(req, res) => {
 
 app.get('/menu/:rid', async(req, res) => {
   const rid = req.params.rid;
-  await db.query(`SELECT itemName, itemPrice, itemPhoto, itemDesc
+  await db.query(`SELECT itemName, itemPrice, itemPhoto, itemDesc, MID
   FROM menuitem WHERE fk_rid = ?`
   , [rid], (error, rows, fields) => {
     if (error) {

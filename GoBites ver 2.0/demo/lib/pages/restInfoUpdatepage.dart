@@ -215,7 +215,7 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: DropdownButton<String>(
-                        value: widget.rest.restaurantstyle,
+                        value: restaurantstyle,
                         underline: Container(
                           height: 2,
                           color: Colors.deepPurpleAccent,
@@ -273,7 +273,33 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                     primary: Colors.red,
                   ),
                   onPressed: () {
-                    restUpdate();
+                    if (_formKey.currentState.validate()) {
+                      if (username == null) {
+                        username = widget.rest.username;
+                      }
+                      if (password == null) {
+                        password = widget.rest.password;
+                      }
+                      if (email == null) {
+                        email = widget.rest.email;
+                      }
+                      if (address == null) {
+                        address = widget.rest.address;
+                      }
+                      if (telephoneNo == null) {
+                        telephoneNo = widget.rest.telephoneNo;
+                      }
+                      if (restaurantname == null) {
+                        restaurantname = widget.rest.restaurantname;
+                      }
+                      if (restaurantstyle == null) {
+                        restaurantstyle = widget.rest.restaurantstyle;
+                      }
+                      if (ownername == null) {
+                        ownername = widget.rest.ownername;
+                      }
+                      restUpdate();
+                    }
                   },
                   child: Text('Update'),
                 ),
