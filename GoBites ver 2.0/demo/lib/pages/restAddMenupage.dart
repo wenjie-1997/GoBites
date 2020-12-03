@@ -126,7 +126,7 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter some digit';
+                        return 'Please enter some text';
                       }
                       return null;
                     },

@@ -3,8 +3,9 @@ class Menu {
   final double itemPrice;
   final String itemPhoto;
   final String itemDesc;
+  final int MID;
 
-  Menu({this.itemName, this.itemPrice, this.itemPhoto, this.itemDesc});
+  Menu({this.itemName, this.itemPrice, this.itemPhoto, this.itemDesc, this.MID});
 
   factory Menu.fromJson(Map<String, dynamic> json) {
     return Menu(
@@ -13,6 +14,7 @@ class Menu {
             ? json['itemPrice'] + .0
             : json['itemPrice']),
         itemPhoto: json['itemPhoto'],
-        itemDesc: json['itemDesc']);
+        itemDesc: json['itemDesc'],
+        MID:json['MID']);
   }
 }

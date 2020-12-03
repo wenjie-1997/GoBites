@@ -226,6 +226,23 @@ app.post('/addmenu', async(req, res)=>{
     });
 });
 
+app.post('/menuupdate', async(req, res)=>{
+  const {itemName, itemPrice, itemPhoto, itemDesc, MID} = req.body;
+  await db.query( "UPDATE `menuitem` SET`itemName`=?,`itemPrice`=?,`itemPhoto`=?,`itemDesc`=? WHERE `MID`=?",
+   [itemName, itemPrice, itemPhoto, itemDesc, MID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");

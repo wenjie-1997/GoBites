@@ -1,20 +1,12 @@
 import 'dart:convert';
-
+import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
+import 'package:demo/modules/restdetail.dart';
+import 'package:demo/pages/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 import 'restAddMenupage.dart';
 import 'restMenuUpdatepage.dart';
-
-/*class RestaurantMenuPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Restaurant Menu Page',
-      home: RestMenuPage(),
-    );
-  }
-}*/
 
 class RestMenuPage extends StatefulWidget {
   @override
@@ -22,7 +14,24 @@ class RestMenuPage extends StatefulWidget {
 }
 
 class _RestMenuPageState extends State<RestMenuPage> {
+  Future<RestDetail> futureRestDetail;
   Future<List<Menu>> futureMenuList;
+  Future<RestDetail> fetchRestDetail() async {
+    print("Im here");
+    final response = await http_get('/restaurant/' + login.login_id);
+
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      rest = RestDetail.fromJson(jsonDecode(response.body));
+      return RestDetail.fromJson(jsonDecode(response.body));
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load detail, code = ' + response.statusCode.toString());
+    }
+  }
 
   List<Menu> parseMenu(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -30,8 +39,8 @@ class _RestMenuPageState extends State<RestMenuPage> {
     return parsed.map<Menu>((json) => Menu.fromJson(json)).toList();
   }
 
-  Future<List<Menu>> fetchMenu(/*String rid*/) async {
-    final response = await http_get('/menu/2');
+  Future<List<Menu>> fetchMenu(String rid) async {
+    final response = await http_get('/menu/' + rid);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -47,7 +56,8 @@ class _RestMenuPageState extends State<RestMenuPage> {
   @override
   void initState() {
     super.initState();
-    futureMenuList = fetchMenu(/*this.widget.rest.RID.toString()*/);
+    futureRestDetail = fetchRestDetail();
+    futureMenuList = fetchMenu(rest.RID.toString());
   }
 
   @override
@@ -127,8 +137,8 @@ class _RestMenuPageState extends State<RestMenuPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        RestMenuUpdatePage()));
+                                    builder: (context) => RestMenuUpdatePage(
+                                        menu: menus[index])));
                           },
                         ),
                       ),
