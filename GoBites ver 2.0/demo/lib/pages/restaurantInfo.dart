@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:demo/modules/http.dart';
+import 'package:demo/pages/restHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/restdetail.dart';
@@ -46,7 +47,10 @@ class _RestaurantPersonalInfoPageState
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new RestHomePage())),
         ),
         title: Text('Restaurant Info'),
         centerTitle: true,

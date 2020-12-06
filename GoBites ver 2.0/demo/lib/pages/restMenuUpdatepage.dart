@@ -39,13 +39,17 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: () => Navigator.of(context).pop()),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new RestMenuPage()));
+                      }),
                 ],
               ));
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => new RestMenuPage()));
+      ;
     } else {
       // AlertDialog(
       //   title: Text(status),
@@ -70,7 +74,10 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new RestMenuPage())),
         ),
         backgroundColor: Colors.red,
         title: Text('Update Menu'),
@@ -108,7 +115,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
-                  initialValue: widget.menu.itemPrice.toStringAsPrecision(2),
+                  initialValue: widget.menu.itemPrice.toStringAsFixed(2),
                   decoration: const InputDecoration(
                     labelText: 'Price (RM)',
                   ),

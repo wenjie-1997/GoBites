@@ -46,14 +46,15 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: () => Navigator.of(context).pop()),
-                ],
-              ));
-      Navigator.pushReplacement(
+                      onPressed: ()  {Navigator.of(context).pop();
+                      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) =>
-                  new RestaurantPersonalInfoPage()));
+                  new RestaurantPersonalInfoPage()));})
+                ],
+              ));
+      
     } else {
       // AlertDialog(
       //   title: Text(status),

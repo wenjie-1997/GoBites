@@ -48,13 +48,15 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: () => Navigator.of(context).pop()),
-                ],
-              ));
-      Navigator.pushReplacement(
+                      onPressed: ()  {Navigator.of(context).pop();
+                      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => new PersonalInfoPage()));
+                      }),
+                ],
+              ));
+      
     } else {
       // AlertDialog(
       //   title: Text(status),

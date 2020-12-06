@@ -33,13 +33,15 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: () => Navigator.of(context).pop()),
-                ],
-              ));
-      Navigator.pushReplacement(
+                      onPressed: () {Navigator.of(context).pop();
+                      Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => new RestMenuPage()));
+              }),
+                ],
+              ));
+      
     } else {
       // AlertDialog(
       //   title: Text(status),

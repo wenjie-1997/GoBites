@@ -3,6 +3,7 @@ import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:demo/modules/restdetail.dart';
+import 'package:demo/pages/restHomepage.dart';
 import 'package:demo/pages/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 import 'restAddMenupage.dart';
@@ -52,6 +53,50 @@ class _RestMenuPageState extends State<RestMenuPage> {
     }
   }
 
+  Future menuDelete(int id) async {
+    // print( widget.menu.MID.toString());
+    final msg = jsonEncode({
+      /*"itemName": itemName,
+      "itemPrice": itemPrice,
+      "itemPhoto": "default.png",
+      "itemDesc": itemDesc,*/
+       "MID": id,
+    });
+    final result = await http_post("/menudelete", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Delete Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Delete Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () {Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => new RestMenuPage()));
+                      },)
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -66,7 +111,10 @@ class _RestMenuPageState extends State<RestMenuPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new RestHomePage())),
         ),
         backgroundColor: Colors.red,
         title: Text('My Menu'),
@@ -146,7 +194,9 @@ class _RestMenuPageState extends State<RestMenuPage> {
                         child: IconButton(
                           icon: Icon(Icons.delete),
                           color: Colors.black,
-                          onPressed: () {},
+                          onPressed: () {
+                            deleteAlertDialog(context, menus[index].MID);
+                          },
                         ),
                       ),
                     ],
@@ -156,5 +206,39 @@ class _RestMenuPageState extends State<RestMenuPage> {
             ),
           );
         });
+  }
+
+  deleteAlertDialog(BuildContext context, int id) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget yesButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        menuDelete(id);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Menu"),
+      content: Text("Are you sure to delete this item?"),
+      actions: [
+        cancelButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

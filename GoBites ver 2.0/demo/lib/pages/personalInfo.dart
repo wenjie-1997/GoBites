@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:demo/modules/http.dart';
+import 'package:demo/pages/custHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import '../modules/custdetail.dart';
@@ -54,7 +55,10 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => new CustHomePage())),
           ),
           title: Text('Personal Info'),
           centerTitle: true,

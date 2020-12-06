@@ -243,6 +243,23 @@ app.post('/menuupdate', async(req, res)=>{
     });
 });
 
+app.post('/menudelete', async(req, res)=>{
+  const {MID} = req.body;
+  await db.query( "DELETE FROM `menuitem` WHERE `MID`=?",
+   [MID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Delete Failed");
+        return;
+    }
+    else{
+        console.log("Delete Sucessful");
+        res.json("Delete Sucessful");
+        return;s
+      }
+    });
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");
