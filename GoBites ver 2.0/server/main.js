@@ -255,7 +255,7 @@ app.post('/menudelete', async(req, res)=>{
     else{
         console.log("Delete Sucessful");
         res.json("Delete Sucessful");
-        return;s
+        return;
       }
     });
 });
