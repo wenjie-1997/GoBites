@@ -4,10 +4,14 @@ import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/restHomepage.dart';
-import 'package:demo/pages/restaurantInfo.dart';
 import 'package:flutter/material.dart';
+import '../modules/menu.dart';
+import '../modules/restdetail.dart';
+import '../modules/restdetail.dart';
 import 'restAddMenupage.dart';
 import 'restMenuUpdatepage.dart';
+
+String RID;
 
 class RestMenuPage extends StatefulWidget {
   @override
@@ -17,13 +21,14 @@ class RestMenuPage extends StatefulWidget {
 class _RestMenuPageState extends State<RestMenuPage> {
   Future<RestDetail> futureRestDetail;
   Future<List<Menu>> futureMenuList;
+  RestDetail rest;
+
   Future<RestDetail> fetchRestDetail() async {
     final response = await http_get('/restaurant/' + login.login_id);
-
+    print(login.login_id);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      rest = RestDetail.fromJson(jsonDecode(response.body));
       return RestDetail.fromJson(jsonDecode(response.body));
     } else {
       // If the server did not return a 200 OK response,
@@ -39,8 +44,9 @@ class _RestMenuPageState extends State<RestMenuPage> {
     return parsed.map<Menu>((json) => Menu.fromJson(json)).toList();
   }
 
-  Future<List<Menu>> fetchMenu(String rid) async {
-    final response = await http_get('/menu/' + rid);
+  Future<List<Menu>> fetchMenu(int rid) async {
+    print(rid);
+    final response = await http_get('/menu/' + rid.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -60,7 +66,7 @@ class _RestMenuPageState extends State<RestMenuPage> {
       "itemPrice": itemPrice,
       "itemPhoto": "default.png",
       "itemDesc": itemDesc,*/
-       "MID": id,
+      "MID": id,
     });
     final result = await http_post("/menudelete", msg);
     String status = jsonDecode(result.body);
@@ -73,13 +79,16 @@ class _RestMenuPageState extends State<RestMenuPage> {
                 title: Text("Delete Successful"),
                 actions: <Widget>[
                   TextButton(
-                      child: Text('Continue'),
-                      onPressed: () {Navigator.of(context).pop();
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
                       Navigator.pushReplacement(
-                        context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => new RestMenuPage()));
-                      },)
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new RestMenuPage()));
+                    },
+                  )
                 ],
               ));
     } else {
@@ -101,7 +110,6 @@ class _RestMenuPageState extends State<RestMenuPage> {
   void initState() {
     super.initState();
     futureRestDetail = fetchRestDetail();
-    futureMenuList = fetchMenu(rest.RID.toString());
   }
 
   @override
@@ -121,22 +129,34 @@ class _RestMenuPageState extends State<RestMenuPage> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-        child: FutureBuilder(
-            future: futureMenuList,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return menuListView(context, snapshot);
-              } else if (snapshot.hasError) {
-                return Text(snapshot.error);
-              }
-              return Center(child: CircularProgressIndicator());
-            }),
-      ),
+          padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+          child: FutureBuilder<RestDetail>(
+              future: futureRestDetail,
+              builder: (context, snapshot1) {
+                if (snapshot1.hasData) {
+                  rest = snapshot1.data;
+                  print(rest.RID);
+                  return FutureBuilder<List<Menu>>(
+                      future: fetchMenu(snapshot1.data.RID),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return menuListView(context, snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error);
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      });
+                } else if (snapshot1.hasError) {
+                  return Text(snapshot1.error);
+                }
+                return Center(child: CircularProgressIndicator());
+              })),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => RestAddMenuPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RestAddMenuPage(RID: rest.RID)));
         },
         child: Icon(Icons.add),
         backgroundColor: Colors.red,

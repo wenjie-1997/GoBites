@@ -8,7 +8,10 @@ String itemName;
 double itemPrice;
 String itemDesc;
 
+// ignore: must_be_immutable
 class RestAddMenuPage extends StatefulWidget {
+  int RID;
+  RestAddMenuPage({Key key, @required this.RID}) : super(key: key);
   @override
   _RestAddMenuPageState createState() => _RestAddMenuPageState();
 }
@@ -20,7 +23,7 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
       "itemPrice": itemPrice,
       "itemPhoto": "default.png",
       "itemDesc": itemDesc,
-      "RID": 2,
+      "RID": widget.RID,
     });
     final result = await http_post("/addmenu", msg);
     String status = jsonDecode(result.body);
@@ -33,15 +36,16 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: () {Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => new RestMenuPage()));
-              }),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new RestMenuPage()));
+                      }),
                 ],
               ));
-      
     } else {
       // AlertDialog(
       //   title: Text(status),

@@ -100,7 +100,7 @@ app.get('/customer/:customerId', async(req, res) => {
 
 app.get('/restaurant/:restaurantId', async(req, res) => {
   const rid = req.params.restaurantId;
-  await db.query(`SELECT restaurant.RID,user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
   FROM restaurant
   INNER JOIN user ON  user.fk_rid=restaurant.RID
   WHERE user.UID = ?`
