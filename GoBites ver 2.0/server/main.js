@@ -156,7 +156,7 @@ app.get('/restaurants/:rid', async(req, res) => {
 app.get('/menu/:rid', async(req, res) => {
   const rid = req.params.rid;
   await db.query(`SELECT itemName, itemPrice, itemPhoto, itemDesc, MID
-  FROM menuitem WHERE fk_rid = ?`
+  FROM MenuItem WHERE fk_rid = ?`
   , [rid], (error, rows, fields) => {
     if (error) {
       console.log(error);
@@ -211,7 +211,7 @@ app.post('/restupdate', async(req, res)=>{
 
 app.post('/addmenu', async(req, res)=>{
   const {itemName, itemPrice, itemPhoto, itemDesc, RID} = req.body;
-  await db.query("INSERT INTO `menuitem`(`itemName`, `itemPrice`, `itemPhoto`, `itemDesc`,`fk_rid`) VALUES (?,?,?,?,?)",
+  await db.query("INSERT INTO `MenuItem`(`itemName`, `itemPrice`, `itemPhoto`, `itemDesc`,`fk_rid`) VALUES (?,?,?,?,?)",
    [itemName, itemPrice, itemPhoto, itemDesc,RID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -228,7 +228,7 @@ app.post('/addmenu', async(req, res)=>{
 
 app.post('/menuupdate', async(req, res)=>{
   const {itemName, itemPrice, itemPhoto, itemDesc, MID} = req.body;
-  await db.query( "UPDATE `menuitem` SET`itemName`=?,`itemPrice`=?,`itemPhoto`=?,`itemDesc`=? WHERE `MID`=?",
+  await db.query( "UPDATE `MenuItem` SET`itemName`=?,`itemPrice`=?,`itemPhoto`=?,`itemDesc`=? WHERE `MID`=?",
    [itemName, itemPrice, itemPhoto, itemDesc, MID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -245,7 +245,7 @@ app.post('/menuupdate', async(req, res)=>{
 
 app.post('/menudelete', async(req, res)=>{
   const {MID} = req.body;
-  await db.query( "DELETE FROM `menuitem` WHERE `MID`=?",
+  await db.query( "DELETE FROM `MenuItem` WHERE `MID`=?",
    [MID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -269,7 +269,7 @@ async function main(){
     db = await mysql.createConnection({
       host:"localhost",
       user: "root",
-      password: "",
+      password: "void",
       database: "gobites",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
