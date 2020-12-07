@@ -6,7 +6,7 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
-import 'package:demo/pages/custMenupage.dart';
+import 'package:demo/pages/customer/custMenupage.dart';
 
 List<RestList> parseRestaurants(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();

@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
-import 'package:demo/pages/restAddMenupage.dart';
-import 'package:demo/pages/restMenupage.dart';
+import 'package:demo/pages/restaurant/restAddMenupage.dart';
+import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:flutter/material.dart';
 
 class RestMenuUpdatePage extends StatefulWidget {

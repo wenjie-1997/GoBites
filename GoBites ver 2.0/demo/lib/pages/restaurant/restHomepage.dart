@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'restMenupage.dart';
-import 'restaurantInfo.dart';
-import 'pageSizing.dart';
+import 'package:demo/pages/restaurant/restMenupage.dart';
+import 'package:demo/pages/restaurant/restaurantInfo.dart';
+import 'package:demo/pages/pageSizing.dart';
 
 class RestaurantHomePage extends StatelessWidget {
   @override

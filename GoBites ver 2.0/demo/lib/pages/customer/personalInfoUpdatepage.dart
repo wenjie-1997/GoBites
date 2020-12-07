@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../modules/custdetail.dart';
-import '../modules/http.dart';
+import '../../modules/custdetail.dart';
+import '../../modules/http.dart';
 import 'personalInfo.dart';
 
 String username;

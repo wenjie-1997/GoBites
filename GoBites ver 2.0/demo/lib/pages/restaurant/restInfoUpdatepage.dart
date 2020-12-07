@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
-import 'package:demo/pages/restaurantInfo.dart';
+import 'package:demo/pages/restaurant/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 
 String username;

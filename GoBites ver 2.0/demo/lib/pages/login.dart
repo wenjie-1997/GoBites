@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
-import 'package:demo/pages/custHomepage.dart';
-import 'package:demo/pages/restHomepage.dart';
+import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/registration.dart';
 import 'package:demo/modules/user.dart';

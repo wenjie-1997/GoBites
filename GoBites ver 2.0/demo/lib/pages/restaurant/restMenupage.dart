@@ -3,13 +3,12 @@ import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:demo/modules/restdetail.dart';
-import 'package:demo/pages/restHomepage.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
 import 'package:flutter/material.dart';
-import '../modules/menu.dart';
-import '../modules/restdetail.dart';
-import '../modules/restdetail.dart';
-import 'restAddMenupage.dart';
-import 'restMenuUpdatepage.dart';
+import '../../modules/menu.dart';
+import '../../modules/restdetail.dart';
+import 'package:demo/pages/restaurant/restAddMenupage.dart';
+import 'package:demo/pages/restaurant/restMenuUpdatepage.dart';
 
 String RID;
 

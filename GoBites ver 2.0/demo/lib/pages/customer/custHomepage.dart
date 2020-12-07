@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'custRestaurantpage.dart';
-import 'personalInfo.dart';
-import 'pageSizing.dart';
+import 'package:demo/pages/customer/custRestaurantpage.dart';
+import 'package:demo/pages/customer/personalInfo.dart';
+import 'package:demo/pages/pageSizing.dart';
 
 class CustomerHomePage extends StatelessWidget {
   @override

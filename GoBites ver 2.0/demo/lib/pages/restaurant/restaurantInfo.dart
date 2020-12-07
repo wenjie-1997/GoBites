@@ -1,51 +1,43 @@
 import 'dart:convert';
 import 'package:demo/modules/http.dart';
-import 'package:demo/pages/custHomepage.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
-import '../modules/custdetail.dart';
-import 'personalInfoUpdatepage.dart';
+import 'package:demo/modules/restdetail.dart';
+import 'restInfoUpdatepage.dart';
 
-import 'package:demo/modules/custdetail.dart';
-/*class PersonalInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "View Personal Info",
-      home: PersonalInfoPage(),
-    );
-  }
-}*/
+RestDetail rest = null;
 
-CustDetail cust = null;
-
-Future<CustDetail> fetchCustDetail() async {
-  final response = await http_get('/customer/' + login.login_id);
+Future<RestDetail> fetchRestDetail() async {
+  print("Im here");
+  final response = await http_get('/restaurant/' + login.login_id);
 
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
-    return CustDetail.fromJson(jsonDecode(response.body));
+    return RestDetail.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
     throw Exception(
-        'Failed to load album, code = ' + response.statusCode.toString());
+        'Failed to load detail, code = ' + response.statusCode.toString());
   }
 }
 
-class PersonalInfoPage extends StatefulWidget {
+class RestaurantPersonalInfoPage extends StatefulWidget {
   @override
-  _PersonalInfoPageState createState() => _PersonalInfoPageState();
+  _RestaurantPersonalInfoPageState createState() =>
+      _RestaurantPersonalInfoPageState();
 }
 
-class _PersonalInfoPageState extends State<PersonalInfoPage> {
-  Future<CustDetail> futureCustDetail;
+class _RestaurantPersonalInfoPageState
+    extends State<RestaurantPersonalInfoPage> {
+  Future<RestDetail> futureRestDetail;
 
   @override
   void initState() {
     super.initState();
-    futureCustDetail = fetchCustDetail();
+    futureRestDetail = fetchRestDetail();
   }
 
   @override
@@ -53,35 +45,37 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacement(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new CustHomePage())),
+                  builder: (BuildContext context) => new RestHomePage())),
+        ),
+        title: Text('Restaurant Info'),
+        centerTitle: true,
+        backgroundColor: Colors.red,
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.edit,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          new RestInfoUpdatePage(rest: rest)));
+            },
           ),
-          title: Text('Personal Info'),
-          centerTitle: true,
-          backgroundColor: Colors.red,
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              new PersonalInfoUpdatePage(cust: cust)));
-                })
-          ]),
-      body: FutureBuilder<CustDetail>(
-          future: futureCustDetail,
+        ],
+      ),
+      body: FutureBuilder<RestDetail>(
+          future: futureRestDetail,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              cust = snapshot.data;
+              rest = snapshot.data;
               return Padding(
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                 child: ListView(
@@ -103,7 +97,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      cust.username,
+                      snapshot.data.username,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -119,7 +113,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      cust.password,
+                      snapshot.data.password,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -129,13 +123,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 20.0,
                     ),
                     Text(
-                      'Name:',
+                      'Restaurant Name:',
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     Text(
-                      cust.custname,
+                      snapshot.data.restaurantname,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -151,7 +145,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      cust.email,
+                      snapshot.data.email,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -161,13 +155,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 20.0,
                     ),
                     Text(
-                      'Gender:',
+                      'Restaurant Owner Name:',
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     Text(
-                      cust.gender,
+                      snapshot.data.ownername,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -177,13 +171,13 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 20.0,
                     ),
                     Text(
-                      'Birthday:',
+                      'Restaurant Type/Style:',
                     ),
                     SizedBox(
                       height: 10.0,
                     ),
                     Text(
-                      cust.birthdate,
+                      snapshot.data.restaurantstyle,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -199,7 +193,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      cust.address,
+                      snapshot.data.address,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -213,16 +207,16 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             }
 
             // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator());
+            return CircularProgressIndicator();
           }),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.red,
         selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.yellow[200],
+        unselectedItemColor: Colors.yellow[100],
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: 'Personal Info'),
+              icon: Icon(Icons.person), label: 'Restaurant Info'),
         ],
         currentIndex: 1,
       ),

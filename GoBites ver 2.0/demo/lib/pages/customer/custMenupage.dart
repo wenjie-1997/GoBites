@@ -3,7 +3,7 @@ import 'package:demo/modules/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
-import 'cartpage.dart';
+import 'package:demo/pages/customer/cartpage.dart';
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);

@@ -3,13 +3,13 @@ import 'package:demo/pages/home.dart';
 import 'package:demo/pages/login.dart';
 import 'package:demo/pages/loading.dart';
 import 'package:demo/pages/registration.dart';
-import 'package:demo/pages/personalInfo.dart';
-import 'package:demo/pages/restaurantInfo.dart';
-import 'package:demo/pages/custHomepage.dart';
-import 'package:demo/pages/restHomepage.dart';
-import 'package:demo/pages/custMenupage.dart';
-import 'package:demo/pages/custRestaurantpage.dart';
-import 'package:demo/pages/restMenupage.dart';
+import 'package:demo/pages/customer/personalInfo.dart';
+import 'package:demo/pages/restaurant/restaurantInfo.dart';
+import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
+import 'package:demo/pages/customer/custMenupage.dart';
+import 'package:demo/pages/customer/custRestaurantpage.dart';
+import 'package:demo/pages/restaurant/restMenupage.dart';
 
 void main() {
   runApp(MaterialApp(
