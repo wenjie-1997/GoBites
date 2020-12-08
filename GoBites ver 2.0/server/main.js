@@ -260,6 +260,26 @@ app.post('/menudelete', async(req, res)=>{
     });
 });
 
+app.get('/viewcart/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT menuitem.itemName, menuitem.itemPrice,cart.quantity,cart.KID
+  FROM cart
+  INNER JOIN menuitem ON menuitem.mid=cart.fk_mid
+  WHERE fk_cid=?`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Cart Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Cart Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");

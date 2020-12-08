@@ -73,16 +73,38 @@ class _CustMenuPageState extends State<CustMenuPage> {
               backgroundColor: Colors.red,
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.black,
+                  icon: new Stack(
+                    children: <Widget>[
+                      new Icon(Icons.shopping_cart_rounded),
+                      new Positioned(
+                        right: 0,
+                        child: new Container(
+                          padding: EdgeInsets.all(1),
+                          decoration: new BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 12,
+                            minHeight: 12,
+                          ),
+                          child: new Text(
+                            '0',
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: 
-                    (context) => CartPage())
-                    );
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CartPage()));
                   },
-                  ),
+                ),
               ],
             ),
             body: Column(children: <Widget>[
@@ -287,6 +309,14 @@ class _CustMenuPageState extends State<CustMenuPage> {
                         flex: 1,
                         child: Text(
                             'RM ${menus[index].itemPrice.toStringAsFixed(2)}'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(Icons.add),
+                          color: Colors.black,
+                          onPressed: () {},
+                        ),
                       ),
                     ],
                   ),
