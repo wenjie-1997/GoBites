@@ -13,7 +13,7 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   int _itemCount = 0;
-  double _totalPrice = 19.50;
+  double _totalPrice = 0;
   Future<CustDetail> futureCustDetail;
 
   cartItemDelete(int kid) async {
@@ -109,6 +109,11 @@ class _CartPageState extends State<CartPage> {
               future: fetchCart(snapshot1.data.CID),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  List<Cart> carts = snapshot.data;
+                  for (var i = 0; i < carts.length; i++) {
+                    _totalPrice +=
+                        (carts[i].itemPrice * carts[i].quantity);
+                  }
                   return cartListView(context, snapshot);
                 } else if (snapshot.hasError) {
                   return Text(snapshot.error);
