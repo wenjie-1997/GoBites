@@ -1,11 +1,9 @@
 import 'dart:convert';
 import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
-import 'package:demo/modules/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
-import 'package:demo/modules/restdetail.dart';
 import 'personalInfo.dart' as info;
 
 class CartPage extends StatefulWidget {
@@ -17,6 +15,52 @@ class _CartPageState extends State<CartPage> {
   int _itemCount = 0;
   double _totalPrice = 19.50;
   Future<CustDetail> futureCustDetail;
+
+  cartItemDelete(int kid) async {
+    final msg = jsonEncode({
+      /*"itemName": itemName,
+      "itemPrice": itemPrice,
+      "itemPhoto": "default.png",
+      "itemDesc": itemDesc,*/
+      "KID": kid,
+    });
+    final result = await http_post("/cartdelete", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Delete Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Delete Successful"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new CartPage()));
+                    },
+                  )
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   List<Cart> parseCart(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -51,9 +95,8 @@ class _CartPageState extends State<CartPage> {
       backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.of(context).pop()),
         title: Text('My Cart'),
         centerTitle: true,
         backgroundColor: Colors.red,
@@ -145,7 +188,9 @@ class _CartPageState extends State<CartPage> {
                           child: IconButton(
                             icon: Icon(Icons.delete),
                             color: Colors.black,
-                            onPressed: () {},
+                            onPressed: () {
+                              deleteAlertDialog(context, carts[index].KID);
+                            },
                           ),
                         ),
                       ],
@@ -172,5 +217,39 @@ class _CartPageState extends State<CartPage> {
         ),
       )
     ]);
+  }
+
+  deleteAlertDialog(BuildContext context, int id) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget yesButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        cartItemDelete(id);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Delete Menu"),
+      content: Text("Are you sure to delete this item?"),
+      actions: [
+        cancelButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

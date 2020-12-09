@@ -280,6 +280,39 @@ app.get('/viewcart/:cid', async(req, res)=>{
     });
 });
 
+app.post('/addtocart', async(req, res)=>{
+  const {MID, quantity, CID} = req.body;
+  await db.query("INSERT INTO `cart`(`fk_mid`,`quantity`,`fk_cid`) VALUES (?,?,?)",
+   [MID, quantity, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Insert Failed");
+        return;
+    }
+    else{
+        console.log("Insert Sucessful");
+        res.json("Insert Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/cartdelete', async(req, res)=>{
+  const {KID} = req.body;
+  await db.query( "DELETE FROM `cart` WHERE `KID`=?",
+   [KID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Delete Failed");
+        return;
+    }
+    else{
+        console.log("Delete Sucessful");
+        res.json("Delete Sucessful");
+        return;s
+      }
+    });
+});
 
 app.get('/', (req, res) => {
   res.send("Hello World");
