@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
+import 'package:demo/modules/orders.dart';
 import 'package:demo/pages/customer/checkoutpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
@@ -13,9 +14,35 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
+  int _CID;
   int _itemCount = 0;
   double _totalPrice = 0;
   Future<CustDetail> futureCustDetail;
+
+  moveToOrder() async {
+    final msg = jsonEncode({
+      "CID": _CID,
+    });
+    final result = await http_post("/movetoorder", msg);
+    Orders orders = Orders.fromJson(jsonDecode(result.body));
+    //String status = loginResult.getStatus();
+    if (orders.OID != null) {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Order Successful"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ));
+    }
+  }
 
   cartItemDelete(int kid) async {
     final msg = jsonEncode({
@@ -106,8 +133,9 @@ class _CartPageState extends State<CartPage> {
         future: futureCustDetail,
         builder: (context, snapshot1) {
           if (snapshot1.hasData) {
+            _CID = snapshot1.data.CID;
             return FutureBuilder(
-              future: fetchCart(snapshot1.data.CID),
+              future: fetchCart(_CID),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   List<Cart> carts = snapshot.data;
@@ -197,8 +225,36 @@ class _CartPageState extends State<CartPage> {
               textAlign: TextAlign.center,
             ),
             onPressed: () {
-              Navigator.push(context,
-                MaterialPageRoute(builder: (context) => Checkoutpage()));
+              if (_totalPrice != 0) {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Check Out"),
+                      content: Text(
+                          "Are you sure to check out? The process is irreversible."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Yes"),
+                          onPressed: () {
+                            moveToOrder();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Checkoutpage()));
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              }
             },
             color: Colors.red,
             textColor: Colors.white,
@@ -225,7 +281,7 @@ class _CartPageState extends State<CartPage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Delete Menu"),
+      title: Text("Delete Itm"),
       content: Text("Are you sure to delete this item?"),
       actions: [
         cancelButton,

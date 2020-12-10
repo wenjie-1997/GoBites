@@ -325,7 +325,7 @@ app.post('/movetoorder', async(req, res)=>{
   (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
   WHERE fk_oid = @last_id) WHERE fk_cid = ?;
-  SELECT @last_id AS MID;`,
+  SELECT @last_id AS OID;`,
    [CID, CID, CID, CID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -334,7 +334,7 @@ app.post('/movetoorder', async(req, res)=>{
     }
     else{
         console.log("Place an Order Sucessful");
-        res.json("Place an Order Sucessful");
+        res.send(rows[5][0]);
         return;
       }
     });
