@@ -323,7 +323,7 @@ async function main(){
       host:"localhost",
       user: "root",
       password: "void",
-      database: "gobites2",
+      database: "goBites2",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
