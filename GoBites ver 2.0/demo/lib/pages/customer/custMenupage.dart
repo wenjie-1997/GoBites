@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/customer/cartpage.dart';
+import 'personalInfo.dart' as info;
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);
@@ -48,7 +49,51 @@ class CustMenuPage extends StatefulWidget {
 class _CustMenuPageState extends State<CustMenuPage> {
   Future<CustRestDetail> futureCustRestDetail;
   Future<List<Menu>> futureMenuList;
+  int _quantity = 1;
   final ScrollController _scrollController = ScrollController();
+
+  Future insertCart(int MID, int quantity, int CID) async {
+    print(MID.toString() + quantity.toString() + CID.toString());
+    final msg = jsonEncode({
+      "MID": MID,
+      "quantity": quantity,
+      "CID": CID,
+    });
+    final result = await http_post("/addtocart", msg);
+    String status = jsonDecode(result.body);
+    if (status == "Insert Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Add to Cart Sucessful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new CustMenuPage(rest: widget.rest)));
+                      }),
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   @override
   void initState() {
@@ -73,16 +118,38 @@ class _CustMenuPageState extends State<CustMenuPage> {
               backgroundColor: Colors.red,
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(
-                    Icons.shopping_cart,
-                    color: Colors.black,
+                  icon: new Stack(
+                    children: <Widget>[
+                      new Icon(Icons.shopping_cart_rounded),
+                      new Positioned(
+                        right: 0,
+                        child: new Container(
+                          padding: EdgeInsets.all(1),
+                          decoration: new BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: BoxConstraints(
+                            minWidth: 12,
+                            minHeight: 12,
+                          ),
+                          child: new Text(
+                            '0',
+                            style: new TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: 
-                    (context) => CartPage())
-                    );
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => CartPage()));
                   },
-                  ),
+                ),
               ],
             ),
             body: Column(children: <Widget>[
@@ -287,6 +354,72 @@ class _CustMenuPageState extends State<CustMenuPage> {
                         flex: 1,
                         child: Text(
                             'RM ${menus[index].itemPrice.toStringAsFixed(2)}'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                            icon: Icon(Icons.add),
+                            color: Colors.black,
+                            onPressed: () {
+                              return showDialog<void>(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (BuildContext context) =>
+                                      new StatefulBuilder(
+                                          builder: (context, setState) {
+                                        return AlertDialog(
+                                          title: Text("Add to Cart"),
+                                          content: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                  "Name: ${menus[index].itemName}\n"),
+                                              Text(
+                                                  "Price: ${menus[index].itemPrice}\n"),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Text("Quantity: "),
+                                                  new IconButton(
+                                                    icon: Icon(Icons.remove),
+                                                    color: Colors.black,
+                                                    onPressed: () =>
+                                                        setState(() {
+                                                      if (_quantity > 1) {
+                                                        _quantity--;
+                                                      }
+                                                    }),
+                                                  ),
+                                                  new Text('$_quantity'),
+                                                  new IconButton(
+                                                    icon: Icon(Icons.add),
+                                                    color: Colors.black,
+                                                    onPressed: () => setState(
+                                                        () => _quantity++),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                                child: Text('Continue'),
+                                                onPressed: () {
+                                                  insertCart(menus[index].MID,
+                                                      _quantity, 9);
+                                                  Navigator.of(context).pop();
+                                                }),
+                                            TextButton(
+                                                child: Text('Cancel'),
+                                                onPressed: () {
+                                                  Navigator.of(context).pop();
+                                                }),
+                                          ],
+                                        );
+                                      }));
+                            }),
                       ),
                     ],
                   ),

@@ -17,7 +17,7 @@ import 'package:demo/modules/custdetail.dart';
   }
 }*/
 
-CustDetail cust = null;
+CustDetail cust;
 
 Future<CustDetail> fetchCustDetail() async {
   final response = await http_get('/customer/' + login.login_id);
@@ -56,9 +56,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new CustHomePage())),
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => new CustHomePage())),
           ),
           title: Text('Personal Info'),
           centerTitle: true,
