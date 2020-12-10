@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
+import 'package:demo/pages/customer/checkoutpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
@@ -215,7 +216,10 @@ class _CartPageState extends State<CartPage> {
               'Total (RM ${_totalPrice.toStringAsFixed(2)}) \n Check Out',
               textAlign: TextAlign.center,
             ),
-            onPressed: () => {},
+            onPressed: () {
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context) => Checkoutpage()));
+            },
             color: Colors.red,
             textColor: Colors.white,
           ),
