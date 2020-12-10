@@ -112,8 +112,7 @@ class _CartPageState extends State<CartPage> {
                 if (snapshot.hasData) {
                   List<Cart> carts = snapshot.data;
                   for (var i = 0; i < carts.length; i++) {
-                    _totalPrice +=
-                        (carts[i].itemPrice * carts[i].quantity);
+                    _totalPrice += (carts[i].itemPrice * carts[i].quantity);
                   }
                   return cartListView(context, snapshot);
                 } else if (snapshot.hasError) {
@@ -161,26 +160,7 @@ class _CartPageState extends State<CartPage> {
                         Expanded(
                           flex: 1,
                           child: Center(
-                            child: IconButton(
-                              icon: Icon(Icons.remove),
-                              color: Colors.black,
-                              onPressed: () => setState(() => _itemCount--),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Center(child: Text(_itemCount.toString())),
-                        ),
-                        Expanded(
-                          flex: 1,
-                          child: Center(
-                            child: IconButton(
-                              icon: Icon(Icons.add),
-                              color: Colors.black,
-                              onPressed: () => setState(() => _itemCount++),
-                            ),
-                          ),
+                              child: Text(carts[index].quantity.toString())),
                         ),
                         Expanded(
                           flex: 2,

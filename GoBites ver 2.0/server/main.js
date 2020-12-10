@@ -297,6 +297,7 @@ app.post('/addtocart', async(req, res)=>{
     });
 });
 
+
 app.post('/cartdelete', async(req, res)=>{
   const {KID} = req.body;
   await db.query( "DELETE FROM `cart` WHERE `KID`=?",
@@ -310,6 +311,31 @@ app.post('/cartdelete', async(req, res)=>{
         console.log("Delete Sucessful");
         res.json("Delete Sucessful");
         return;s
+      }
+    });
+});
+
+app.post('/movetoorder', async(req, res)=>{
+  const {CID} = req.body;
+  await db.query(`INSERT INTO orders(fk_cid) VALUES(?);
+  SET @last_id = LAST_INSERT_ID();
+  INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
+  DELETE FROM cart WHERE fk_cid = ?;
+  UPDATE orders SET totalprice = 
+  (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
+  JOIN menuitem ON menuitem.MID=orderitem.fk_mid
+  WHERE fk_oid = @last_id) WHERE fk_cid = ?;
+  SELECT @last_id AS MID;`,
+   [CID, CID, CID, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Place an Order Failed");
+        return;
+    }
+    else{
+        console.log("Place an Order Sucessful");
+        res.json("Place an Order Sucessful");
+        return;
       }
     });
 });
