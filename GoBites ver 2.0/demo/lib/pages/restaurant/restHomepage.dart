@@ -120,33 +120,34 @@ class _RestHomePageState extends State<RestHomePage> {
         ));
 
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
-      body: Container(
-        height: SizeConfig.safeBlockVertical * 100,
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
-          child: Column(
-            children: <Widget>[
-              Center(
-                child: Text('GoBites',
-                    style: TextStyle(
-                        fontSize: 50.0,
-                        letterSpacing: 3.0,
-                        color: Colors.black,
-                        fontFamily: 'Vibur')),
+        backgroundColor: Colors.yellow[200],
+        body: Center(
+          child: Container(
+            height: SizeConfig.safeBlockVertical * 100,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
+              child: Column(
+                children: <Widget>[
+                  Center(
+                    child: Text('GoBites',
+                        style: TextStyle(
+                            fontSize: 50.0,
+                            letterSpacing: 3.0,
+                            color: Colors.black,
+                            fontFamily: 'Vibur')),
+                  ),
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  menuButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  restaurantDetailButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  viewOrderButton,
+                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
+                  feedbackButton,
+                ],
               ),
-              SizedBox(height: 50.0),
-              menuButton,
-              SizedBox(height: 50.0),
-              restaurantDetailButton,
-              SizedBox(height: 50.0),
-              viewOrderButton,
-              SizedBox(height: 50.0),
-              feedbackButton,
-            ],
+            ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
