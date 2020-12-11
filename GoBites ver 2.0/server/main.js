@@ -342,9 +342,9 @@ app.post('/movetoorder', async(req, res)=>{
 
 app.get('/vieworderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid, totalPrice
+  await db.query( `SELECT orderid AS OID, totalPrice
   FROM orders
-  WHERE fk_oid=?`,
+  WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -353,7 +353,7 @@ app.get('/vieworderid/:oid', async(req, res)=>{
     }
     else{
         console.log("Retrieve Order ID Sucessful");
-        res.send(rows);
+        res.send(rows[0]);
         return;
       }
     });
