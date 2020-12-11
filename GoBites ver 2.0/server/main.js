@@ -340,6 +340,45 @@ app.post('/movetoorder', async(req, res)=>{
     });
 });
 
+app.get('/vieworderid/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT orderid, totalPrice
+  FROM orders
+  WHERE fk_oid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/viewordername/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE fk_oid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order Name Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

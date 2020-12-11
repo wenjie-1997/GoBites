@@ -3,6 +3,7 @@ import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/orders.dart';
 import 'package:demo/pages/customer/checkoutpage.dart';
+import 'package:demo/pages/customer/orderConfirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
@@ -37,6 +38,10 @@ class _CartPageState extends State<CartPage> {
                     child: Text('Continue'),
                     onPressed: () {
                       Navigator.of(context).pop();
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrderConfirmPage(oid:orders.OID)));
                     },
                   )
                 ],
@@ -244,10 +249,6 @@ class _CartPageState extends State<CartPage> {
                           child: Text("Yes"),
                           onPressed: () {
                             moveToOrder();
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Checkoutpage()));
                           },
                         ),
                       ],
