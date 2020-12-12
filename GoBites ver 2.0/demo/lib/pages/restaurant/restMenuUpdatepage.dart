@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/menu.dart';
-import 'package:demo/pages/restaurant/restAddMenupage.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:flutter/material.dart';
 
@@ -13,6 +12,10 @@ class RestMenuUpdatePage extends StatefulWidget {
   @override
   _RestMenuUpdatePageState createState() => _RestMenuUpdatePageState();
 }
+
+String itemName;
+double itemPrice;
+String itemDesc;
 
 class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   Future menuUpdate() async {
@@ -65,6 +68,14 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   }
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    itemName = widget.menu.itemName;
+    itemPrice = widget.menu.itemPrice;
+    itemDesc = widget.menu.itemDesc;
+  }
 
   @override
   Widget build(BuildContext context) {
