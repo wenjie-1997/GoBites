@@ -384,10 +384,10 @@ router.get(DOMAIN + '/viewcart/:cid', async(req, res)=>{
 
 async function main(){
     db = await mysql.createConnection({
-      host:"localhost",
-      user: "root",
-      password: "void",
-      database: "goBites2",
+      host:"johnny.heliohost.org",
+      user: "ainalfa_pharveish",
+      password: "pharveish@123",
+      database: "ainalfa_go-bites-db",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
