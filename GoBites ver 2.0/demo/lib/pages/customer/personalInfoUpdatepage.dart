@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import '../../modules/custdetail.dart';
 import '../../modules/http.dart';
 import 'personalInfo.dart';
@@ -48,15 +46,16 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
-                      onPressed: ()  {Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => new PersonalInfoPage()));
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new PersonalInfoPage()),
+                            (route) => false);
                       }),
                 ],
               ));
-      
     } else {
       // AlertDialog(
       //   title: Text(status),
@@ -235,6 +234,24 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
+                    if (username == null) {
+                      username = widget.cust.username;
+                    }
+                    if (password == null) {
+                      password = widget.cust.password;
+                    }
+                    if (email == null) {
+                      email = widget.cust.email;
+                    }
+                    if (address == null) {
+                      address = widget.cust.address;
+                    }
+                    if (telephoneNo == null) {
+                      telephoneNo = widget.cust.telephoneNo;
+                    }
+                    if (custname == null) {
+                      custname = widget.cust.custname;
+                    }
                     custUpdate();
                   }
                 },

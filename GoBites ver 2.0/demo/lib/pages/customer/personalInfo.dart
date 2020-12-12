@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import '../../modules/custdetail.dart';
 import 'package:demo/pages/customer/personalInfoUpdatepage.dart';
-
+import 'package:intl/intl.dart';
 import 'package:demo/modules/custdetail.dart';
 /*class PersonalInfo extends StatelessWidget {
   @override
@@ -183,7 +183,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       height: 10.0,
                     ),
                     Text(
-                      cust.birthdate,
+                      "${DateFormat('dd-MM-yyyy').format(cust.birthdate)}",
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -205,6 +205,9 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(
+                      height: 20.0,
+                    ),
                   ],
                 ),
               );
@@ -215,17 +218,17 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             // By default, show a loading spinner.
             return Center(child: CircularProgressIndicator());
           }),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.red,
-        selectedItemColor: Colors.black,
-        unselectedItemColor: Colors.yellow[200],
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.person), label: 'Personal Info'),
-        ],
-        currentIndex: 1,
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   backgroundColor: Colors.red,
+      //   selectedItemColor: Colors.black,
+      //   unselectedItemColor: Colors.yellow[200],
+      //   items: [
+      //     BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      //     BottomNavigationBarItem(
+      //         icon: Icon(Icons.person), label: 'Personal Info'),
+      //   ],
+      //   currentIndex: 1,
+      // ),
     );
   }
 }

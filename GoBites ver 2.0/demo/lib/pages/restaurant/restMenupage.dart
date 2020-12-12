@@ -133,7 +133,9 @@ class _RestMenuPageState extends State<RestMenuPage> {
               future: futureRestDetail,
               builder: (context, snapshot1) {
                 if (snapshot1.hasData) {
+                  print(snapshot1.data.RID);
                   rest = snapshot1.data;
+                  print(rest.email);
                   print(rest.RID);
                   return FutureBuilder<List<Menu>>(
                       future: fetchMenu(snapshot1.data.RID),

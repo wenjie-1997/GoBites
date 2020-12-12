@@ -297,6 +297,7 @@ app.post('/addtocart', async(req, res)=>{
     });
 });
 
+
 app.post('/cartdelete', async(req, res)=>{
   const {KID} = req.body;
   await db.query( "DELETE FROM `cart` WHERE `KID`=?",
@@ -310,6 +311,70 @@ app.post('/cartdelete', async(req, res)=>{
         console.log("Delete Sucessful");
         res.json("Delete Sucessful");
         return;s
+      }
+    });
+});
+
+app.post('/movetoorder', async(req, res)=>{
+  const {CID} = req.body;
+  await db.query(`INSERT INTO orders(fk_cid) VALUES(?);
+  SET @last_id = LAST_INSERT_ID();
+  INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
+  DELETE FROM cart WHERE fk_cid = ?;
+  UPDATE orders SET totalprice = 
+  (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
+  JOIN menuitem ON menuitem.MID=orderitem.fk_mid
+  WHERE fk_oid = @last_id) WHERE fk_cid = ?;
+  SELECT @last_id AS OID;`,
+   [CID, CID, CID, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Place an Order Failed");
+        return;
+    }
+    else{
+        console.log("Place an Order Sucessful");
+        res.send(rows[5][0]);
+        return;
+      }
+    });
+});
+
+app.get('/vieworderid/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT orderid AS OID, totalPrice
+  FROM orders
+  WHERE orderid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows[0]);
+        return;
+      }
+    });
+});
+
+app.get('/viewordername/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE fk_oid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order Name Sucessful");
+        res.send(rows);
+        return;
       }
     });
 });

@@ -100,7 +100,7 @@ router.get(DOMAIN + '/customer/:customerId', async(req, res) => {
 
 router.get(DOMAIN + '/restaurant/:restaurantId', async(req, res) => {
   const rid = req.params.restaurantId;
-  await db.query(`SELECT user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
   FROM restaurant
   INNER JOIN user ON  user.fk_rid=restaurant.RID
   WHERE user.UID = ?`
@@ -384,10 +384,10 @@ router.get(DOMAIN + '/viewcart/:cid', async(req, res)=>{
 
 async function main(){
     db = await mysql.createConnection({
-      host:"johnny.heliohost.org",
-      user: "ainalfa_pharveish",
-      password: "pharveish@123",
-      database: "ainalfa_go-bites-db",
+      host:"localhost",
+      user: "root",
+      password: "void",
+      database: "goBites2",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
