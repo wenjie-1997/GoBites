@@ -4,6 +4,7 @@ import 'package:demo/modules/orders.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'custHomepage.dart';
 
 Orders orders;
 
@@ -80,28 +81,22 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                   children: <Widget>[
                     ListView(
                       children: <Widget>[
+                        SizedBox(
+                          height: 10.0,
+                        ),
                         Text(
                           "Order Successful!",
                           style: TextStyle(
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
                           ),
+                          textAlign: TextAlign.center,
                         ),
                         SizedBox(
-                          height: 30.0,
+                          height: 20.0,
                         ),
                         Text(
-                          "Order ID",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          orders.OID.toString(),
+                          "Order ID: ${orders.OID.toString()}",
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
@@ -120,6 +115,9 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                         SizedBox(
                           height: 10.0,
                         ),
+                        Divider(
+                          color: Colors.black,
+                        ),
                         FutureBuilder(
                             future: futureOrderList,
                             builder: (context, snapshot) {
@@ -134,17 +132,7 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                           height: 20.0,
                         ),
                         Text(
-                          "Total Price",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          "RM ${orders.totalPrice.toStringAsFixed(2)}",
+                          "Total Price: RM ${orders.totalPrice.toStringAsFixed(2)}",
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.bold,
@@ -163,7 +151,13 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                             'Continue',
                             textAlign: TextAlign.center,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CustHomePage()),
+                                (route) => false);
+                          },
                           color: Colors.red,
                           textColor: Colors.white,
                         ),
@@ -185,37 +179,51 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
   Widget orderListView(BuildContext context, AsyncSnapshot snapshot) {
     List<OrderItem> orderitem = snapshot.data;
     return ListView.builder(
-        padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+        shrinkWrap: true,
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
         itemCount: snapshot.data.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
-          return Card(
-            elevation: 10.0,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        flex: 2,
-                        child: Text(orderitem[index].itemName),
+          return Column(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: Text(
+                        orderitem[index].itemName,
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                            'RM ${orderitem[index].itemPrice.toStringAsFixed(2)}'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        '${orderitem[index].quantity.toString()}',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child:
-                            Text('RM ${orderitem[index].quantity.toString()}'),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Text(
+                        'RM ${(orderitem[index].itemPrice * orderitem[index].quantity).toStringAsFixed(2)}',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                    ),
+                  ],
+                ),
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+            ],
           );
         });
   }

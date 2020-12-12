@@ -38,11 +38,11 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                       child: Text('Continue'),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.pushReplacement(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    new RestMenuPage()));
+                                builder: (context) => new RestMenuPage()),
+                            (route) => false);
                       }),
                 ],
               ));

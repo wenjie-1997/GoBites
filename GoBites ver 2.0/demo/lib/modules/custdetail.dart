@@ -3,7 +3,7 @@ class CustDetail {
   final String username;
   final String password;
   final String custname;
-  final String birthdate;
+  final DateTime birthdate;
   final String gender;
   final String address;
   final String email;
@@ -26,7 +26,7 @@ class CustDetail {
         username: json['username'],
         password: json['password'],
         custname: json['custname'],
-        birthdate: json['birthdate'],
+        birthdate: DateTime.parse(json['birthdate']),
         gender: json['gender'],
         address: json['address'],
         email: json['email'],

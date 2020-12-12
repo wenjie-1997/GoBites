@@ -48,11 +48,11 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                       child: Text('Continue'),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.pushReplacement(
+                        Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    new PersonalInfoPage()));
+                                builder: (context) => new PersonalInfoPage()),
+                            (route) => false);
                       }),
                 ],
               ));
