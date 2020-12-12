@@ -3,7 +3,7 @@ const { Router } = require('express')
 const router = Router();
 let db=null
 
-const DOMAIN = "";
+const DOMAIN = "mobile/api";
 
 router.post(DOMAIN + '/login', async(req, res)=>{
   const username = req.body.username;
