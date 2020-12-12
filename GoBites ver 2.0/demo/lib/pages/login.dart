@@ -13,6 +13,7 @@ class Login extends StatefulWidget {
 }
 
 String login_id;
+String rest_id;
 
 class _LoginState extends State<Login> {
   LoginResult loginResult;
@@ -63,6 +64,7 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) => CustomerHomePage()));
       } else if (loginResult.status == "Login Sucessful as Restaurant") {
         login_id = loginResult.id;
+        rest_id = loginResult.fk_rid;
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => RestHomePage()));
       } else {
