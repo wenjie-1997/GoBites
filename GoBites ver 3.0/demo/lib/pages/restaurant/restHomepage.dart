@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:demo/pages/restaurant/restaurantInfo.dart';
+import 'package:demo/pages/restaurant/restViewOrderpage.dart';
 import 'package:demo/pages/pageSizing.dart';
 
 class RestaurantHomePage extends StatelessWidget {
@@ -82,7 +83,12 @@ class _RestHomePageState extends State<RestHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantViewOrderPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.list),
