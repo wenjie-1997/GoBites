@@ -1,3 +1,4 @@
+import 'package:demo/pages/customer/custViewOrderpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
@@ -80,7 +81,10 @@ class _CustHomePageState extends State<CustHomePage> {
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CustomerViewOrderPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.list),

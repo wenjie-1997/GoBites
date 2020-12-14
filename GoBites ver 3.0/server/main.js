@@ -399,6 +399,25 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
     });
 });
 
+app.get('/vieworderidcust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, totalPrice
+  FROM orders
+  WHERE fk_cid=?`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows[0]);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
