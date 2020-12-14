@@ -379,6 +379,26 @@ app.get('/viewordername/:oid', async(req, res)=>{
     });
 });
 
+app.get('/vieworderrest/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE menuitem.fk_rid=?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
