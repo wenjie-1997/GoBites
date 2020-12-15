@@ -412,8 +412,32 @@ app.get('/vieworderidcust/:cid', async(req, res)=>{
     }
     else{
         console.log("Retrieve Order ID Sucessful");
-        res.send(rows[0]);
+        res.send(rows);
         return;
+      }
+    });
+});
+
+app.post('/checkusername', async(req, res)=>{
+  const username = req.body.username;
+  await db.query( `SELECT username FROM user WHERE username = ?`,
+   [username] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get User Name Failed");
+        return;
+    }
+    else{
+      if(rows.length > 0){
+        console.log("Username exists in Database");
+        res.json("Username exists in database");
+        return;
+        }
+        else{
+          console.log("Username does not exist");
+        res.json("Username does not exist");
+        return;
+        }
       }
     });
 });
@@ -442,6 +466,7 @@ async function main(){
       }
     });
 }
+
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 main();

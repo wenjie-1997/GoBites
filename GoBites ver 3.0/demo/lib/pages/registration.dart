@@ -76,6 +76,39 @@ class RegistrationForm extends StatefulWidget {
 class RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
+  Future checkUsername() async {
+    final msg = jsonEncode({
+      "username": username,
+    });
+    final result = await http_post("/checkusername", msg);
+    String status = jsonDecode(result.body);
+    if (status == "Username does not exist") {
+      if (usertype == "customer") {
+        // If the form is valid, display a Snackbar.
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CusRegistrationForm()));
+      } else if (usertype == "restaurant") {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => RestRegistrationForm()));
+      }
+    } else {
+      Future(() {
+        showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => new AlertDialog(
+                  title: Text("Username exists!"),
+                  content: Text("Please try to type a different username."),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text('Continue'),
+                        onPressed: () => Navigator.of(context).pop()),
+                  ],
+                ));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -183,14 +216,7 @@ class RegistrationFormState extends State<RegistrationForm> {
               ),
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  if (usertype == "customer") {
-                    // If the form is valid, display a Snackbar.
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CusRegistrationForm()));
-                  } else if (usertype == "restaurant") {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RestRegistrationForm()));
-                  }
+                  checkUsername();
                 }
               },
               child: Text('Continue'),

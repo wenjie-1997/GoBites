@@ -75,22 +75,19 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
         centerTitle: true,
         backgroundColor: Colors.red,
       ),
-      /*body: Padding(
+      body: Padding(
           padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
           child: FutureBuilder<CustDetail>(
               future: futureCustDetail,
               builder: (context, snapshot1) {
                 if (snapshot1.hasData) {
-                  cust = snapshot1.data;
-                  print(cust.CID);
-                  
                   return FutureBuilder<List<Orders>>(
                       future: fetchOrderId(snapshot1.data.CID),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           return orderIdListView(context, snapshot);
                         } else if (snapshot.hasError) {
-                          return Text(snapshot.error);
+                          return Text('${snapshot.error}');
                         }
                         return Center(child: CircularProgressIndicator());
                       });
@@ -98,7 +95,7 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
                   return Text(snapshot1.error);
                 }
                 return Center(child: CircularProgressIndicator());
-              })),*/
+              })),
     );
   }
 

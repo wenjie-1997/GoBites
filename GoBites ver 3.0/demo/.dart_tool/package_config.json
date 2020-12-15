@@ -182,11 +182,7 @@
       "languageVersion": "2.7"
     }
   ],
-<<<<<<< HEAD
-  "generated": "2020-12-14T02:47:52.167027Z",
-=======
-  "generated": "2020-12-14T13:07:43.352790Z",
->>>>>>> parent of aa9662bc... check username
+  "generated": "2020-12-15T08:32:32.013693Z",
   "generator": "pub",
   "generatorVersion": "2.10.0"
 }

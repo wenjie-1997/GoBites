@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#Mon Dec 14 11:52:45 SGT 2020
-=======
-#Mon Dec 14 10:19:13 SGT 2020
->>>>>>> parent of aa9662bc... check username
-base.0=C\:\\Users\\ongsh\\Documents\\GitHub\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+#Tue Dec 15 16:33:45 SGT 2020
+base.0=C\:\\Users\\Wen Jie\\Folder\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
 path.0=classes.dex
 renamed.0=classes.dex

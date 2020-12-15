@@ -263,7 +263,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
                         }
-                        return Container();
+                        return Center(child: CircularProgressIndicator());
                       }),
                 ),
               ),
