@@ -70,7 +70,7 @@ class _RestMenuPageState extends State<RestMenuPage> {
     final result = await http_post("/menudelete", msg);
     String status = jsonDecode(result.body);
     //String status = loginResult.getStatus();
-    if (status == "Delete Sucessful") {
+    if (status == "Delete Successful") {
       showDialog<void>(
           context: context,
           barrierDismissible: false,

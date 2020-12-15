@@ -33,7 +33,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
     final result = await http_post("/menuupdate", msg);
     String status = jsonDecode(result.body);
     //String status = loginResult.getStatus();
-    if (status == "Update Sucessful") {
+    if (status == "Update Successful") {
       showDialog<void>(
           context: context,
           barrierDismissible: false,
