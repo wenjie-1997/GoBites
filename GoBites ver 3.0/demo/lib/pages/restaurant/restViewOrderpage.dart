@@ -7,14 +7,13 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'restHomepage.dart';
 
-
 class RestaurantViewOrderPage extends StatefulWidget {
   @override
-  _RestaurantViewOrderPageState createState() => _RestaurantViewOrderPageState();
+  _RestaurantViewOrderPageState createState() =>
+      _RestaurantViewOrderPageState();
 }
 
 class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
-
   Future<RestDetail> fetchRestDetail() async {
     final response = await http_get('/restaurant/' + login.login_id);
     print(login.login_id);
@@ -29,7 +28,6 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
           'Failed to load detail, code = ' + response.statusCode.toString());
     }
   }
-
 
   List<OrderItem> parseOrderItem(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -51,10 +49,11 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
           'Failed to load, code = ' + response.statusCode.toString());
     }
   }
+
   Future<List<OrderItem>> futureOrderList;
   Future<RestDetail> futureRestDetail;
   RestDetail rest;
-   @override
+  @override
   void initState() {
     super.initState();
     futureRestDetail = fetchRestDetail();
@@ -119,28 +118,41 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
                     children: <Widget>[
                       Expanded(
                         flex: 2,
-                        child: Text(orders[index].itemName,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),),
+                        child: Text(
+                          orders[index].itemName,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 1,
                         child: Text(
-                            '${orders[index].quantity.toString()}',
-                            style: TextStyle(
-                          fontSize: 18.0,
-                        ),),
-                      ),
-                      Expanded(
-                      flex: 1,
-                      child: Text(
-                        'RM ${(orders[index].itemPrice * orders[index].quantity).toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 18.0,
+                          '${orders[index].quantity.toString()}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
-                    ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'RM ${(orders[index].itemPrice * orders[index].quantity).toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(Icons.remove),
+                          color: Colors.black,
+                          onPressed: () {
+                            removeAlertDialog(context);
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -148,5 +160,39 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
             ),
           );
         });
+  }
+
+  removeAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget yesButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        //menuDelete(id);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Remove Order"),
+      content: Text("Are you sure to remove this order?"),
+      actions: [
+        cancelButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }
