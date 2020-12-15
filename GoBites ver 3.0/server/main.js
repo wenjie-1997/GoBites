@@ -399,6 +399,7 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
     });
 });
 
+<<<<<<< HEAD
 app.get('/vieworderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
   await db.query( `SELECT orderid as OID, totalPrice
@@ -418,6 +419,8 @@ app.get('/vieworderidcust/:cid', async(req, res)=>{
     });
 });
 
+=======
+>>>>>>> parent of aa9662bc... check username
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
