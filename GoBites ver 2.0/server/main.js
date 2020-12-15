@@ -297,6 +297,7 @@ app.post('/addtocart', async(req, res)=>{
     });
 });
 
+
 app.post('/cartdelete', async(req, res)=>{
   const {KID} = req.body;
   await db.query( "DELETE FROM `cart` WHERE `KID`=?",
