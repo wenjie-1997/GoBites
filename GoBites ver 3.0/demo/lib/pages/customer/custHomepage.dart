@@ -82,8 +82,10 @@ class _CustHomePageState extends State<CustHomePage> {
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CustomerViewOrderPage()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerViewOrderPage()));
           },
           child: Column(
             children: <Widget>[
