@@ -442,6 +442,26 @@ app.post('/checkusername', async(req, res)=>{
     });
 });
 
+app.get('/getcartquantity/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT SUM(quantity) as quantity
+  FROM cart
+  WHERE fk_cid=?`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve quantity Sucessful");
+        console.log(rows[0].quantity);
+        res.json(rows[0].quantity);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

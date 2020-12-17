@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:demo/pages/customer/custMenupage.dart';
+import 'personalInfo.dart';
+import 'cartpage.dart';
 
 List<RestList> parseRestaurants(String responseBody) {
   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
@@ -36,11 +38,13 @@ class CustRestaurantPage extends StatefulWidget {
 
 class _CustRestaurantPageState extends State<CustRestaurantPage> {
   Future<List<RestList>> restaurants;
+  Future<CustDetail> futureCustDetail;
 
   @override
   void initState() {
     super.initState();
     restaurants = fetchRestaurantList();
+    futureCustDetail = fetchCustDetail();
   }
 
   @override
@@ -55,6 +59,65 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
           backgroundColor: Colors.red,
           title: Text('Pick a Restaurant'),
           centerTitle: true,
+          actions: [
+            FutureBuilder<CustDetail>(
+              future: futureCustDetail,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return FutureBuilder<int>(
+                      future: fetchCartQuantity(snapshot.data.CID),
+                      builder: (context, snapshot1) {
+                        if (snapshot1.hasData) {
+                          return IconButton(
+                            icon: new Stack(
+                              children: <Widget>[
+                                new Icon(
+                                  Icons.shopping_cart_rounded,
+                                  size: 30,
+                                ),
+                                new Positioned(
+                                  right: 0,
+                                  child: new Container(
+                                    padding: EdgeInsets.all(1),
+                                    decoration: new BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    constraints: BoxConstraints(
+                                      minWidth: 12,
+                                      minHeight: 12,
+                                    ),
+                                    child: new Text(
+                                      '${snapshot1.data.toString()}',
+                                      style: new TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => CartPage()));
+                            },
+                          );
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error);
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      });
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error);
+                }
+                return Center(child: CircularProgressIndicator());
+              },
+            ),
+          ],
         ),
         body: FutureBuilder<List<RestList>>(
           future: restaurants,
