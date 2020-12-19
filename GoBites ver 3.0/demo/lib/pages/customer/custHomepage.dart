@@ -3,6 +3,8 @@ import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
 import 'package:demo/pages/pageSizing.dart';
 
+import 'custRestaurantlist.dart';
+
 class CustomerHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,8 +33,10 @@ class _CustHomePageState extends State<CustHomePage> {
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CustRestaurantPage()));
+            Navigator.push(
+                context,
+                //MaterialPageRoute(builder: (context) => CustRestaurantPage()));
+                MaterialPageRoute(builder: (context) => CustRestaurantList()));
           },
           child: Column(
             children: <Widget>[

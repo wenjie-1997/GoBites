@@ -39,8 +39,8 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
 
   @override
   void initState() {
-    super.initState();
     restaurants = fetchRestaurantList();
+    super.initState();
   }
 
   @override
@@ -54,6 +54,13 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
           ),
           backgroundColor: Colors.red,
           title: Text('Pick a Restaurant'),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.search),
+                onPressed: () {
+                  showSearch(context: context, delegate: null);
+                })
+          ],
           centerTitle: true,
         ),
         body: FutureBuilder<List<RestList>>(
@@ -73,6 +80,7 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
 
   Widget restaurantListView(BuildContext context, AsyncSnapshot snapshot) {
     List<RestList> restaurants = snapshot.data;
+
     return ListView.builder(
         padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
         itemCount: snapshot.data.length,

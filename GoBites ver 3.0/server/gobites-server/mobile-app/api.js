@@ -3,7 +3,7 @@ const { Router } = require('express')
 const router = Router();
 let db=null
 
-const DOMAIN = "mobile/api";
+const DOMAIN = "";
 
 router.post(DOMAIN + '/login', async(req, res)=>{
   const username = req.body.username;
@@ -113,6 +113,23 @@ router.get(DOMAIN + '/restaurant/:restaurantId', async(req, res) => {
     else{
       console.log("Retreive data Sucessful");
       res.json(rows[0]);
+      return;
+    }
+  });
+});
+
+router.get(DOMAIN + '/restaurantname', async(req, res) => {
+  await db.query(`SELECT restaurantname
+  FROM restaurant`
+  , [], (error, rows, fields) => {
+    if (error) {
+      console.log(error);
+      res.json("Retrieve data Failed");
+      return;
+  ``}
+    else{
+      console.log("Retreive restName Sucessful");
+      res.json(rows);
       return;
     }
   });
@@ -384,10 +401,10 @@ router.get(DOMAIN + '/viewcart/:cid', async(req, res)=>{
 
 async function main(){
     db = await mysql.createConnection({
-      host:"johnny.heliohost.org",
-      user: "ainalfa_pharveish",
-      password: "pharveish@123",
-      database: "ainalfa_go-bites-db",
+      host:"localhost",
+      user: "root",
+      password: "void",
+      database: "goBites2",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true

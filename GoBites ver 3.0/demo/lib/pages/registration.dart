@@ -8,9 +8,12 @@ import 'package:demo/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:date_format/date_format.dart';
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'encryption.dart';
 
 String username;
 String password;
+String encryptedPass;
 String usertype;
 DateTime birthdate;
 String custname;
@@ -114,7 +117,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Password',
                 ),
                 validator: (value) {
-                  if (value.length < 8 || value.length > 15) {
+                  if (value.length < 8) {
                     return 'The length of the password must be from 8 to 15.';
                   }
                   return null;
@@ -182,6 +185,11 @@ class RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               onPressed: () {
+                setState(() {
+                  encryptedPass = EncryptDecrypt.encryptAES(password);
+                });
+                print(password);
+                print(encryptedPass);
                 if (_formKey.currentState.validate()) {
                   if (usertype == "customer") {
                     // If the form is valid, display a Snackbar.
@@ -484,9 +492,11 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
   Future restaurantRegister() async {
+    print(password);
+    print(encryptedPass);
     final msg = jsonEncode({
       "username": username,
-      "password": password,
+      "password": encryptedPass,
       "usertype": usertype,
       "restaurantname": restaurantname,
       "ownername": ownername,

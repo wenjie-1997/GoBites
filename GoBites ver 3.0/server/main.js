@@ -6,7 +6,7 @@ let db = null;
 const app = express();
 app.use(express.json());
 // Setup server port
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
 app.post('/login', async(req, res)=>{
   const username = req.body.username;
