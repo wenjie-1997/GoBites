@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
-import 'package:demo/modules/orders.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
@@ -16,7 +15,6 @@ class RestaurantViewOrderPage extends StatefulWidget {
 class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
   Future<RestDetail> fetchRestDetail() async {
     final response = await http_get('/restaurant/' + login.login_id);
-    print(login.login_id);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -36,7 +34,6 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
   }
 
   Future<List<OrderItem>> fetchOrderItem(int rid) async {
-    print(rid);
     final response = await http_get('/vieworderrest/' + rid.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -47,6 +44,48 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
       // then throw an exception.
       throw Exception(
           'Failed to load, code = ' + response.statusCode.toString());
+    }
+  }
+
+  Future orderitemDelete(int id) async {
+    final msg = jsonEncode({
+      "ID": id,
+    });
+    final result = await http_post("/orderitemdelete", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Delete Order Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Delete Order Successful"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new RestaurantViewOrderPage()));
+                    },
+                  )
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
     }
   }
 
@@ -149,7 +188,8 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
                           icon: Icon(Icons.remove),
                           color: Colors.black,
                           onPressed: () {
-                            removeAlertDialog(context);
+                            print(orders[index].ID);
+                            removeAlertDialog(context, orders[index].ID);
                           },
                         ),
                       ),
@@ -162,7 +202,7 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
         });
   }
 
-  removeAlertDialog(BuildContext context) {
+  removeAlertDialog(BuildContext context, int id) {
     // set up the buttons
     Widget cancelButton = FlatButton(
       child: Text("Cancel"),
@@ -173,7 +213,7 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
     Widget yesButton = FlatButton(
       child: Text("Yes"),
       onPressed: () {
-        //menuDelete(id);
+        orderitemDelete(id);
       },
     );
 

@@ -381,7 +381,7 @@ app.get('/viewordername/:oid', async(req, res)=>{
 
 app.get('/vieworderrest/:rid', async(req, res)=>{
   const rid = req.params.rid;
-  await db.query( `SELECT menuitem.itemName, quantity, menuitem.itemPrice
+  await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
   FROM orderitem
   JOIN menuitem ON menuitem.mid=orderitem.fk_mid
   WHERE menuitem.fk_rid=?`,
@@ -461,6 +461,32 @@ app.get('/getcartquantity/:cid', async(req, res)=>{
       }
     });
 });
+
+app.post('/orderitemdelete', async(req, res)=>{
+  const ID = req.body.ID;
+  await db.query( `
+  SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
+  DELETE FROM orderitem WHERE id=?;
+  UPDATE orders SET totalprice = 
+  (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
+  JOIN menuitem ON menuitem.MID=orderitem.fk_mid
+  WHERE fk_oid = @oid) WHERE orderid = @oid;
+  DELETE FROM orders WHERE totalPrice = 0;
+  `,
+   [ID,ID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Delete Order Failed");
+        return;
+    }
+    else{
+        console.log("Delete Order Sucessful");
+        res.json("Delete Order Sucessful");
+        return;s
+      }
+    });
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");
