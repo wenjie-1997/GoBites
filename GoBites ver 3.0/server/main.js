@@ -454,9 +454,12 @@ app.get('/getcartquantity/:cid', async(req, res)=>{
         return;
     }
     else{
+      let quantity = 0;
         console.log("Retrieve quantity Sucessful");
-        console.log(rows[0].quantity);
-        res.json(rows[0].quantity);
+        if(rows[0].quantity != null){
+          quantity = rows[0].quantity;
+        }
+        res.json(quantity);
         return;
       }
     });
