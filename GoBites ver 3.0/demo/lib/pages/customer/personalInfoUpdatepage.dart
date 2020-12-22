@@ -36,7 +36,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
     });
     final result = await http_post("/custupdate", msg);
     String status = jsonDecode(result.body);
-    //String status = loginResult.getStatus();
+
     if (status == "Update Sucessful") {
       showDialog<void>(
           context: context,

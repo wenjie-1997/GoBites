@@ -1,12 +1,19 @@
 const express = require("express");
 const mysql = require("mysql");
+path = require('path');
+var bodyParser = require("body-parser");
+var fs = require("fs");
+
 let db = null;
 
 // create express app
 const app = express();
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+
 // Setup server port
 const port = process.env.PORT || 8000;
+app.use(express.static('images'));
 
 app.post('/login', async(req, res)=>{
   const username = req.body.username;
@@ -485,11 +492,27 @@ app.post('/orderitemdelete', async(req, res)=>{
     else{
         console.log("Delete Order Sucessful");
         res.json("Delete Order Sucessful");
-        return;s
+        return;
       }
     });
 });
 
+app.post("/image", function(req, res){
+  var name = req.body.name;
+  var img = req.body.image;
+  var realFile = Buffer.from(img,"base64");
+  console.log(name);
+  fs.writeFile("images/"+name, realFile, function(err) {
+      if(err)
+         console.log(err);
+   });
+   res.send("OK");
+ });
+
+ app.get("/image.png", (req, res) => {
+   fs.readFile
+  res.sendFile();
+});
 
 app.get('/', (req, res) => {
   res.send("Hello World");

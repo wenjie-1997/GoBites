@@ -8,6 +8,7 @@ class CustDetail {
   final String address;
   final String email;
   final String telephoneNo;
+  final String image;
 
   CustDetail(
       {this.CID,
@@ -18,7 +19,8 @@ class CustDetail {
       this.gender,
       this.address,
       this.email,
-      this.telephoneNo});
+      this.telephoneNo,
+      this.image});
 
   factory CustDetail.fromJson(Map<String, dynamic> json) {
     return CustDetail(
@@ -30,6 +32,7 @@ class CustDetail {
         gender: json['gender'],
         address: json['address'],
         email: json['email'],
-        telephoneNo: json['telephoneNo']);
+        telephoneNo: json['telephoneNo'],
+        image: json['image']);
   }
 }

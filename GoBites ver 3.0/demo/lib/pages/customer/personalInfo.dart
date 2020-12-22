@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:flutter/material.dart';
@@ -7,15 +8,7 @@ import '../../modules/custdetail.dart';
 import 'package:demo/pages/customer/personalInfoUpdatepage.dart';
 import 'package:intl/intl.dart';
 import 'package:demo/modules/custdetail.dart';
-/*class PersonalInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "View Personal Info",
-      home: PersonalInfoPage(),
-    );
-  }
-}*/
+import 'package:image_picker/image_picker.dart';
 
 CustDetail cust;
 
@@ -41,6 +34,63 @@ class PersonalInfoPage extends StatefulWidget {
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   Future<CustDetail> futureCustDetail;
+  File file;
+
+  get http => null;
+
+  void _choose() async {
+    file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    _upload();
+  }
+
+  _upload() async {
+    if (file == null) return;
+    String base64Image = base64Encode(file.readAsBytesSync());
+    String fileName = file.path.split("/").last;
+
+    final result = await http.post("http://$DOMAIN/image", body: {
+      "image": base64Image,
+      "name": fileName,
+    }).then((res) {
+      print(res.statusCode);
+    }).catchError((err) {
+      print(err);
+    });
+
+    String status = jsonDecode(result.body);
+    if (status == "OK") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Upload Image Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new PersonalInfoPage()),
+                            (route) => false);
+                      }),
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   @override
   void initState() {
@@ -88,9 +138,20 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   children: <Widget>[
                     Center(
                       child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/default.png'),
+                        backgroundImage: cust.image == null
+                            ? AssetImage('assets/default.png')
+                            : NetworkImage("http://$DOMAIN/" + cust.image),
                         radius: 50.0,
                       ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        RaisedButton(
+                          onPressed: _choose,
+                          child: Text('Choose Image'),
+                        ),
+                      ],
                     ),
                     Divider(
                       height: 60.0,
