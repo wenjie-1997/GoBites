@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/customer/cartpage.dart';
-import 'personalInfo.dart' as info;
+import 'personalInfo.dart';
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);
@@ -16,6 +17,18 @@ Future<CustRestDetail> fetchRestDetail(String rid) async {
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
+    throw Exception('Failed to load, code = ' + response.statusCode.toString());
+  }
+}
+
+Future<int> fetchCartQuantity(int cid) async {
+  final response = await http_get('/getcartquantity/' + cid.toString());
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print("success");
+    return jsonDecode(response.body);
+  } else {
     throw Exception('Failed to load, code = ' + response.statusCode.toString());
   }
 }
@@ -49,6 +62,7 @@ class CustMenuPage extends StatefulWidget {
 class _CustMenuPageState extends State<CustMenuPage> {
   Future<CustRestDetail> futureCustRestDetail;
   Future<List<Menu>> futureMenuList;
+  Future<CustDetail> futureCustDetail;
   int _quantity = 1;
   final ScrollController _scrollController = ScrollController();
 
@@ -100,6 +114,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
     super.initState();
     futureCustRestDetail = fetchRestDetail(this.widget.rest.RID.toString());
     futureMenuList = fetchMenu(this.widget.rest.RID.toString());
+    futureCustDetail = fetchCustDetail();
   }
 
   @override
@@ -117,37 +132,62 @@ class _CustMenuPageState extends State<CustMenuPage> {
               centerTitle: true,
               backgroundColor: Colors.red,
               actions: <Widget>[
-                IconButton(
-                  icon: new Stack(
-                    children: <Widget>[
-                      new Icon(Icons.shopping_cart_rounded),
-                      new Positioned(
-                        right: 0,
-                        child: new Container(
-                          padding: EdgeInsets.all(1),
-                          decoration: new BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          constraints: BoxConstraints(
-                            minWidth: 12,
-                            minHeight: 12,
-                          ),
-                          child: new Text(
-                            '0',
-                            style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CartPage()));
+                FutureBuilder<CustDetail>(
+                  future: futureCustDetail,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return FutureBuilder<int>(
+                          future: fetchCartQuantity(snapshot.data.CID),
+                          builder: (context, snapshot1) {
+                            if (snapshot1.hasData) {
+                              return IconButton(
+                                icon: new Stack(
+                                  children: <Widget>[
+                                    new Icon(
+                                      Icons.shopping_cart_rounded,
+                                      size: 30,
+                                    ),
+                                    new Positioned(
+                                      right: 0,
+                                      child: new Container(
+                                        padding: EdgeInsets.all(1),
+                                        decoration: new BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        constraints: BoxConstraints(
+                                          minWidth: 12,
+                                          minHeight: 12,
+                                        ),
+                                        child: new Text(
+                                          '${snapshot1.data.toString()}',
+                                          style: new TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CartPage()));
+                                },
+                              );
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error);
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          });
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error);
+                    }
+                    return Center(child: CircularProgressIndicator());
                   },
                 ),
               ],

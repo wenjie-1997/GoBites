@@ -7,17 +7,15 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'restHomepage.dart';
 
-
 class RestaurantViewOrderPage extends StatefulWidget {
   @override
-  _RestaurantViewOrderPageState createState() => _RestaurantViewOrderPageState();
+  _RestaurantViewOrderPageState createState() =>
+      _RestaurantViewOrderPageState();
 }
 
 class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
-
   Future<RestDetail> fetchRestDetail() async {
     final response = await http_get('/restaurant/' + login.login_id);
-    print(login.login_id);
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -30,7 +28,6 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
     }
   }
 
-
   List<OrderItem> parseOrderItem(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
@@ -38,7 +35,6 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
   }
 
   Future<List<OrderItem>> fetchOrderItem(int rid) async {
-    print(rid);
     final response = await http_get('/vieworderrest/' + rid.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -51,10 +47,85 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
           'Failed to load, code = ' + response.statusCode.toString());
     }
   }
+
+  List<Orders> parseOrder(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Orders>((json) => Orders.fromJson(json)).toList();
+  }
+
+  Future<List<Orders>> fetchOrder(int rid) async {
+    final response = await http_get('/vieworderrest/' + rid.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return parseOrder(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load, code = ' + response.statusCode.toString());
+    }
+  }
+
+  Future orderComplete(int id) async {
+    final msg = jsonEncode({
+      "ID": id,
+    });
+    final response = await http_post("/orderitemstatus", msg);
+    String status = jsonDecode(response.body);
+
+    if (status == "orderitem status done") {
+      print('orderitem status success!');
+    }
+  }
+
+  Future orderitemDelete(int id) async {
+    final msg = jsonEncode({
+      "ID": id,
+    });
+    final result = await http_post("/orderitemdelete", msg);
+    String status = jsonDecode(result.body);
+    //String status = loginResult.getStatus();
+    if (status == "Delete Order Sucessful") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Delete Order Successful"),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new RestaurantViewOrderPage()));
+                    },
+                  )
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
+
   Future<List<OrderItem>> futureOrderList;
   Future<RestDetail> futureRestDetail;
   RestDetail rest;
-   @override
+  @override
   void initState() {
     super.initState();
     futureRestDetail = fetchRestDetail();
@@ -119,28 +190,53 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
                     children: <Widget>[
                       Expanded(
                         flex: 2,
-                        child: Text(orders[index].itemName,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),),
+                        child: Text(
+                          orders[index].itemName,
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 1,
                         child: Text(
-                            '${orders[index].quantity.toString()}',
-                            style: TextStyle(
-                          fontSize: 18.0,
-                        ),),
-                      ),
-                      Expanded(
-                      flex: 1,
-                      child: Text(
-                        'RM ${(orders[index].itemPrice * orders[index].quantity).toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 18.0,
+                          '${orders[index].quantity.toString()}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
                         ),
                       ),
-                    ),
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          'RM ${(orders[index].itemPrice * orders[index].quantity).toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(Icons.remove),
+                          color: Colors.black,
+                          onPressed: () {
+                            print(orders[index].ID);
+                            removeAlertDialog(context, orders[index].ID);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(Icons.check),
+                          color: Colors.black,
+                          onPressed: () {
+                            print(orders[index].ID);
+                            orderComplete(orders[index].ID);
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 )
@@ -148,5 +244,39 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
             ),
           );
         });
+  }
+
+  removeAlertDialog(BuildContext context, int id) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget yesButton = FlatButton(
+      child: Text("Yes"),
+      onPressed: () {
+        orderitemDelete(id);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Remove Order"),
+      content: Text("Are you sure to remove this order?"),
+      actions: [
+        cancelButton,
+        yesButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
   }
 }

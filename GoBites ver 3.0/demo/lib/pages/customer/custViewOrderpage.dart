@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
 import 'package:demo/modules/custdetail.dart';
+import 'package:demo/pages/customer/custViewOrderDetailpage.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'custHomepage.dart';
-import 'package:expansion_card/expansion_card.dart';
 
 class CustomerViewOrderPage extends StatefulWidget {
   @override
@@ -110,14 +110,21 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
             elevation: 4.0,
             child: Column(
               children: <Widget>[
-                Container(
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomerViewOrderDetailPage(
+                                oid: orderids[index].OID)));
+                  },
                   padding: EdgeInsets.all(10.0),
                   child: Row(
                     children: <Widget>[
                       Expanded(
                         flex: 2,
                         child: Text(
-                          orderids[index].OID.toString(),
+                          'ID: ${orderids[index].OID.toString()}',
                           style: TextStyle(
                             fontSize: 18.0,
                           ),

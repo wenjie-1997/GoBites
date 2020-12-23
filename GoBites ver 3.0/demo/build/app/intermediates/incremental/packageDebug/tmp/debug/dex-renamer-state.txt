@@ -1,4 +1,4 @@
-#Tue Dec 15 16:33:45 SGT 2020
-base.0=C\:\\Users\\Wen Jie\\Folder\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+#Thu Dec 24 01:08:24 SGT 2020
+base.0=/home/pharveish/goBites/sprint2/Flutter_App_GoBites/GoBites ver 3.0/demo/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 path.0=classes.dex
 renamed.0=classes.dex
