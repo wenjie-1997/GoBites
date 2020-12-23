@@ -103,10 +103,11 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacement(
+            onPressed: () => Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => new CustHomePage())),
+                    builder: (BuildContext context) => new CustHomePage()),
+                (route) => false),
           ),
           title: Text('Personal Info'),
           centerTitle: true,
@@ -118,7 +119,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>

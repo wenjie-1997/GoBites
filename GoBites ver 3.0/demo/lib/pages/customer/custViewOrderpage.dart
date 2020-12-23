@@ -66,10 +66,11 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
+          onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new CustHomePage())),
+                  builder: (BuildContext context) => new CustHomePage()),
+              (route) => false),
         ),
         title: Text('Order List'),
         centerTitle: true,

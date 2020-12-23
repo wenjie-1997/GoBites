@@ -118,11 +118,13 @@ class _RestMenuPageState extends State<RestMenuPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
+          onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new RestHomePage())),
+                  builder: (BuildContext context) => new RestHomePage()),
+              (route) => false),
         ),
+        //),
         backgroundColor: Colors.red,
         title: Text('My Menu'),
         centerTitle: true,

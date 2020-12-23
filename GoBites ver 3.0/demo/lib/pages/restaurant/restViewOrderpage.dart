@@ -105,10 +105,11 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
+          onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new RestHomePage())),
+                  builder: (BuildContext context) => new RestHomePage()),
+              (route) => false),
         ),
         title: Text('Order List'),
         centerTitle: true,
