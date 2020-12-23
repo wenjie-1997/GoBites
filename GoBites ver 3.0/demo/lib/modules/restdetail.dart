@@ -8,6 +8,7 @@ class RestDetail {
   final String restaurantstyle;
   final String email;
   final String telephoneNo;
+  final String image;
 
   RestDetail(
       {this.RID,
@@ -18,7 +19,8 @@ class RestDetail {
       this.address,
       this.restaurantstyle,
       this.email,
-      this.telephoneNo});
+      this.telephoneNo,
+      this.image});
 
   factory RestDetail.fromJson(Map<String, dynamic> json) {
     return RestDetail(
@@ -30,7 +32,8 @@ class RestDetail {
         address: json['address'],
         restaurantstyle: json['restaurantstyle'],
         email: json['email'],
-        telephoneNo: json['telephoneNo']);
+        telephoneNo: json['telephoneNo'],
+        image: json['image']);
   }
 }
 

@@ -79,13 +79,8 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
         backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new RestaurantPersonalInfoPage())),
-          ),
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context)),
           backgroundColor: Colors.red,
           title: Text('Update Detail'),
           centerTitle: true,

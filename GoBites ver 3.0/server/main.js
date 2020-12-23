@@ -87,7 +87,7 @@ app.post('/restregister', async(req, res)=>{
 
 app.get('/customer/:customerId', async(req, res) => {
   const cid = req.params.customerId;
-  await db.query(`SELECT customer.CID,user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo
+  await db.query(`SELECT customer.CID,user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo, customer.image
   FROM customer
   INNER JOIN user ON  user.fk_cid=customer.CID
   WHERE user.UID = ?`
@@ -107,7 +107,7 @@ app.get('/customer/:customerId', async(req, res) => {
 
 app.get('/restaurant/:restaurantId', async(req, res) => {
   const rid = req.params.restaurantId;
-  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo, restaurant.image
   FROM restaurant
   INNER JOIN user ON  user.fk_rid=restaurant.RID
   WHERE user.UID = ?`
@@ -179,11 +179,44 @@ app.get('/menu/:rid', async(req, res) => {
 });
 
 app.post('/custupdate', async(req, res)=>{
-  const {CID, username,password, custname,address,email,telephoneNo} = req.body;
+  const {CID, custname,address,email,telephoneNo} = req.body;
   let updateCusttable = "UPDATE `customer` SET `custname`=?, `address`=?,`email`=?,`telephoneNo`=? WHERE CID = ?;";
-  let updateUsertable = "UPDATE `user` SET `username`=? , `password` = ? WHERE fk_cid = ?";
-  await db.query( updateCusttable + updateUsertable,
-   [custname, address, email, telephoneNo, CID, username, password, CID] , (error, rows, fields)=>{
+  await db.query( updateCusttable,
+   [custname, address, email, telephoneNo, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/custupdatepassword', async(req, res)=>{
+  const {password,CID} = req.body;
+  await db.query( "UPDATE `user` SET password = ? WHERE fk_cid = ?;",
+   [password,CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/restupdatepassword', async(req, res)=>{
+  const {password,RID} = req.body;
+  await db.query( "UPDATE `user` SET password = ? WHERE fk_rid = ?;",
+   [password,RID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Update Failed");
@@ -331,9 +364,9 @@ app.post('/movetoorder', async(req, res)=>{
   UPDATE orders SET totalprice = 
   (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
-  WHERE fk_oid = @last_id) WHERE fk_cid = ?;
+  WHERE fk_oid = @last_id) WHERE orderid = @last_id;
   SELECT @last_id AS OID;`,
-   [CID, CID, CID, CID] , (error, rows, fields)=>{
+   [CID, CID, CID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Place an Order Failed");
@@ -497,22 +530,81 @@ app.post('/orderitemdelete', async(req, res)=>{
     });
 });
 
-app.post("/image", function(req, res){
+app.post("/restimage", async(req, res) => {
+  var RID = req.body.RID;
   var name = req.body.name;
   var img = req.body.image;
   var realFile = Buffer.from(img,"base64");
-  console.log(name);
-  fs.writeFile("images/"+name, realFile, function(err) {
-      if(err)
-         console.log(err);
-   });
-   res.send("OK");
+  await db.query( `SELECT image FROM restaurant WHERE RID = ?`,
+   [RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        return;
+    }
+    else{
+      if(rows[0].image!=null){
+        console.log(rows[0].image);
+        var filePath = "images/"+rows[0].image;
+        fs.unlinkSync(filePath);
+        }
+      }
+    });
+  
+  fs.writeFile("images/" + RID + "_" + name, realFile, function (err) {
+    if (err)
+      console.log(err);
+  });
+   await db.query( `UPDATE restaurant SET image = ? WHERE RID = ?`,
+   [RID+"_"+name,RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Upload Image Failed");
+        return;
+    }
+    else{
+        console.log("Upload Image Sucessful");
+        res.json("OK");
+        return;
+      }
+    });
  });
 
- app.get("/image.png", (req, res) => {
-   fs.readFile
-  res.sendFile();
-});
+ app.post("/image", async(req, res) => {
+  var CID = req.body.CID;
+  var name = req.body.name;
+  var img = req.body.image;
+  var realFile = Buffer.from(img,"base64");
+  await db.query( `SELECT image FROM customer WHERE CID = ?`,
+   [CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        return;
+    }
+    else{
+      console.log(rows[0].image);
+      var filePath = "images/"+rows[0].image;
+      fs.unlinkSync(filePath);
+      }
+    });
+  
+  fs.writeFile("images/" + CID + "_" + name, realFile, function (err) {
+    if (err)
+      console.log(err);
+  });
+   await db.query( `UPDATE customer SET image = ? WHERE CID = ?`,
+   [CID+"_"+name,CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Upload Image Failed");
+        return;
+    }
+    else{
+        console.log("Upload Image Sucessful");
+        res.json("OK");
+        return;
+      }
+    });
+ });
 
 app.get('/', (req, res) => {
   res.send("Hello World");

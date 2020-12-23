@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/customer/updatePassword.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import '../../modules/custdetail.dart';
@@ -34,29 +36,25 @@ class PersonalInfoPage extends StatefulWidget {
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   Future<CustDetail> futureCustDetail;
-  File file;
-
-  get http => null;
+  PickedFile pickedFile;
 
   void _choose() async {
-    file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    final _picker = ImagePicker();
+    pickedFile = await _picker.getImage(source: ImageSource.gallery);
     _upload();
   }
 
   _upload() async {
-    if (file == null) return;
+    if (pickedFile == null) return;
+    final File file = File(pickedFile.path);
     String base64Image = base64Encode(file.readAsBytesSync());
     String fileName = file.path.split("/").last;
-
-    final result = await http.post("http://$DOMAIN/image", body: {
+    final msg = jsonEncode({
+      "CID": cust.CID,
       "image": base64Image,
       "name": fileName,
-    }).then((res) {
-      print(res.statusCode);
-    }).catchError((err) {
-      print(err);
     });
-
+    final result = await http_post("/image", msg);
     String status = jsonDecode(result.body);
     if (status == "OK") {
       showDialog<void>(
@@ -133,25 +131,45 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             if (snapshot.hasData) {
               cust = snapshot.data;
               return Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+                padding: EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 10.0),
                 child: ListView(
                   children: <Widget>[
-                    Center(
-                      child: CircleAvatar(
-                        backgroundImage: cust.image == null
-                            ? AssetImage('assets/default.png')
-                            : NetworkImage("http://$DOMAIN/" + cust.image),
-                        radius: 50.0,
-                      ),
+                    SizedBox(
+                      height: 30.0,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        RaisedButton(
-                          onPressed: _choose,
-                          child: Text('Choose Image'),
-                        ),
-                      ],
+                    Center(
+                      child: Stack(
+                        children: <Widget>[
+                          new CircleAvatar(
+                            backgroundImage: cust.image == null
+                                ? AssetImage('assets/default.png')
+                                : NetworkImage("http://$DOMAIN/" + cust.image),
+                            radius: 100.0,
+                          ),
+                          new Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: new Material(
+                                color: Colors.transparent,
+                                child: Center(
+                                  child: Ink(
+                                    decoration: const ShapeDecoration(
+                                      color: Colors.red,
+                                      shape: CircleBorder(),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.upload_sharp,
+                                        size: 30,
+                                      ),
+                                      color: Colors.white,
+                                      onPressed: _choose,
+                                    ),
+                                  ),
+                                ),
+                              ))
+                        ],
+                      ),
                     ),
                     Divider(
                       height: 60.0,
@@ -179,13 +197,24 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    Text(
-                      cust.password,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                    Row(children: [
+                      Text(
+                        '·' * cust.password.length,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.edit_sharp),
+                        color: Colors.black,
+                        onPressed: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new UpdatePassword(cust: cust))),
+                      )
+                    ]),
                     SizedBox(
                       height: 20.0,
                     ),
