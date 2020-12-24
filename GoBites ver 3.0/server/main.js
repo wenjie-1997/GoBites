@@ -384,7 +384,7 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
   await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
   FROM orderitem
   JOIN menuitem ON menuitem.mid=orderitem.fk_mid
-  WHERE menuitem.fk_rid=?`,
+  WHERE menuitem.fk_rid=? AND status='PREPARING'`,
    [rid] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -512,7 +512,7 @@ app.post('/orderitemdelete', async(req, res)=>{
 app.post('/orderitemstatus', async(req, res) => {
 	const ID = req.body.ID;
 	await db.query(`
-  	SET @oid = (SELECT dk_oid FROM orderitem WHERE id=?);
+  	SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
 	update orderitem set status = 'DONE' where id=?;
 	update orders set status = 'DELIVERING' where orderid=@oid;`,
 	[ID, ID], (error, rows, fields) => {
@@ -538,8 +538,8 @@ async function main(){
     db = await mysql.createConnection({
       host:"localhost",
       user: "root",
-      password: "void",
-      database: "gobites3",
+      password: "",
+      database: "gobites",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true

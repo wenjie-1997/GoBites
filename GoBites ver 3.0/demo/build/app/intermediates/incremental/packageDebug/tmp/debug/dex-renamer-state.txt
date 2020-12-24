@@ -1,4 +1,7 @@
-#Thu Dec 24 01:08:24 SGT 2020
-base.0=/home/pharveish/goBites/sprint2/Flutter_App_GoBites/GoBites ver 3.0/demo/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
+#Thu Dec 24 20:35:04 SGT 2020
+base.0=C\:\\home\\pharveish\\goBites\\sprint2\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
+path.1=classes.dex
+renamed.1=classes2.dex
 path.0=classes.dex
 renamed.0=classes.dex
+base.1=C\:\\Users\\ongsh\\Documents\\GitHub\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
