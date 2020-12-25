@@ -2,8 +2,9 @@ class Orders {
   final int OID;
   final double totalPrice;
   final String status;
+  final DateTime addedDate;
 
-  Orders({this.OID, this.totalPrice, this.status});
+  Orders({this.OID, this.totalPrice, this.status, this.addedDate});
 
   factory Orders.fromJson(Map<String, dynamic> json) {
     return Orders(
@@ -12,6 +13,8 @@ class Orders {
           ? json['totalPrice'] + .0
           : json['totalPrice']),
       status: json['status'],
+      addedDate:
+          json['addedDate'] != null ? DateTime.parse(json['addedDate']) : null,
     );
   }
 }

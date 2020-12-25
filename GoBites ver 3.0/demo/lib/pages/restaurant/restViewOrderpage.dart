@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
+import 'package:demo/modules/orders.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
@@ -75,7 +76,25 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
     String status = jsonDecode(response.body);
 
     if (status == "orderitem status done") {
-      print('orderitem status success!');
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Order is successfully completed."),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('Continue'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new RestaurantViewOrderPage()));
+                    },
+                  )
+                ],
+              ));
     }
   }
 

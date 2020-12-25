@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/menu.dart';
+import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/customer/cartpage.dart';
-import 'personalInfo.dart';
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);
@@ -114,7 +114,6 @@ class _CustMenuPageState extends State<CustMenuPage> {
     super.initState();
     futureCustRestDetail = fetchRestDetail(this.widget.rest.RID.toString());
     futureMenuList = fetchMenu(this.widget.rest.RID.toString());
-    futureCustDetail = fetchCustDetail();
   }
 
   @override
@@ -132,64 +131,53 @@ class _CustMenuPageState extends State<CustMenuPage> {
               centerTitle: true,
               backgroundColor: Colors.red,
               actions: <Widget>[
-                FutureBuilder<CustDetail>(
-                  future: futureCustDetail,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return FutureBuilder<int>(
-                          future: fetchCartQuantity(snapshot.data.CID),
-                          builder: (context, snapshot1) {
-                            if (snapshot1.hasData) {
-                              return IconButton(
-                                icon: new Stack(
-                                  children: <Widget>[
-                                    new Icon(
-                                      Icons.shopping_cart_rounded,
-                                      size: 30,
+                FutureBuilder<int>(
+                    future: fetchCartQuantity(cust.CID),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return IconButton(
+                          icon: new Stack(
+                            children: <Widget>[
+                              new Icon(
+                                Icons.shopping_cart_rounded,
+                                size: 30,
+                              ),
+                              new Positioned(
+                                right: 0,
+                                child: new Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: new Text(
+                                    '${snapshot.data.toString()}',
+                                    style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
                                     ),
-                                    new Positioned(
-                                      right: 0,
-                                      child: new Container(
-                                        padding: EdgeInsets.all(1),
-                                        decoration: new BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                        ),
-                                        constraints: BoxConstraints(
-                                          minWidth: 12,
-                                          minHeight: 12,
-                                        ),
-                                        child: new Text(
-                                          '${snapshot1.data.toString()}',
-                                          style: new TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                    )
-                                  ],
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CartPage()));
-                                },
-                              );
-                            } else if (snapshot.hasError) {
-                              return Text(snapshot.error);
-                            }
-                            return Center(child: CircularProgressIndicator());
-                          });
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error);
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  },
-                ),
+                              )
+                            ],
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CartPage()));
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error);
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    })
               ],
             ),
             body: Column(children: <Widget>[
@@ -409,39 +397,50 @@ class _CustMenuPageState extends State<CustMenuPage> {
                                           builder: (context, setState) {
                                         return AlertDialog(
                                           title: Text("Add to Cart"),
-                                          content: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "Name: ${menus[index].itemName}\n"),
-                                              Text(
-                                                  "Price: ${menus[index].itemPrice}\n"),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Text("Quantity: "),
-                                                  new IconButton(
-                                                    icon: Icon(Icons.remove),
-                                                    color: Colors.black,
-                                                    onPressed: () =>
-                                                        setState(() {
-                                                      if (_quantity > 1) {
-                                                        _quantity--;
-                                                      }
-                                                    }),
-                                                  ),
-                                                  new Text('$_quantity'),
-                                                  new IconButton(
-                                                    icon: Icon(Icons.add),
-                                                    color: Colors.black,
-                                                    onPressed: () => setState(
-                                                        () => _quantity++),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                      "Name: ${menus[index].itemName}\n"),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                      "Price: ${menus[index].itemPrice}\n"),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Text("Quantity: "),
+                                                    new IconButton(
+                                                      icon: Icon(Icons.remove),
+                                                      color: Colors.black,
+                                                      onPressed: () =>
+                                                          setState(() {
+                                                        if (_quantity > 1) {
+                                                          _quantity--;
+                                                        }
+                                                      }),
+                                                    ),
+                                                    new Text('$_quantity'),
+                                                    new IconButton(
+                                                      icon: Icon(Icons.add),
+                                                      color: Colors.black,
+                                                      onPressed: () => setState(
+                                                          () => _quantity++),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                           actions: <Widget>[
                                             TextButton(

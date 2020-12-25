@@ -2,12 +2,11 @@ import 'dart:convert';
 import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/orders.dart';
-import 'package:demo/pages/customer/checkoutpage.dart';
 import 'package:demo/pages/customer/orderConfirmation.dart';
 import 'package:flutter/material.dart';
-import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
-import 'personalInfo.dart' as info;
+
+import 'custHomepage.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -39,9 +38,10 @@ class _CartPageState extends State<CartPage> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => OrderConfirmPage(oid:orders.OID)));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  OrderConfirmPage(oid: orders.OID)));
                     },
                   )
                 ],
@@ -101,8 +101,8 @@ class _CartPageState extends State<CartPage> {
     return parsed.map<Cart>((json) => Cart.fromJson(json)).toList();
   }
 
-  Future<List<Cart>> fetchCart(int cid) async {
-    final response = await http_get('/viewcart/' + cid.toString());
+  Future<List<Cart>> fetchCart() async {
+    final response = await http_get('/viewcart/' + cust.CID.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -119,48 +119,35 @@ class _CartPageState extends State<CartPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    futureCustDetail = info.fetchCustDetail();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop()),
-        title: Text('My Cart'),
-        centerTitle: true,
-        backgroundColor: Colors.red,
-      ),
-      body: FutureBuilder(
-        future: futureCustDetail,
-        builder: (context, snapshot1) {
-          if (snapshot1.hasData) {
-            _CID = snapshot1.data.CID;
-            return FutureBuilder(
-              future: fetchCart(_CID),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<Cart> carts = snapshot.data;
-                  for (var i = 0; i < carts.length; i++) {
-                    _totalPrice += (carts[i].itemPrice * carts[i].quantity);
-                  }
-                  return cartListView(context, snapshot);
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error);
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            );
-          } else if (snapshot1.hasError) {
-            return Text(snapshot1.error);
-          }
-          return Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+        backgroundColor: Colors.yellow[200],
+        appBar: AppBar(
+          leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.black),
+              onPressed: () => Navigator.of(context).pop()),
+          title: Text('My Cart'),
+          centerTitle: true,
+          backgroundColor: Colors.red,
+        ),
+        body: FutureBuilder(
+          future: fetchCart(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              List<Cart> carts = snapshot.data;
+              for (var i = 0; i < carts.length; i++) {
+                _totalPrice += (carts[i].itemPrice * carts[i].quantity);
+              }
+              return cartListView(context, snapshot);
+            } else if (snapshot.hasError) {
+              return Text(snapshot.error);
+            }
+            return Center(child: CircularProgressIndicator());
+          },
+        ));
   }
 
   Widget cartListView(BuildContext context, AsyncSnapshot snapshot) {
