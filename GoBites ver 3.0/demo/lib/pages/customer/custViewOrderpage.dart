@@ -112,11 +112,12 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
             child: Column(
               children: <Widget>[
                 MaterialButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CustomerViewOrderDetailPage(oid:orderids[index].OID)));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CustomerViewOrderDetailPage(
+                                oid: orderids[index].OID)));
                   },
                   padding: EdgeInsets.all(10.0),
                   child: Row(

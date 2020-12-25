@@ -47,6 +47,38 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
     }
   }
 
+  List<Orders> parseOrder(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Orders>((json) => Orders.fromJson(json)).toList();
+  }
+
+  Future<List<Orders>> fetchOrder(int rid) async {
+    final response = await http_get('/vieworderrest/' + rid.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return parseOrder(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load, code = ' + response.statusCode.toString());
+    }
+  }
+
+  Future orderComplete(int id) async {
+    final msg = jsonEncode({
+      "ID": id,
+    });
+    final response = await http_post("/orderitemstatus", msg);
+    String status = jsonDecode(response.body);
+
+    if (status == "orderitem status done") {
+      print('orderitem status success!');
+    }
+  }
+
   Future orderitemDelete(int id) async {
     final msg = jsonEncode({
       "ID": id,
@@ -191,6 +223,17 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
                           onPressed: () {
                             print(orders[index].ID);
                             removeAlertDialog(context, orders[index].ID);
+                          },
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(Icons.check),
+                          color: Colors.black,
+                          onPressed: () {
+                            print(orders[index].ID);
+                            orderComplete(orders[index].ID);
                           },
                         ),
                       ),

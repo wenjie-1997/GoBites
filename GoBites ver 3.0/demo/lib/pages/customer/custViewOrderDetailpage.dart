@@ -135,6 +135,13 @@ class _CustomerViewOrderDetailPageState
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    Text(
+                      "Status: ${orders.status}",
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ],
                 ),
               );

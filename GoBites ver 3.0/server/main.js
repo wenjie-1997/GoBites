@@ -361,7 +361,7 @@ app.post('/movetoorder', async(req, res)=>{
   SET @last_id = LAST_INSERT_ID();
   INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
   DELETE FROM cart WHERE fk_cid = ?;
-  UPDATE orders SET totalprice = 
+  UPDATE orders SET totalPrice = 
   (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
   WHERE fk_oid = @last_id) WHERE orderid = @last_id;
@@ -382,7 +382,7 @@ app.post('/movetoorder', async(req, res)=>{
 
 app.get('/vieworderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid AS OID, totalPrice
+  await db.query( `SELECT orderid AS OID, totalPrice, status
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -424,7 +424,7 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
   await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
   FROM orderitem
   JOIN menuitem ON menuitem.mid=orderitem.fk_mid
-  WHERE menuitem.fk_rid=?`,
+  WHERE menuitem.fk_rid=? AND status='PREPARING'`,
    [rid] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -441,7 +441,7 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
 
 app.get('/vieworderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT orderid as OID, totalPrice
+  await db.query( `SELECT orderid as OID, totalPrice 
   FROM orders
   WHERE fk_cid=?`,
    [cid] , (error, rows, fields)=>{
@@ -452,6 +452,25 @@ app.get('/vieworderidcust/:cid', async(req, res)=>{
     }
     else{
         console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/viewordercust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, status
+  FROM orders
+  WHERE fk_cid=?`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve status success");
         res.send(rows);
         return;
       }
@@ -510,7 +529,7 @@ app.post('/orderitemdelete', async(req, res)=>{
   await db.query( `
   SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
   DELETE FROM orderitem WHERE id=?;
-  UPDATE orders SET totalprice = 
+  UPDATE orders SET totalPrice = 
   (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
   WHERE fk_oid = @oid) WHERE orderid = @oid;
@@ -526,6 +545,7 @@ app.post('/orderitemdelete', async(req, res)=>{
         console.log("Delete Order Sucessful");
         res.json("Delete Order Sucessful");
         return;
+
       }
     });
 });
@@ -605,6 +625,27 @@ app.post("/restimage", async(req, res) => {
       }
     });
  });
+
+app.post('/orderitemstatus', async(req, res) => {
+	const ID = req.body.ID;
+	await db.query(`
+  	SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
+	update orderitem set status = 'DONE' where id=?;
+	update orders set status = 'DELIVERING' where orderid=@oid;`,
+	[ID, ID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status change fail");
+			return;
+		}
+		else{
+			console.log('status success');
+			res.json("orderitem status done");
+		}
+	});
+
+});
+
 
 app.get('/', (req, res) => {
   res.send("Hello World");

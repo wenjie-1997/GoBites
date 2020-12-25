@@ -156,7 +156,7 @@ app.get('/restaurants/:rid', async(req, res) => {
 app.get('/menu/:rid', async(req, res) => {
   const rid = req.params.rid;
   await db.query(`SELECT itemName, itemPrice, itemPhoto, itemDesc, MID
-  FROM menuitem WHERE fk_rid = ?`
+  FROM MenuItem WHERE fk_rid = ?`
   , [rid], (error, rows, fields) => {
     if (error) {
       console.log(error);
@@ -211,7 +211,7 @@ app.post('/restupdate', async(req, res)=>{
 
 app.post('/addmenu', async(req, res)=>{
   const {itemName, itemPrice, itemPhoto, itemDesc, RID} = req.body;
-  await db.query("INSERT INTO `menuitem`(`itemName`, `itemPrice`, `itemPhoto`, `itemDesc`,`fk_rid`) VALUES (?,?,?,?,?)",
+  await db.query("INSERT INTO `MenuItem`(`itemName`, `itemPrice`, `itemPhoto`, `itemDesc`,`fk_rid`) VALUES (?,?,?,?,?)",
    [itemName, itemPrice, itemPhoto, itemDesc,RID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -228,7 +228,7 @@ app.post('/addmenu', async(req, res)=>{
 
 app.post('/menuupdate', async(req, res)=>{
   const {itemName, itemPrice, itemPhoto, itemDesc, MID} = req.body;
-  await db.query( "UPDATE `menuitem` SET`itemName`=?,`itemPrice`=?,`itemPhoto`=?,`itemDesc`=? WHERE `MID`=?",
+  await db.query( "UPDATE `MenuItem` SET`itemName`=?,`itemPrice`=?,`itemPhoto`=?,`itemDesc`=? WHERE `MID`=?",
    [itemName, itemPrice, itemPhoto, itemDesc, MID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -245,7 +245,7 @@ app.post('/menuupdate', async(req, res)=>{
 
 app.post('/menudelete', async(req, res)=>{
   const {MID} = req.body;
-  await db.query( "DELETE FROM `menuitem` WHERE `MID`=?",
+  await db.query( "DELETE FROM `MenuItem` WHERE `MID`=?",
    [MID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -255,16 +255,16 @@ app.post('/menudelete', async(req, res)=>{
     else{
         console.log("Delete Sucessful");
         res.json("Delete Sucessful");
-        return;s
+        return;
       }
     });
 });
 
 app.get('/viewcart/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT menuitem.itemName, menuitem.itemPrice,cart.quantity,cart.KID
+  await db.query( `SELECT MenuItem.itemName, MenuItem.itemPrice,cart.quantity,cart.KID
   FROM cart
-  INNER JOIN menuitem ON menuitem.mid=cart.fk_mid
+  INNER JOIN MenuItem ON MenuItem.mid=cart.fk_mid
   WHERE fk_cid=?`,
    [cid] , (error, rows, fields)=>{
     if (error) {
@@ -322,8 +322,8 @@ app.post('/movetoorder', async(req, res)=>{
   INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
   DELETE FROM cart WHERE fk_cid = ?;
   UPDATE orders SET totalprice = 
-  (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
-  JOIN menuitem ON menuitem.MID=orderitem.fk_mid
+  (SELECT SUM(MenuItem.itemPrice*orderitem.quantity) FROM orderitem 
+  JOIN MenuItem ON MenuItem.MID=orderitem.fk_mid
   WHERE fk_oid = @last_id) WHERE fk_cid = ?;
   SELECT @last_id AS OID;`,
    [CID, CID, CID, CID] , (error, rows, fields)=>{
@@ -361,9 +361,9 @@ app.get('/vieworderid/:oid', async(req, res)=>{
 
 app.get('/viewordername/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT menuitem.itemName, quantity, menuitem.itemPrice
+  await db.query( `SELECT MenuItem.itemName, quantity, MenuItem.itemPrice
   FROM orderitem
-  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  JOIN MenuItem ON MenuItem.mid=orderitem.fk_mid
   WHERE fk_oid=?`,
    [oid] , (error, rows, fields)=>{
     if (error) {
@@ -379,6 +379,7 @@ app.get('/viewordername/:oid', async(req, res)=>{
     });
 });
 
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
@@ -387,8 +388,8 @@ async function main(){
     db = await mysql.createConnection({
       host:"localhost",
       user: "root",
-      password: "",
-      database: "gobites",
+      password: "void",
+      database: "goBites2",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
