@@ -460,6 +460,43 @@ app.get('/vieworderidcust/:cid', async(req, res)=>{
     });
 });
 
+app.get('/vieworderdate/:rid', async(req, res)=>{
+	const rid = req.params.rid;
+	await db.query(`select distinct orders.orderid as OID, orders.addedDate, orders.totalPrice from orderitem join orders on orders.orderid=orderitem.fk_oid join menuitem on menuitem.MID=orderitem.fk_mid where menuitem.fk_rid=? AND orders.status='PREPARING';
+	`, [rid], (error, rows, fields)=>{
+		if(error){
+			console.log(error);
+			res.json("get orders fail");
+			return;
+		}
+		else{
+			console.log("Retrieve order in rest success");
+			res.send(rows);
+			return;
+		}
+	})
+});
+
+app.get('/vieworderitemrest/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE orderitem.fk_oid=? AND status='PREPARING'`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log(rows);
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.post('/checkusername', async(req, res)=>{
   const username = req.body.username;
   await db.query( `SELECT username FROM user WHERE username = ?`,
@@ -612,9 +649,7 @@ app.post("/restimage", async(req, res) => {
 app.post('/orderitemstatus', async(req, res) => {
 	const ID = req.body.ID;
 	await db.query(`
-  	SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
-	update orderitem set status = 'DONE' where id=?;
-	update orders set status = 'DELIVERING' where orderid=@oid;`,
+	update orderitem set status = 'DONE' where id=?;`,
 	[ID, ID], (error, rows, fields) => {
 		if (error){
 			console.log(error);
@@ -630,6 +665,24 @@ app.post('/orderitemstatus', async(req, res) => {
 });
 
 
+app.post('/ordersetstatus', async(req, res) => {
+	const OID = req.body.OID;
+	await db.query(`
+	update orders set status = 'DELIVERING' where orderid=?;`,
+	[OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status change fail");
+			return;
+		}
+		else{
+			console.log('status success');
+			res.json("orders status done");
+		}
+	});
+
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
@@ -638,8 +691,8 @@ async function main(){
     db = await mysql.createConnection({
       host:"localhost",
       user: "root",
-      password: "",
-      database: "gobites",
+      password: "void",
+      database: "goBites3",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
