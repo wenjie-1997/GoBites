@@ -321,7 +321,9 @@ app.get('/viewcart/:cid', async(req, res)=>{
 });
 
 app.post('/addtocart', async(req, res)=>{
+  
   const {MID, quantity, CID} = req.body;
+  console.log(CID);
   await db.query("INSERT INTO `cart`(`fk_mid`,`quantity`,`fk_cid`) VALUES (?,?,?)",
    [MID, quantity, CID] , (error, rows, fields)=>{
     if (error) {

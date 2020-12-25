@@ -7,7 +7,7 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:demo/pages/customer/custMenupage.dart';
-import 'personalInfo.dart';
+import 'custHomepage.dart';
 import 'cartpage.dart';
 
 class CustRestaurantPage extends StatefulWidget {
@@ -45,7 +45,6 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
 
   @override
   void initState() {
-    futureCustDetail = fetchCustDetail();
     fetchRestaurantList().then((value) {
       setState(() {
         _restList.addAll(value);
@@ -62,70 +61,63 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
+            onPressed: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => new CustHomePage()),
+                (route) => false),
           ),
           backgroundColor: Colors.red,
           title: Text('Pick a Restaurant'),
           centerTitle: true,
           actions: [
-            FutureBuilder<CustDetail>(
-              future: futureCustDetail,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  print(snapshot.data.CID);
-                  return FutureBuilder<int>(
-                      future: fetchCartQuantity(snapshot.data.CID),
-                      builder: (context, snapshot1) {
-                        if (snapshot1.hasData) {
-                          return IconButton(
-                            icon: new Stack(
-                              children: <Widget>[
-                                new Icon(
-                                  Icons.shopping_cart_rounded,
-                                  size: 30,
+            FutureBuilder<int>(
+                future: fetchCartQuantity(cust.CID),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return IconButton(
+                      icon: new Stack(
+                        children: <Widget>[
+                          new Icon(
+                            Icons.shopping_cart_rounded,
+                            size: 30,
+                          ),
+                          new Positioned(
+                            right: 0,
+                            child: new Container(
+                              padding: EdgeInsets.all(1),
+                              decoration: new BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              constraints: BoxConstraints(
+                                minWidth: 12,
+                                minHeight: 12,
+                              ),
+                              child: new Text(
+                                '${snapshot.data.toString()}',
+                                style: new TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
                                 ),
-                                new Positioned(
-                                  right: 0,
-                                  child: new Container(
-                                    padding: EdgeInsets.all(1),
-                                    decoration: new BoxDecoration(
-                                      color: Colors.red,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    constraints: BoxConstraints(
-                                      minWidth: 12,
-                                      minHeight: 12,
-                                    ),
-                                    child: new Text(
-                                      '${snapshot1.data.toString()}',
-                                      style: new TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                )
-                              ],
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CartPage()));
-                            },
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error);
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      });
-                } else if (snapshot.hasError) {
-                  return Text(snapshot.error);
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
+                          )
+                        ],
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error);
+                  }
+                  return Center(child: CircularProgressIndicator());
+                })
           ],
         ),
         body: ListView.builder(
