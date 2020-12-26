@@ -118,11 +118,13 @@ class _RestMenuPageState extends State<RestMenuPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
+          onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new RestHomePage())),
+                  builder: (BuildContext context) => new RestHomePage()),
+              (route) => false),
         ),
+        //),
         backgroundColor: Colors.red,
         title: Text('My Menu'),
         centerTitle: true,
@@ -133,9 +135,7 @@ class _RestMenuPageState extends State<RestMenuPage> {
               future: futureRestDetail,
               builder: (context, snapshot1) {
                 if (snapshot1.hasData) {
-                  print(snapshot1.data.RID);
                   rest = snapshot1.data;
-                  print(rest.email);
                   print(rest.RID);
                   return FutureBuilder<List<Menu>>(
                       future: fetchMenu(snapshot1.data.RID),

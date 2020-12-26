@@ -1,9 +1,14 @@
+import 'dart:convert';
+import 'package:demo/modules/custdetail.dart';
+import 'package:demo/modules/http.dart';
+import 'package:demo/pages/customer/custViewOrderpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
 import 'package:demo/pages/pageSizing.dart';
+import 'package:demo/pages/login.dart' as login;
 
-import 'custRestaurantlist.dart';
+CustDetail cust;
 
 class CustomerHomePage extends StatelessWidget {
   @override
@@ -20,7 +25,26 @@ class CustHomePage extends StatefulWidget {
   _CustHomePageState createState() => _CustHomePageState();
 }
 
+fetchCustDetail() async {
+  final response = await http_get('/customer/' + login.login_id);
+
+  if (response.statusCode == 200) {
+    cust = CustDetail.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
+  }
+}
+
 class _CustHomePageState extends State<CustHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchCustDetail();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -33,10 +57,8 @@ class _CustHomePageState extends State<CustHomePage> {
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(
-                context,
-                //MaterialPageRoute(builder: (context) => CustRestaurantPage()));
-                MaterialPageRoute(builder: (context) => CustRestaurantList()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CustRestaurantPage()));
           },
           child: Column(
             children: <Widget>[
@@ -84,7 +106,12 @@ class _CustHomePageState extends State<CustHomePage> {
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerViewOrderPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.list),

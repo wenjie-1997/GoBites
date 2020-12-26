@@ -1,21 +1,16 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:async';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/customer/updatePassword.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import '../../modules/custdetail.dart';
 import 'package:demo/pages/customer/personalInfoUpdatepage.dart';
 import 'package:intl/intl.dart';
 import 'package:demo/modules/custdetail.dart';
-/*class PersonalInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: "View Personal Info",
-      home: PersonalInfoPage(),
-    );
-  }
-}*/
+import 'package:image_picker/image_picker.dart';
 
 CustDetail cust;
 
@@ -41,6 +36,59 @@ class PersonalInfoPage extends StatefulWidget {
 
 class _PersonalInfoPageState extends State<PersonalInfoPage> {
   Future<CustDetail> futureCustDetail;
+  PickedFile pickedFile;
+
+  void _choose() async {
+    final _picker = ImagePicker();
+    pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    _upload();
+  }
+
+  _upload() async {
+    if (pickedFile == null) return;
+    final File file = File(pickedFile.path);
+    String base64Image = base64Encode(file.readAsBytesSync());
+    String fileName = file.path.split("/").last;
+    final msg = jsonEncode({
+      "CID": cust.CID,
+      "image": base64Image,
+      "name": fileName,
+    });
+    final result = await http_post("/image", msg);
+    String status = jsonDecode(result.body);
+    if (status == "OK") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Upload Image Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => new PersonalInfoPage()),
+                            (route) => false);
+                      }),
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   @override
   void initState() {
@@ -55,10 +103,11 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacement(
+            onPressed: () => Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => new CustHomePage())),
+                    builder: (BuildContext context) => new CustHomePage()),
+                (route) => false),
           ),
           title: Text('Personal Info'),
           centerTitle: true,
@@ -70,7 +119,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
@@ -83,13 +132,44 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
             if (snapshot.hasData) {
               cust = snapshot.data;
               return Padding(
-                padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
+                padding: EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 10.0),
                 child: ListView(
                   children: <Widget>[
+                    SizedBox(
+                      height: 30.0,
+                    ),
                     Center(
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/default.png'),
-                        radius: 50.0,
+                      child: Stack(
+                        children: <Widget>[
+                          new CircleAvatar(
+                            backgroundImage: cust.image == null
+                                ? AssetImage('assets/default.png')
+                                : NetworkImage("http://$DOMAIN/" + cust.image),
+                            radius: 100.0,
+                          ),
+                          new Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: new Material(
+                                color: Colors.transparent,
+                                child: Center(
+                                  child: Ink(
+                                    decoration: const ShapeDecoration(
+                                      color: Colors.red,
+                                      shape: CircleBorder(),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.upload_sharp,
+                                        size: 30,
+                                      ),
+                                      color: Colors.white,
+                                      onPressed: _choose,
+                                    ),
+                                  ),
+                                ),
+                              ))
+                        ],
                       ),
                     ),
                     Divider(
@@ -118,13 +198,24 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    Text(
-                      cust.password,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                    Row(children: [
+                      Text(
+                        '·' * cust.password.length,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.edit_sharp),
+                        color: Colors.black,
+                        onPressed: () => Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new UpdatePassword(cust: cust))),
+                      )
+                    ]),
                     SizedBox(
                       height: 20.0,
                     ),

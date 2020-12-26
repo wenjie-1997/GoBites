@@ -1,12 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/restaurant/restHomepage.dart';
+import 'package:demo/pages/restaurant/updatePassword.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/restdetail.dart';
+import 'package:image_picker/image_picker.dart';
 import 'restInfoUpdatepage.dart';
 
-RestDetail rest = null;
+RestDetail rest;
 
 Future<RestDetail> fetchRestDetail() async {
   print("Im here");
@@ -33,6 +36,59 @@ class RestaurantPersonalInfoPage extends StatefulWidget {
 class _RestaurantPersonalInfoPageState
     extends State<RestaurantPersonalInfoPage> {
   Future<RestDetail> futureRestDetail;
+  PickedFile pickedFile;
+
+  void _choose() async {
+    final _picker = ImagePicker();
+    pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    _upload();
+  }
+
+  _upload() async {
+    if (pickedFile == null) return;
+    final File file = File(pickedFile.path);
+    String base64Image = base64Encode(file.readAsBytesSync());
+    String fileName = file.path.split("/").last;
+    final msg = jsonEncode({
+      "RID": rest.RID,
+      "image": base64Image,
+      "name": fileName,
+    });
+    final result = await http_post("/restimage", msg);
+    String status = jsonDecode(result.body);
+    if (status == "OK") {
+      showDialog<void>(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => AlertDialog(
+                title: Text("Upload Image Successful"),
+                actions: <Widget>[
+                  TextButton(
+                      child: Text('Continue'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    new RestaurantPersonalInfoPage()));
+                      }),
+                ],
+              ));
+    } else {
+      // AlertDialog(
+      //   title: Text(status),
+      //   actions: <Widget>[
+      //     TextButton(
+      //       child: Text('Continue'),
+      //       onPressed: () {
+      //         Navigator.of(context).pop();
+      //       },
+      //     ),
+      //   ],
+      // );
+    }
+  }
 
   @override
   void initState() {
@@ -47,10 +103,11 @@ class _RestaurantPersonalInfoPageState
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pushReplacement(
+          onPressed: () => Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => new RestHomePage())),
+                  builder: (BuildContext context) => new RestHomePage()),
+              (route) => false),
         ),
         title: Text('Restaurant Info'),
         centerTitle: true,
@@ -62,7 +119,7 @@ class _RestaurantPersonalInfoPageState
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
@@ -80,10 +137,41 @@ class _RestaurantPersonalInfoPageState
                 padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                 child: ListView(
                   children: <Widget>[
+                    SizedBox(
+                      height: 30.0,
+                    ),
                     Center(
-                      child: CircleAvatar(
-                        backgroundImage: AssetImage('assets/default.png'),
-                        radius: 50.0,
+                      child: Stack(
+                        children: <Widget>[
+                          new CircleAvatar(
+                            backgroundImage: rest.image == null
+                                ? AssetImage('assets/default.png')
+                                : NetworkImage("http://$DOMAIN/" + rest.image),
+                            radius: 100.0,
+                          ),
+                          new Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: new Material(
+                                color: Colors.transparent,
+                                child: Center(
+                                  child: Ink(
+                                    decoration: const ShapeDecoration(
+                                      color: Colors.red,
+                                      shape: CircleBorder(),
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(
+                                        Icons.upload_sharp,
+                                        size: 30,
+                                      ),
+                                      color: Colors.white,
+                                      onPressed: _choose,
+                                    ),
+                                  ),
+                                ),
+                              ))
+                        ],
                       ),
                     ),
                     Divider(
@@ -97,7 +185,7 @@ class _RestaurantPersonalInfoPageState
                       height: 10.0,
                     ),
                     Text(
-                      snapshot.data.username,
+                      rest.username,
                       style: TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -112,13 +200,24 @@ class _RestaurantPersonalInfoPageState
                     SizedBox(
                       height: 10.0,
                     ),
-                    Text(
-                      snapshot.data.password,
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
+                    Row(children: [
+                      Text(
+                        '·' * rest.password.length,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        icon: Icon(Icons.edit_sharp),
+                        color: Colors.black,
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new RestUpdatePassword(rest: rest))),
+                      )
+                    ]),
                     SizedBox(
                       height: 20.0,
                     ),

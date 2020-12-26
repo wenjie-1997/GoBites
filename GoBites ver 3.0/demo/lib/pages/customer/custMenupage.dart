@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/menu.dart';
+import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/customer/cartpage.dart';
-import 'personalInfo.dart' as info;
 
 Future<CustRestDetail> fetchRestDetail(String rid) async {
   final response = await http_get('/restaurants/' + rid);
@@ -16,6 +18,18 @@ Future<CustRestDetail> fetchRestDetail(String rid) async {
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
+    throw Exception('Failed to load, code = ' + response.statusCode.toString());
+  }
+}
+
+Future<int> fetchCartQuantity(int cid) async {
+  final response = await http_get('/getcartquantity/' + cid.toString());
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    print("success");
+    return jsonDecode(response.body);
+  } else {
     throw Exception('Failed to load, code = ' + response.statusCode.toString());
   }
 }
@@ -49,15 +63,15 @@ class CustMenuPage extends StatefulWidget {
 class _CustMenuPageState extends State<CustMenuPage> {
   Future<CustRestDetail> futureCustRestDetail;
   Future<List<Menu>> futureMenuList;
+  Future<CustDetail> futureCustDetail;
   int _quantity = 1;
   final ScrollController _scrollController = ScrollController();
 
-  Future insertCart(int MID, int quantity, int CID) async {
-    print(MID.toString() + quantity.toString() + CID.toString());
+  Future insertCart(int MID, int quantity) async {
     final msg = jsonEncode({
       "MID": MID,
       "quantity": quantity,
-      "CID": CID,
+      "CID": cust.CID,
     });
     final result = await http_post("/addtocart", msg);
     String status = jsonDecode(result.body);
@@ -111,45 +125,62 @@ class _CustMenuPageState extends State<CustMenuPage> {
             appBar: AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CustRestaurantPage())),
               ),
               title: Text('Make an Order'),
               centerTitle: true,
               backgroundColor: Colors.red,
               actions: <Widget>[
-                IconButton(
-                  icon: new Stack(
-                    children: <Widget>[
-                      new Icon(Icons.shopping_cart_rounded),
-                      new Positioned(
-                        right: 0,
-                        child: new Container(
-                          padding: EdgeInsets.all(1),
-                          decoration: new BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(6),
+                FutureBuilder<int>(
+                    future: fetchCartQuantity(cust.CID),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return IconButton(
+                          icon: new Stack(
+                            children: <Widget>[
+                              new Icon(
+                                Icons.shopping_cart_rounded,
+                                size: 30,
+                              ),
+                              new Positioned(
+                                right: 0,
+                                child: new Container(
+                                  padding: EdgeInsets.all(1),
+                                  decoration: new BoxDecoration(
+                                    color: Colors.red,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  constraints: BoxConstraints(
+                                    minWidth: 12,
+                                    minHeight: 12,
+                                  ),
+                                  child: new Text(
+                                    '${snapshot.data.toString()}',
+                                    style: new TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              )
+                            ],
                           ),
-                          constraints: BoxConstraints(
-                            minWidth: 12,
-                            minHeight: 12,
-                          ),
-                          child: new Text(
-                            '0',
-                            style: new TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => CartPage()));
-                  },
-                ),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CartPage()));
+                          },
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error);
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    })
               ],
             ),
             body: Column(children: <Widget>[
@@ -263,7 +294,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
                         } else if (snapshot.hasError) {
                           return Text("${snapshot.error}");
                         }
-                        return Container();
+                        return Center(child: CircularProgressIndicator());
                       }),
                 ),
               ),
@@ -369,46 +400,57 @@ class _CustMenuPageState extends State<CustMenuPage> {
                                           builder: (context, setState) {
                                         return AlertDialog(
                                           title: Text("Add to Cart"),
-                                          content: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  "Name: ${menus[index].itemName}\n"),
-                                              Text(
-                                                  "Price: ${menus[index].itemPrice}\n"),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  Text("Quantity: "),
-                                                  new IconButton(
-                                                    icon: Icon(Icons.remove),
-                                                    color: Colors.black,
-                                                    onPressed: () =>
-                                                        setState(() {
-                                                      if (_quantity > 1) {
-                                                        _quantity--;
-                                                      }
-                                                    }),
-                                                  ),
-                                                  new Text('$_quantity'),
-                                                  new IconButton(
-                                                    icon: Icon(Icons.add),
-                                                    color: Colors.black,
-                                                    onPressed: () => setState(
-                                                        () => _quantity++),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                          content: Container(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                      "Name: ${menus[index].itemName}\n"),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  child: Text(
+                                                      "Price: ${menus[index].itemPrice}\n"),
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Text("Quantity: "),
+                                                    new IconButton(
+                                                      icon: Icon(Icons.remove),
+                                                      color: Colors.black,
+                                                      onPressed: () =>
+                                                          setState(() {
+                                                        if (_quantity > 1) {
+                                                          _quantity--;
+                                                        }
+                                                      }),
+                                                    ),
+                                                    new Text('$_quantity'),
+                                                    new IconButton(
+                                                      icon: Icon(Icons.add),
+                                                      color: Colors.black,
+                                                      onPressed: () => setState(
+                                                          () => _quantity++),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                           actions: <Widget>[
                                             TextButton(
                                                 child: Text('Continue'),
                                                 onPressed: () {
                                                   insertCart(menus[index].MID,
-                                                      _quantity, 9);
+                                                      _quantity);
                                                   Navigator.of(context).pop();
                                                 }),
                                             TextButton(
