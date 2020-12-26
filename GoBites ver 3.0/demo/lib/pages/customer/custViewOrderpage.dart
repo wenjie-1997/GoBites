@@ -260,7 +260,7 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
 
 getColor(String status) {
   if (status == "PREPARING") {
-    return Colors.yellow[800];
+    return Colors.yellow;
   } else if (status == "DELIVERING") {
     return Colors.lightBlue[400];
   } else {

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
+import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'custHomepage.dart';
@@ -64,8 +65,7 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.yellow[200],
-      appBar: new AppBar(
-        leading: new Container(),
+      appBar: AppBar(
         title: Text('Order Confirmation'),
         centerTitle: true,
         backgroundColor: Colors.red,

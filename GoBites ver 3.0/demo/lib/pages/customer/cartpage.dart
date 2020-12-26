@@ -5,6 +5,7 @@ import 'package:demo/modules/orders.dart';
 import 'package:demo/pages/customer/orderConfirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
+
 import 'custHomepage.dart';
 
 class CartPage extends StatefulWidget {
@@ -13,12 +14,14 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  double _totalPrice;
+  int _CID;
+  int _itemCount = 0;
+  double _totalPrice = 0;
   Future<CustDetail> futureCustDetail;
 
   moveToOrder() async {
     final msg = jsonEncode({
-      "CID": cust.CID,
+      "CID": _CID,
     });
     final result = await http_post("/movetoorder", msg);
     Orders orders = Orders.fromJson(jsonDecode(result.body));
@@ -134,7 +137,6 @@ class _CartPageState extends State<CartPage> {
           future: fetchCart(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              _totalPrice = 0;
               List<Cart> carts = snapshot.data;
               for (var i = 0; i < carts.length; i++) {
                 _totalPrice += (carts[i].itemPrice * carts[i].quantity);
@@ -151,63 +153,59 @@ class _CartPageState extends State<CartPage> {
   Widget cartListView(BuildContext context, AsyncSnapshot snapshot) {
     List<Cart> carts = snapshot.data;
     return Stack(children: <Widget>[
-      Container(
-          padding: EdgeInsets.only(bottom: 70),
-          child: ListView.builder(
-              padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-              itemCount: snapshot.data.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return Card(
-                  elevation: 4.0,
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.all(10.0),
-                        child: Row(
-                          children: <Widget>[
-                            Expanded(
-                              flex: 2,
-                              child: CircleAvatar(
-                                backgroundImage:
-                                    AssetImage('assets/default.png'),
-                                radius: 30.0,
-                              ),
-                            ),
-                            Expanded(
-                              flex: 3,
-                              child: Text(carts[index].itemName),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: Center(
-                                  child:
-                                      Text(carts[index].quantity.toString())),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Center(
-                                child: Text(
-                                    'RM ${carts[index].itemPrice.toStringAsFixed(2)}'),
-                              ),
-                            ),
-                            Expanded(
-                              flex: 1,
-                              child: IconButton(
-                                icon: Icon(Icons.delete),
-                                color: Colors.black,
-                                onPressed: () {
-                                  deleteAlertDialog(context, carts[index].KID);
-                                },
-                              ),
-                            ),
-                          ],
+      ListView.builder(
+          padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+          itemCount: snapshot.data.length,
+          scrollDirection: Axis.vertical,
+          itemBuilder: (context, index) {
+            return Card(
+              elevation: 4.0,
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.all(10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 2,
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage('assets/default.png'),
+                            radius: 30.0,
+                          ),
                         ),
-                      )
-                    ],
-                  ),
-                );
-              })),
+                        Expanded(
+                          flex: 3,
+                          child: Text(carts[index].itemName),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                              child: Text(carts[index].quantity.toString())),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Center(
+                            child: Text(
+                                'RM ${carts[index].itemPrice.toStringAsFixed(2)}'),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            icon: Icon(Icons.delete),
+                            color: Colors.black,
+                            onPressed: () {
+                              deleteAlertDialog(context, carts[index].KID);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          }),
       Align(
         alignment: Alignment.bottomCenter,
         child: Container(
