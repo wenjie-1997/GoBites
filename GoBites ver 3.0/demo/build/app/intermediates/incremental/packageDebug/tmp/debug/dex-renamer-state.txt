@@ -1,7 +1,10 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 #Sat Dec 26 00:34:51 SGT 2020
 base.0=/home/pharveish/goBites/sprint2/Flutter_App_GoBites/GoBites ver 3.0/demo/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
 =======
+=======
+>>>>>>> parent of d7d63cea... bug fixed(addtocart always added to ivan)
 #Fri Dec 25 13:17:08 SGT 2020
 base.0=C\:\\Users\\Wen Jie\\Folder\\Flutter_App_GoBites\\GoBites ver 3.0\\demo\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\out\\classes.dex
 >>>>>>> parent of d7d63cea... bug fixed(addtocart always added to ivan)
