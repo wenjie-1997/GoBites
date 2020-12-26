@@ -11,7 +11,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+
+app.use(express.static('images'));
 
 const db = require("./web-app/models/index.js");
 
