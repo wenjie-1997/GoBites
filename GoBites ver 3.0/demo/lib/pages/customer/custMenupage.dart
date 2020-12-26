@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
+import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
@@ -66,12 +67,11 @@ class _CustMenuPageState extends State<CustMenuPage> {
   int _quantity = 1;
   final ScrollController _scrollController = ScrollController();
 
-  Future insertCart(int MID, int quantity, int CID) async {
-    print(MID.toString() + quantity.toString() + CID.toString());
+  Future insertCart(int MID, int quantity) async {
     final msg = jsonEncode({
       "MID": MID,
       "quantity": quantity,
-      "CID": CID,
+      "CID": cust.CID,
     });
     final result = await http_post("/addtocart", msg);
     String status = jsonDecode(result.body);
@@ -125,7 +125,10 @@ class _CustMenuPageState extends State<CustMenuPage> {
             appBar: AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CustRestaurantPage())),
               ),
               title: Text('Make an Order'),
               centerTitle: true,
@@ -447,7 +450,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
                                                 child: Text('Continue'),
                                                 onPressed: () {
                                                   insertCart(menus[index].MID,
-                                                      _quantity, 9);
+                                                      _quantity);
                                                   Navigator.of(context).pop();
                                                 }),
                                             TextButton(
