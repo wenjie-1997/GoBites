@@ -26,7 +26,7 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final menuButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -43,7 +43,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "Menu List",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -51,7 +51,7 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final restaurantDetailButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -70,7 +70,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "Restaurant Detail",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -78,7 +78,7 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final viewOrderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -97,7 +97,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "View Order",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -105,7 +105,7 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final feedbackButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -119,14 +119,13 @@ class _RestHomePageState extends State<RestHomePage> {
                 "My Feedback",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
         ));
 
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         body: Center(
           child: Container(
             height: SizeConfig.safeBlockVertical * 100,

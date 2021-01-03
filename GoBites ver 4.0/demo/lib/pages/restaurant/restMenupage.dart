@@ -114,7 +114,6 @@ class _RestMenuPageState extends State<RestMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -125,7 +124,7 @@ class _RestMenuPageState extends State<RestMenuPage> {
               (route) => false),
         ),
         //),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         title: Text('My Menu'),
         centerTitle: true,
       ),

@@ -51,7 +51,6 @@ class _CustomerViewOrderDetailPageState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -61,7 +60,7 @@ class _CustomerViewOrderDetailPageState
           ),
           title: Text('Order Detail'),
           centerTitle: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),

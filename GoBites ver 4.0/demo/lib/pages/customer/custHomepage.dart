@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/http.dart';
+import 'package:demo/pages/customer/custOrderRatingpage.dart';
 import 'package:demo/pages/customer/custViewOrderpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/customer/custRestaurantpage.dart';
@@ -51,7 +52,7 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final orderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
@@ -68,7 +69,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Order Food",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -76,7 +77,7 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final personalDetailButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
@@ -93,7 +94,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Personal Detail",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -101,7 +102,7 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final viewOrderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
@@ -120,7 +121,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "View Order",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -128,12 +129,17 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final giveFeedbackButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerOrderRatingPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.feedback),
@@ -142,7 +148,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Give Feedback",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -150,7 +156,6 @@ class _CustHomePageState extends State<CustHomePage> {
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.yellow[200],
         body: Center(
           child: Container(
             height: SizeConfig.safeBlockVertical * 100,

@@ -148,7 +148,6 @@ class _RestOrderItemPageState extends State<RestOrderItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -160,7 +159,7 @@ class _RestOrderItemPageState extends State<RestOrderItemPage> {
         ),
         title: Text('Order Items'),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),

@@ -121,7 +121,6 @@ class _CustMenuPageState extends State<CustMenuPage> {
     return DefaultTabController(
         length: 1,
         child: Scaffold(
-            backgroundColor: Colors.yellow[200],
             appBar: AppBar(
               leading: IconButton(
                 icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -132,7 +131,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
               ),
               title: Text('Make an Order'),
               centerTitle: true,
-              backgroundColor: Colors.red,
+              backgroundColor: Colors.blue,
               actions: <Widget>[
                 FutureBuilder<int>(
                     future: fetchCartQuantity(cust.CID),

@@ -12,14 +12,13 @@ class _CheckoutpageState extends State<Checkoutpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop()),
           title: Text('Check Out'),
           centerTitle: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
         ),
         body: Container(
           padding: EdgeInsets.all(10.0),

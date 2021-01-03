@@ -60,13 +60,12 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed:() => Navigator.pop(context),
+          onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         title: Text('Update Detail'),
         centerTitle: true,
       ),

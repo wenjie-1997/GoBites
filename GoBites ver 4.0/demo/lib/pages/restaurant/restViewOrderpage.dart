@@ -112,7 +112,6 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -124,7 +123,7 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
         ),
         title: Text('Order List'),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),

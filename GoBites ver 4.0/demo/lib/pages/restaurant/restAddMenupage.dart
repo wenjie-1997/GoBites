@@ -65,13 +65,12 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
           title: Text('Add Menu'),
           centerTitle: true,
         ),

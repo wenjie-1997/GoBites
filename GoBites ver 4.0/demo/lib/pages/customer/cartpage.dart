@@ -121,14 +121,13 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
               icon: Icon(Icons.arrow_back, color: Colors.black),
               onPressed: () => Navigator.of(context).pop()),
           title: Text('My Cart'),
           centerTitle: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
         ),
         body: FutureBuilder(
           future: fetchCart(),

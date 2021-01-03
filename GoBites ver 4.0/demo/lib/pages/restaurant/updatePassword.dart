@@ -55,7 +55,7 @@ class RestUpdatePasswordState extends State<RestUpdatePassword> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),

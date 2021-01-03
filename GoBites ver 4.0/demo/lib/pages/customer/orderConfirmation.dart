@@ -63,12 +63,11 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: new AppBar(
         leading: new Container(),
         title: Text('Order Confirmation'),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
       ),
       body: FutureBuilder<Orders>(
           future: futureOrder,

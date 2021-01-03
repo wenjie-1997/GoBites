@@ -57,7 +57,6 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
@@ -67,7 +66,7 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
                     builder: (BuildContext context) => new CustHomePage()),
                 (route) => false),
           ),
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
           title: Text('Pick a Restaurant'),
           centerTitle: true,
           actions: [

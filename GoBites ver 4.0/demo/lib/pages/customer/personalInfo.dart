@@ -99,7 +99,6 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
@@ -111,7 +110,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
           ),
           title: Text('Personal Info'),
           centerTitle: true,
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.blue,
           actions: <Widget>[
             IconButton(
                 icon: Icon(

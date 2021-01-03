@@ -683,6 +683,25 @@ app.post('/ordersetstatus', async(req, res) => {
 
 });
 
+app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  FROM orders
+  WHERE fk_cid=? AND status='DELIVERED'`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

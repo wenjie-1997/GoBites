@@ -84,7 +84,7 @@ class _LoginState extends State<Login> {
     final loginButton = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
             "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
           ),
         ));
 
@@ -126,7 +126,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Center(
         child: Container(
-          color: Colors.yellow[200],
           child: Padding(
             padding: const EdgeInsets.all(36.0),
             child: Column(
