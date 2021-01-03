@@ -702,6 +702,25 @@ app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
     });
 });
 
+app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  FROM orders
+  WHERE orderid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

@@ -202,11 +202,13 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                     padding: EdgeInsets.all(5.0),
                     child: RaisedButton(
                       onPressed: () {
-                        Navigator.push(
+                      Navigator.of(context).pop();
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => MakeRatingPage()));
-                      },
+                              builder: (context) =>
+                                  MakeRatingPage(oid: orders[index].OID)));
+                    },
                       child: Text(
                         "Give Rating",
                       ),
