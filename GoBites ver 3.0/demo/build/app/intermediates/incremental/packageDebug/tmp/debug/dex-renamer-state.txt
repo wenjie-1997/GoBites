@@ -1,4 +1,0 @@
-#Tue Dec 29 21:05:01 SGT 2020
-base.0=/home/pharveish/goBites/sprint2/Flutter_App_GoBites/GoBites ver 3.0/demo/build/app/intermediates/dex/debug/mergeDexDebug/out/classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
