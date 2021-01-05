@@ -245,7 +245,7 @@ class _CartPageState extends State<CartPage> {
                 );
               }
             },
-            color: Colors.red,
+            color: Colors.blue,
             textColor: Colors.white,
           ),
         ),

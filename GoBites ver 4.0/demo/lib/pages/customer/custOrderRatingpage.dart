@@ -202,7 +202,7 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             textAlign: TextAlign.right),
                       ),
                     ])),
-                Builder(
+                /*Builder(
                   builder: (BuildContext context) {
                     if (orders[index].rating != null) {
                       return Container(
@@ -248,7 +248,21 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                           ));
                     }
                   },
-                ),
+                ),*/
+                Container(
+                          padding: EdgeInsets.all(5.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MakeRatingPage(
+                                          oid: orders[index].OID)));
+                            },
+                            child: Text(
+                              "Give Rating",
+                            ),
+                          ))
               ],
             ),
           );

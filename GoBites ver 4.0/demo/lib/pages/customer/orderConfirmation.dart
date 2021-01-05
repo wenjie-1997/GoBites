@@ -157,7 +157,7 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                                     builder: (context) => CustHomePage()),
                                 (route) => false);
                           },
-                          color: Colors.red,
+                          color: Colors.blue,
                           textColor: Colors.white,
                         ),
                       ),

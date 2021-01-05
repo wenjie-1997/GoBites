@@ -685,7 +685,7 @@ app.post('/ordersetstatus', async(req, res) => {
 
 app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, rating, comment
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
   FROM orders
   WHERE fk_cid=? AND status='DONE'`,
    [cid] , (error, rows, fields)=>{
@@ -704,7 +704,7 @@ app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
 
 app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, rating, comment
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -722,11 +722,10 @@ app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
 });
 
 app.post('/makerating', async(req, res) => {
-  const {OID, rating, comment} = req.body;
+  const {rating, comment, OID, RID} = req.body;
   console.log(rating);
-	await db.query(`
-	UPDATE orders SET rating = ?,comment = ? WHERE orderid=?;`,
-	[rating,comment,OID], (error, rows, fields) => {
+	await db.query(`INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?)`,
+	[rating, comment, OID, RID], (error, rows, fields) => {
 		if (error){
 			console.log(error);
 			res.json("Rate fail");
@@ -738,6 +737,29 @@ app.post('/makerating', async(req, res) => {
 		}
 	});
 
+});
+
+app.get('/vieworderrestaurant/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT restaurant.restaurantname, restaurant.RID
+  FROM orderitem
+  JOIN menuitem ON menuitem.MID = orderitem.fk_mid
+  JOIN restaurant ON restaurant.RID = menuitem.fk_rid
+  WHERE orderitem.fk_oid=?
+  GROUP BY restaurant.restaurantname, restaurant.RID
+  `,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
 });
 
 app.get('/', (req, res) => {

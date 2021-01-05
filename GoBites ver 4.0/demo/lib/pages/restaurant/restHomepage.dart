@@ -1,3 +1,4 @@
+import 'package:demo/pages/restaurant/restRatingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:demo/pages/restaurant/restaurantInfo.dart';
@@ -110,7 +111,12 @@ class _RestHomePageState extends State<RestHomePage> {
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantRatingPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.feedback),

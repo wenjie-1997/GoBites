@@ -300,7 +300,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
               SizedBox(
                 height: 50.0,
                 child: AppBar(
-                  backgroundColor: Colors.red,
+                  backgroundColor: Colors.blue,
                   bottom: TabBar(
                     tabs: [
                       Tab(
