@@ -685,9 +685,9 @@ app.post('/ordersetstatus', async(req, res) => {
 
 app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, rating, comment
   FROM orders
-  WHERE fk_cid=? AND status='DELIVERED'`,
+  WHERE fk_cid=? AND status='DONE'`,
    [cid] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
@@ -704,7 +704,7 @@ app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
 
 app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, rating, comment
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -719,6 +719,25 @@ app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
         return;
       }
     });
+});
+
+app.post('/makerating', async(req, res) => {
+  const {OID, rating, comment} = req.body;
+  console.log(rating);
+	await db.query(`
+	UPDATE orders SET rating = ?,comment = ? WHERE orderid=?;`,
+	[rating,comment,OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Rate fail");
+			return;
+		}
+		else{
+			console.log('Rate successful');
+			res.json("Rate Successful");
+		}
+	});
+
 });
 
 app.get('/', (req, res) => {

@@ -1,10 +1,20 @@
+import 'dart:ffi';
+
 class Orders {
   final int OID;
   final double totalPrice;
   final String status;
   final DateTime addedDate;
+  final double rating;
+  final String comment;
 
-  Orders({this.OID, this.totalPrice, this.status, this.addedDate});
+  Orders(
+      {this.OID,
+      this.totalPrice,
+      this.status,
+      this.addedDate,
+      this.rating,
+      this.comment});
 
   factory Orders.fromJson(Map<String, dynamic> json) {
     return Orders(
@@ -15,6 +25,8 @@ class Orders {
       status: json['status'],
       addedDate:
           json['addedDate'] != null ? DateTime.parse(json['addedDate']) : null,
+      rating: ((json['rating'] is int) ? json['rating'] + .0 : json['rating']),
+      comment: json['comment'],
     );
   }
 }

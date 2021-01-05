@@ -7,12 +7,14 @@ import 'package:demo/pages/customer/custRatingpage.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'custHomepage.dart';
 
 class CustomerOrderRatingPage extends StatefulWidget {
   @override
-  _CustomerOrderRatingPageState createState() => _CustomerOrderRatingPageState();
+  _CustomerOrderRatingPageState createState() =>
+      _CustomerOrderRatingPageState();
 }
 
 class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
@@ -39,7 +41,8 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
 
   Future<List<Orders>> fetchOrderId(int cid) async {
     print(cid);
-    final response = await http_get('/viewdeliveredorderidcust/' + cid.toString());
+    final response =
+        await http_get('/viewdeliveredorderidcust/' + cid.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
@@ -80,6 +83,7 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
     super.initState();
     futureCustDetail = fetchCustDetail();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -198,21 +202,53 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             textAlign: TextAlign.right),
                       ),
                     ])),
-                    Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  MakeRatingPage(oid: orders[index].OID)));
-                    },
-                      child: Text(
-                        "Give Rating",
-                      ),
-                      ))
+                Builder(
+                  builder: (BuildContext context) {
+                    if (orders[index].rating != null) {
+                      return Container(
+                          padding: EdgeInsets.all(5.0),
+                          child: Column(children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: RatingBarIndicator(
+                                rating: orders[index].rating,
+                                itemBuilder: (context, index) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                itemCount: 5,
+                                itemSize: 30,
+                                direction: Axis.horizontal,
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Comment:\n${orders[index].comment}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                            )
+                          ]));
+                    } else {
+                      return Container(
+                          padding: EdgeInsets.all(5.0),
+                          child: RaisedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MakeRatingPage(
+                                          oid: orders[index].OID)));
+                            },
+                            child: Text(
+                              "Give Rating",
+                            ),
+                          ));
+                    }
+                  },
+                ),
               ],
             ),
           );
@@ -279,7 +315,7 @@ getColor(String status) {
     return Colors.lightBlue[400];
   } else if (status == "DELIVERED") {
     return Colors.green[400];
-  }else {
+  } else {
     return Colors.black54;
   }
 }
