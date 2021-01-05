@@ -1,9 +1,9 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:demo/modules/http.dart';
-import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/restaurant/restHomepage.dart';
-import 'package:demo/pages/login.dart' as login;
+import 'package:demo/pages/restaurant/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -13,12 +13,14 @@ class RestaurantRatingPage extends StatefulWidget {
 }
 
 class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
-  Future<RestDetail> fetchRestDetail() async {
-    final response = await http_get('/restaurant/' + login.login_id);
+  Future<double> futurerating;
+
+  Future<double> getRating() async {
+    final response = await http_get('/getrating/' + rest.RID.toString());
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      return RestDetail.fromJson(jsonDecode(response.body));
+      return jsonDecode(response.body).toDouble();
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -26,43 +28,95 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
           'Failed to load detail, code = ' + response.statusCode.toString());
     }
   }
-  
+
+  @override
+  void initState() {
+    super.initState();
+    futurerating = getRating();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new RestHomePage()),
-              (route) => false),
-        ),
-        title: Text('My Rating'),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-      ),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 200.0,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
-              child: Text('Average Rating')
-            ),
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.black),
+            onPressed: () => Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => new RestHomePage()),
+                (route) => false),
           ),
-          SizedBox(
-            height: 50.0,
-            child: AppBar(
-              title: Text('Feedback List'),
-              centerTitle: true,
-              backgroundColor: Colors.blue,
-            ),
-          ),
-
-        ],
+          title: Text('My Rating'),
+          centerTitle: true,
+          backgroundColor: Colors.blue,
         ),
-    );
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              SizedBox(
+                  child: Column(children: [
+                Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                    child: Text(
+                      'Average Rating',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 20),
+                    )),
+                FutureBuilder<double>(
+                  future: futurerating,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: RatingBarIndicator(
+                          rating: snapshot.data,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          itemCount: 5,
+                          itemSize: 50,
+                          direction: Axis.horizontal,
+                        ),
+                      );
+                    }
+                    return Align(
+                      alignment: Alignment.center,
+                      child: RatingBarIndicator(
+                        rating: 0,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 50,
+                        direction: Axis.horizontal,
+                      ),
+                    );
+                  },
+                ),
+              ])),
+              SizedBox(
+                height: 10.0,
+              ),
+              Divider(
+                color: Colors.black,
+              ),
+              SizedBox(
+                  child: Container(
+                      color: Colors.blue,
+                      child: AppBar(
+                        title: Text(
+                          'Feedback List',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        centerTitle: true,
+                        leading: Container(),
+                        backgroundColor: Colors.lightBlue,
+                      )))
+            ],
+          ),
+        ));
   }
 }

@@ -685,7 +685,7 @@ app.post('/ordersetstatus', async(req, res) => {
 
 app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, hasFeedback
   FROM orders
   WHERE fk_cid=? AND status='DONE'`,
    [cid] , (error, rows, fields)=>{
@@ -757,6 +757,40 @@ app.get('/vieworderrestaurant/:oid', async(req, res)=>{
     else{
         console.log("Retrieve Order ID Sucessful");
         res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/getorderfeedback/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE oid = ?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows[0]);
+        return;
+      }
+    });
+});
+
+app.get('/getrating/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT SUM(rating)/COUNT(*) as rating FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve rating Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve rating Sucessful");
+        res.json(rows[0].rating);
         return;
       }
     });

@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
 import 'package:demo/modules/custdetail.dart';
+import 'package:demo/modules/feedback.dart';
 import 'package:demo/pages/customer/custRatingpage.dart';
 import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
@@ -67,6 +68,20 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       return parseOrder(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load, code = ' + response.statusCode.toString());
+    }
+  }
+
+  Future<Feedbacks> getFeedback(int oid) async {
+    final response = await http_get('/getorderfeedback/' + oid.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return Feedbacks.fromJson(jsonDecode(response.body));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -202,35 +217,44 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             textAlign: TextAlign.right),
                       ),
                     ])),
-                /*Builder(
-                  builder: (BuildContext context) {
-                    if (orders[index].rating != null) {
-                      return Container(
-                          padding: EdgeInsets.all(5.0),
-                          child: Column(children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: RatingBarIndicator(
-                                rating: orders[index].rating,
-                                itemBuilder: (context, index) => Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                ),
-                                itemCount: 5,
-                                itemSize: 30,
-                                direction: Axis.horizontal,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                "Comment:\n${orders[index].comment}",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                ),
-                              ),
-                            )
-                          ]));
+                Builder(
+                  builder: (context) {
+                    if (orders[index].hasFeedback == 1) {
+                      return FutureBuilder<Feedbacks>(
+                          future: getFeedback(orders[index].OID),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return Container(
+                                  padding: EdgeInsets.all(5.0),
+                                  child: Column(children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: RatingBarIndicator(
+                                        rating: snapshot.data.rating,
+                                        itemBuilder: (context, index) => Icon(
+                                          Icons.star,
+                                          color: Colors.amber,
+                                        ),
+                                        itemCount: 5,
+                                        itemSize: 30,
+                                        direction: Axis.horizontal,
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        "Comment:\n${snapshot.data.comment}",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                    )
+                                  ]));
+                            } else if (snapshot.hasError) {
+                              return Text(snapshot.error);
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          });
                     } else {
                       return Container(
                           padding: EdgeInsets.all(5.0),
@@ -247,22 +271,9 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             ),
                           ));
                     }
+                    return Container();
                   },
-                ),*/
-                Container(
-                          padding: EdgeInsets.all(5.0),
-                          child: RaisedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MakeRatingPage(
-                                          oid: orders[index].OID)));
-                            },
-                            child: Text(
-                              "Give Rating",
-                            ),
-                          ))
+                ),
               ],
             ),
           );
