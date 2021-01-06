@@ -1,9 +1,16 @@
+import 'dart:convert';
+
+import 'package:demo/modules/http.dart';
+import 'package:demo/modules/restdetail.dart';
 import 'package:demo/pages/restaurant/restRatingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:demo/pages/restaurant/restaurantInfo.dart';
 import 'package:demo/pages/restaurant/restViewOrderpage.dart';
 import 'package:demo/pages/pageSizing.dart';
+import 'package:demo/pages/login.dart' as login;
+
+RestDetail rest;
 
 class RestaurantHomePage extends StatelessWidget {
   @override
@@ -20,7 +27,25 @@ class RestHomePage extends StatefulWidget {
   _RestHomePageState createState() => _RestHomePageState();
 }
 
+fetchRestDetail() async {
+  final response = await http_get('/restaurant/' + login.login_id);
+
+  if (response.statusCode == 200) {
+    rest = RestDetail.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
+  }
+}
+
 class _RestHomePageState extends State<RestHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchRestDetail();
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);

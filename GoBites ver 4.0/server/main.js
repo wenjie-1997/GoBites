@@ -796,6 +796,23 @@ app.get('/getrating/:rid', async(req, res)=>{
     });
 });
 
+app.get('/getfeedbackrest/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve Feedback Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });

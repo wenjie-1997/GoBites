@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:demo/modules/feedback.dart';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/restaurant/restHomepage.dart';
-import 'package:demo/pages/restaurant/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -29,10 +29,32 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
     }
   }
 
+  List<Feedbacks> parseFeedback(String responseBody) {
+    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+    return parsed.map<Feedbacks>((json) => Feedbacks.fromJson(json)).toList();
+  }
+
+  Future<List<Feedbacks>> fetchFeedback() async {
+    final response = await http_get('/getfeedbackrest/' + rest.RID.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return parseFeedback(response.body);
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load, code = ' + response.statusCode.toString());
+    }
+  }
+
+  Future<List<Feedbacks>> futureFeedbackList;
   @override
   void initState() {
     super.initState();
     futurerating = getRating();
+    futureFeedbackList = fetchFeedback();
   }
 
   @override
@@ -100,9 +122,6 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
               SizedBox(
                 height: 10.0,
               ),
-              Divider(
-                color: Colors.black,
-              ),
               SizedBox(
                   child: Container(
                       color: Colors.blue,
@@ -114,9 +133,76 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
                         centerTitle: true,
                         leading: Container(),
                         backgroundColor: Colors.lightBlue,
-                      )))
+                      ))),
+              FutureBuilder<List<Feedbacks>>(
+                  future: futureFeedbackList,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return feedbackListView(context, snapshot);
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error);
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }),
             ],
           ),
         ));
+  }
+
+  Widget feedbackListView(BuildContext context, AsyncSnapshot snapshot) {
+    List<Feedbacks> feedbackrest = snapshot.data;
+    return ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
+        itemCount: snapshot.data.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'Feedback ID: ${feedbackrest[index].FID.toString()}',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                RatingBarIndicator(
+                  rating: feedbackrest[index].rating,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  itemCount: 5,
+                  itemSize: 50,
+                  direction: Axis.horizontal,
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  'Comment Received:',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Text(
+                  '${feedbackrest[index].comment}',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+              ],
+            ),
+          );
+        });
   }
 }
