@@ -1,3 +1,5 @@
 # This is a generated file; do not edit or check into version control.
-flutter_plugin_android_lifecycle=C:\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\flutter_plugin_android_lifecycle-1.0.11\\
-image_picker=C:\\flutter\\.pub-cache\\hosted\\pub.dartlang.org\\image_picker-0.6.7+17\\
+flutter_local_notifications=/home/pharveish/.flutter_install/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_local_notifications-3.0.2/
+flutter_plugin_android_lifecycle=/home/pharveish/.flutter_install/flutter/.pub-cache/hosted/pub.dartlang.org/flutter_plugin_android_lifecycle-1.0.11/
+image_picker=/home/pharveish/.flutter_install/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker-0.6.7+17/
+workmanager=/home/pharveish/.flutter_install/flutter/.pub-cache/hosted/pub.dartlang.org/workmanager-0.2.3/

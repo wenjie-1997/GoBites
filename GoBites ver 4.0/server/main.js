@@ -664,6 +664,26 @@ app.post('/orderitemstatus', async(req, res) => {
 
 });
 
+app.get('/vieworderstatus/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(`
+	select orders.fk_cid, orders.status from orders 
+	join customer on customer.CID=orders.fk_cid
+  INNER JOIN user ON  user.fk_cid=customer.CID
+  WHERE user.UID = ?;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+			console.log("showing delivery notification");
+			res.send(rows[0]);
+		}
+	});
+
+});
 
 app.post('/ordersetstatus', async(req, res) => {
 	const OID = req.body.OID;
