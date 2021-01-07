@@ -37,4 +37,13 @@ class LocalNotification {
         "Your food is being delivered", scheduledDate, notificationDetails,
         androidAllowWhileIdle: true);
   }
+
+  static DeliveredNotification(DateTime scheduledDate) async {
+    var notificationDetails =
+        NotificationDetails(android: androidSettings, iOS: null);
+    // ignore: deprecated_member_use
+    await flutterNotificationPlugin.schedule(1, "GoBites",
+        "Your food is delivered", scheduledDate, notificationDetails,
+        androidAllowWhileIdle: true);
+  }
 }

@@ -23,6 +23,8 @@ void callbackDispatcher1() {
     var convert = json.decode(response.body);
     if (convert['status'] == "DELIVERING") {
       LocalNotification.DeliveryNotification(DateTime.now());
+    } else if (convert['status'] == "DONE") {
+      LocalNotification.DeliveredNotification(DateTime.now());
     } else {
       print("no message");
     }
