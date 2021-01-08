@@ -271,7 +271,6 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             ),
                           ));
                     }
-                    return Container();
                   },
                 ),
               ],

@@ -126,7 +126,7 @@ app.get('/restaurant/:restaurantId', async(req, res) => {
 });
 
 app.get('/restaurants', async(req, res) => {
-  await db.query(`SELECT RID,restaurantname
+  await db.query(`SELECT *
   FROM restaurant`
   , [], (error, rows, fields) => {
     if (error) {
