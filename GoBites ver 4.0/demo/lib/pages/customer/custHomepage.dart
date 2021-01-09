@@ -14,23 +14,23 @@ import 'package:demo/modules/local_notification.dart';
 
 CustDetail cust;
 
-void callbackDispatcher1() {
-  Workmanager.executeTask((taskName, inputData) async {
-    //show notification
-    LocalNotification.Initializer();
-    var response = await http_get('/vieworderstatus/' + login.login_id);
-    print(response);
-    var convert = json.decode(response.body);
-    if (convert['status'] == "DELIVERING") {
-      LocalNotification.DeliveryNotification(DateTime.now());
-    } else if (convert['status'] == "DONE") {
-      LocalNotification.DeliveredNotification(DateTime.now());
-    } else {
-      print("no message");
-    }
-    return Future.value(true);
-  });
-}
+//void callbackDispatcher1() {
+//Workmanager.executeTask((taskName, inputData) async {
+////show notification
+//LocalNotification.Initializer();
+//var response = await http_get('/vieworderstatus/' + login.login_id);
+//print(response);
+//var convert = json.decode(response.body);
+//if (convert['status'] == "DELIVERING") {
+//LocalNotification.DeliveryNotification(DateTime.now());
+//} else if (convert['status'] == "DONE") {
+//LocalNotification.DeliveredNotification(DateTime.now());
+//} else {
+//print("no message");
+//}
+//return Future.value(true);
+//});
+//}
 
 class CustomerHomePage extends StatelessWidget {
   @override
@@ -60,16 +60,30 @@ fetchCustDetail() async {
   }
 }
 
+notification() async {
+  var response = await http_get('/vieworderstatus/' + login.login_id);
+  var convert = json.decode(response.body);
+  if (convert['status'] == "DELIVERING") {
+    LocalNotification.DeliveryNotification(DateTime.now());
+  } else if (convert['status'] == "DONE") {
+    LocalNotification.DeliveredNotification(DateTime.now());
+  } else {
+    print("no message");
+  }
+}
+
 class _CustHomePageState extends State<CustHomePage> {
   @override
   void initState() {
     super.initState();
-    WidgetsFlutterBinding.ensureInitialized();
-    Workmanager.initialize(callbackDispatcher1);
-    Workmanager.registerPeriodicTask("test_workertask1", "test_workertask1",
-        frequency: Duration(minutes: 15),
-        initialDelay: Duration(seconds: 5),
-        inputData: {"data1": "value1", "data2": "value2"});
+    LocalNotification.Initializer();
+    notification();
+    //WidgetsFlutterBinding.ensureInitialized();
+    //Workmanager.initialize(callbackDispatcher1);
+    //Workmanager.registerPeriodicTask("test_workertask1", "test_workertask1",
+    //frequency: Duration(minutes: 15),
+    //initialDelay: Duration(seconds: 5),
+    //inputData: {"data1": "value1", "data2": "value2"});
     fetchCustDetail();
   }
 

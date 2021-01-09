@@ -841,8 +841,8 @@ async function main(){
     db = await mysql.createConnection({
       host:"localhost",
       user: "root",
-      password: "void",
-      database: "goBites3",
+      password: "",
+      database: "gobites",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
