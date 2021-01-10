@@ -673,6 +673,159 @@ router.post(DOMAIN+'/ordersetstatus', async(req, res) => {
 
 });
 
+router.get(DOMAIN+'/vieworderstatus/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(`
+	select orders.fk_cid, orders.status from orders 
+	join customer on customer.CID=orders.fk_cid
+  INNER JOIN user ON  user.fk_cid=customer.CID
+  WHERE user.UID = ?;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+			console.log("showing delivery notification");
+			res.send(rows[0]);
+		}
+	});
+
+});
+
+router.get(DOMAIN+'/viewdeliveredorderidcust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, hasFeedback
+  FROM orders
+  WHERE fk_cid=? AND status='DONE'`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+router.get(DOMAIN+'/viewdeliveredorderid/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  FROM orders
+  WHERE orderid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+router.post(DOMAIN+'/makerating', async(req, res) => {
+  const {rating, comment, OID, RID} = req.body;
+  console.log(rating);
+	await db.query(`INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?)`,
+	[rating, comment, OID, RID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Rate fail");
+			return;
+		}
+		else{
+			console.log('Rate successful');
+			res.json("Rate Successful");
+		}
+	});
+
+});
+
+router.get(DOMAIN+'/vieworderrestaurant/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT restaurant.restaurantname, restaurant.RID
+  FROM orderitem
+  JOIN menuitem ON menuitem.MID = orderitem.fk_mid
+  JOIN restaurant ON restaurant.RID = menuitem.fk_rid
+  WHERE orderitem.fk_oid=?
+  GROUP BY restaurant.restaurantname, restaurant.RID
+  `,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+router.get(DOMAIN+'/getorderfeedback/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE oid = ?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows[0]);
+        return;
+      }
+    });
+});
+
+router.get(DOMAIN+'/getrating/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT SUM(rating)/COUNT(*) as rating FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve rating Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve rating Sucessful");
+        res.json(rows[0].rating);
+        return;
+      }
+    });
+});
+
+router.get(DOMAIN+'/getfeedbackrest/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve Feedback Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+
+
 
 async function main(){
     db = await mysql.createConnection({
