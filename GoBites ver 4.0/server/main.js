@@ -744,8 +744,10 @@ app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
 app.post('/makerating', async(req, res) => {
   const {rating, comment, OID, RID} = req.body;
   console.log(rating);
-	await db.query(`INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?)`,
-	[rating, comment, OID, RID], (error, rows, fields) => {
+  await db.query(`INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?);
+  UPDATE orders SET hasFeedback = true WHERE orderid = ?;
+  `,
+	[rating, comment, OID, RID, OID], (error, rows, fields) => {
 		if (error){
 			console.log(error);
 			res.json("Rate fail");
