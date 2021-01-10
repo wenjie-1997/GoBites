@@ -1,7 +1,16 @@
+import 'dart:convert';
+
+import 'package:demo/modules/http.dart';
+import 'package:demo/modules/restdetail.dart';
+import 'package:demo/pages/restaurant/restRatingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:demo/pages/restaurant/restaurantInfo.dart';
+import 'package:demo/pages/restaurant/restViewOrderpage.dart';
 import 'package:demo/pages/pageSizing.dart';
+import 'package:demo/pages/login.dart' as login;
+
+RestDetail rest;
 
 class RestaurantHomePage extends StatelessWidget {
   @override
@@ -18,14 +27,32 @@ class RestHomePage extends StatefulWidget {
   _RestHomePageState createState() => _RestHomePageState();
 }
 
+fetchRestDetail() async {
+  final response = await http_get('/restaurant/' + login.login_id);
+
+  if (response.statusCode == 200) {
+    rest = RestDetail.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
+  }
+}
+
 class _RestHomePageState extends State<RestHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchRestDetail();
+  }
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
     final menuButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -42,7 +69,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "Menu List",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -50,7 +77,7 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final restaurantDetailButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
@@ -69,7 +96,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "Restaurant Detail",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -77,12 +104,17 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final viewOrderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantViewOrderPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.list),
@@ -91,7 +123,7 @@ class _RestHomePageState extends State<RestHomePage> {
                 "View Order",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -99,12 +131,17 @@ class _RestHomePageState extends State<RestHomePage> {
 
     final feedbackButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: 250.0,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => RestaurantRatingPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.feedback),
@@ -113,14 +150,13 @@ class _RestHomePageState extends State<RestHomePage> {
                 "My Feedback",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
         ));
 
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         body: Center(
           child: Container(
             height: SizeConfig.safeBlockVertical * 100,

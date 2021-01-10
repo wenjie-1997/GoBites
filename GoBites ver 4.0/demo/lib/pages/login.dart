@@ -13,7 +13,6 @@ class Login extends StatefulWidget {
 }
 
 String login_id;
-String rest_id;
 
 class _LoginState extends State<Login> {
   LoginResult loginResult;
@@ -64,7 +63,6 @@ class _LoginState extends State<Login> {
             MaterialPageRoute(builder: (context) => CustomerHomePage()));
       } else if (loginResult.status == "Login Sucessful as Restaurant") {
         login_id = loginResult.id;
-        rest_id = loginResult.fk_rid;
         Navigator.push(
             context, MaterialPageRoute(builder: (context) => RestHomePage()));
       } else {
@@ -86,7 +84,7 @@ class _LoginState extends State<Login> {
     final loginButton = Material(
         elevation: 5.0,
         borderRadius: BorderRadius.circular(30.0),
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           onPressed: () {
@@ -108,7 +106,7 @@ class _LoginState extends State<Login> {
             "Login",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
           ),
         ));
 
@@ -128,7 +126,6 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Center(
         child: Container(
-          color: Colors.yellow[200],
           child: Padding(
             padding: const EdgeInsets.all(36.0),
             child: Column(

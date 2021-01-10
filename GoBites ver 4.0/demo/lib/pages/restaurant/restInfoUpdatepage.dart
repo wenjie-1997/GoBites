@@ -76,17 +76,11 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.yellow[200],
         appBar: AppBar(
           leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new RestaurantPersonalInfoPage())),
-          ),
-          backgroundColor: Colors.red,
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: () => Navigator.pop(context)),
+          backgroundColor: Colors.blue,
           title: Text('Update Detail'),
           centerTitle: true,
         ),

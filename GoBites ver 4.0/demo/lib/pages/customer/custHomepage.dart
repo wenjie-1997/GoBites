@@ -1,9 +1,36 @@
+import 'dart:convert';
+import 'package:demo/modules/custdetail.dart';
+import 'package:demo/modules/http.dart';
+import 'package:demo/pages/customer/custOrderRatingpage.dart';
+import 'package:demo/pages/customer/custViewOrderpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
 import 'package:demo/pages/pageSizing.dart';
+import 'package:demo/pages/login.dart' as login;
+import 'package:workmanager/workmanager.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:demo/modules/local_notification.dart';
 
-import 'custRestaurantlist.dart';
+CustDetail cust;
+
+//void callbackDispatcher1() {
+//Workmanager.executeTask((taskName, inputData) async {
+////show notification
+//LocalNotification.Initializer();
+//var response = await http_get('/vieworderstatus/' + login.login_id);
+//print(response);
+//var convert = json.decode(response.body);
+//if (convert['status'] == "DELIVERING") {
+//LocalNotification.DeliveryNotification(DateTime.now());
+//} else if (convert['status'] == "DONE") {
+//LocalNotification.DeliveredNotification(DateTime.now());
+//} else {
+//print("no message");
+//}
+//return Future.value(true);
+//});
+//}
 
 class CustomerHomePage extends StatelessWidget {
   @override
@@ -20,23 +47,60 @@ class CustHomePage extends StatefulWidget {
   _CustHomePageState createState() => _CustHomePageState();
 }
 
+fetchCustDetail() async {
+  final response = await http_get('/customer/' + login.login_id);
+
+  if (response.statusCode == 200) {
+    cust = CustDetail.fromJson(jsonDecode(response.body));
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception(
+        'Failed to load album, code = ' + response.statusCode.toString());
+  }
+}
+
+notification() async {
+  var response = await http_get('/vieworderstatus/' + login.login_id);
+  var convert = json.decode(response.body);
+  if (convert['status'] == "DELIVERING") {
+    LocalNotification.DeliveryNotification(DateTime.now());
+  } else if (convert['status'] == "DONE") {
+    LocalNotification.DeliveredNotification(DateTime.now());
+  } else {
+    print("no message");
+  }
+}
+
 class _CustHomePageState extends State<CustHomePage> {
+  @override
+  void initState() {
+    super.initState();
+    LocalNotification.Initializer();
+    notification();
+    //WidgetsFlutterBinding.ensureInitialized();
+    //Workmanager.initialize(callbackDispatcher1);
+    //Workmanager.registerPeriodicTask("test_workertask1", "test_workertask1",
+    //frequency: Duration(minutes: 15),
+    //initialDelay: Duration(seconds: 5),
+    //inputData: {"data1": "value1", "data2": "value2"});
+    fetchCustDetail();
+  }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
     final orderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
           onPressed: () {
-            Navigator.push(
-                context,
-                //MaterialPageRoute(builder: (context) => CustRestaurantPage()));
-                MaterialPageRoute(builder: (context) => CustRestaurantList()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => CustRestaurantPage()));
           },
           child: Column(
             children: <Widget>[
@@ -46,7 +110,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Order Food",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -54,7 +118,7 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final personalDetailButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
@@ -71,7 +135,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Personal Detail",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -79,12 +143,17 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final viewOrderButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerViewOrderPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.list),
@@ -93,7 +162,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "View Order",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -101,12 +170,17 @@ class _CustHomePageState extends State<CustHomePage> {
 
     final giveFeedbackButton = Material(
         elevation: 5.0,
-        color: Colors.red,
+        color: Colors.blue,
         child: MaterialButton(
           height: 100.0,
           minWidth: SizeConfig.safeBlockVertical * 38,
           padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CustomerOrderRatingPage()));
+          },
           child: Column(
             children: <Widget>[
               Icon(Icons.feedback),
@@ -115,7 +189,7 @@ class _CustHomePageState extends State<CustHomePage> {
                 "Give Feedback",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.amber, fontSize: 20.0, letterSpacing: 3.0),
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
               ),
             ],
           ),
@@ -123,7 +197,6 @@ class _CustHomePageState extends State<CustHomePage> {
 
     return Scaffold(
         resizeToAvoidBottomPadding: false,
-        backgroundColor: Colors.yellow[200],
         body: Center(
           child: Container(
             height: SizeConfig.safeBlockVertical * 100,

@@ -27,8 +27,6 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
   Future custUpdate() async {
     final msg = jsonEncode({
       "CID": widget.cust.CID,
-      "username": username,
-      "password": password,
       "custname": custname,
       "address": address,
       "email": email,
@@ -36,7 +34,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
     });
     final result = await http_post("/custupdate", msg);
     String status = jsonDecode(result.body);
-    //String status = loginResult.getStatus();
+
     if (status == "Update Sucessful") {
       showDialog<void>(
           context: context,
@@ -56,34 +54,18 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                       }),
                 ],
               ));
-    } else {
-      // AlertDialog(
-      //   title: Text(status),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: Text('Continue'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
-    }
+    } else {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new PersonalInfoPage())),
+          onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         title: Text('Update Detail'),
         centerTitle: true,
       ),
@@ -97,46 +79,37 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
                 TextFormField(
+                  enabled: false,
                   initialValue: widget.cust.username,
                   decoration: const InputDecoration(
                     labelText: 'Username',
                   ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      username = value;
-                    });
-                  },
                 ),
               ]),
             ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.cust.password,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      password = value;
-                    });
-                  },
-                ),
-              ]),
-            ),
+            // Container(
+            //   padding: EdgeInsets.all(10.0),
+            //   child: Column(children: <Widget>[
+            //     TextFormField(
+            //       enabled: ,
+            //       initialValue: widget.cust.password,
+            //       decoration: const InputDecoration(
+            //         labelText: 'Password',
+            //       ),
+            //       validator: (value) {
+            //         if (value.isEmpty) {
+            //           return 'Please enter some text';
+            //         }
+            //         return null;
+            //       },
+            //       onChanged: (String value) {
+            //         setState(() {
+            //           password = value;
+            //         });
+            //       },
+            //     ),
+            //   ]),
+            // ),
             Container(
               padding: EdgeInsets.all(10.0),
               child: Column(children: <Widget>[
@@ -234,12 +207,6 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                 ),
                 onPressed: () {
                   if (_formKey.currentState.validate()) {
-                    if (username == null) {
-                      username = widget.cust.username;
-                    }
-                    if (password == null) {
-                      password = widget.cust.password;
-                    }
                     if (email == null) {
                       email = widget.cust.email;
                     }

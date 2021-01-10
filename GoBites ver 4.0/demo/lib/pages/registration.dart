@@ -8,12 +8,9 @@ import 'package:demo/pages/login.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'package:date_format/date_format.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
-import 'encryption.dart';
 
 String username;
 String password;
-String encryptedPass;
 String usertype;
 DateTime birthdate;
 String custname;
@@ -79,6 +76,39 @@ class RegistrationForm extends StatefulWidget {
 class RegistrationFormState extends State<RegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
+  Future checkUsername() async {
+    final msg = jsonEncode({
+      "username": username,
+    });
+    final result = await http_post("/checkusername", msg);
+    String status = jsonDecode(result.body);
+    if (status == "Username does not exist") {
+      if (usertype == "customer") {
+        // If the form is valid, display a Snackbar.
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => CusRegistrationForm()));
+      } else if (usertype == "restaurant") {
+        Navigator.of(context).push(
+            MaterialPageRoute(builder: (context) => RestRegistrationForm()));
+      }
+    } else {
+      Future(() {
+        showDialog<void>(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) => new AlertDialog(
+                  title: Text("Username exists!"),
+                  content: Text("Please try to type a different username."),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text('Continue'),
+                        onPressed: () => Navigator.of(context).pop()),
+                  ],
+                ));
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Build a Form widget using the _formKey created above.
@@ -117,7 +147,7 @@ class RegistrationFormState extends State<RegistrationForm> {
                   labelText: 'Password',
                 ),
                 validator: (value) {
-                  if (value.length < 8) {
+                  if (value.length < 8 || value.length > 15) {
                     return 'The length of the password must be from 8 to 15.';
                   }
                   return null;
@@ -185,20 +215,8 @@ class RegistrationFormState extends State<RegistrationForm> {
                 ),
               ),
               onPressed: () {
-                setState(() {
-                  encryptedPass = EncryptDecrypt.encryptAES(password);
-                });
-                print(password);
-                print(encryptedPass);
                 if (_formKey.currentState.validate()) {
-                  if (usertype == "customer") {
-                    // If the form is valid, display a Snackbar.
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => CusRegistrationForm()));
-                  } else if (usertype == "restaurant") {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => RestRegistrationForm()));
-                  }
+                  checkUsername();
                 }
               },
               child: Text('Continue'),
@@ -492,11 +510,9 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
   final _formKey = GlobalKey<FormState>();
 
   Future restaurantRegister() async {
-    print(password);
-    print(encryptedPass);
     final msg = jsonEncode({
       "username": username,
-      "password": encryptedPass,
+      "password": password,
       "usertype": usertype,
       "restaurantname": restaurantname,
       "ownername": ownername,

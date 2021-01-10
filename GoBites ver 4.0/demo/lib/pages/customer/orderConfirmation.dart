@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
-import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'custHomepage.dart';
@@ -64,11 +63,11 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
-      appBar: AppBar(
+      appBar: new AppBar(
+        leading: new Container(),
         title: Text('Order Confirmation'),
         centerTitle: true,
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
       ),
       body: FutureBuilder<Orders>(
           future: futureOrder,
@@ -158,7 +157,7 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                                     builder: (context) => CustHomePage()),
                                 (route) => false);
                           },
-                          color: Colors.red,
+                          color: Colors.blue,
                           textColor: Colors.white,
                         ),
                       ),

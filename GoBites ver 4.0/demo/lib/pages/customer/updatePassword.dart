@@ -1,38 +1,40 @@
 import 'dart:convert';
-
-import 'package:demo/modules/http.dart';
-import 'package:demo/pages/restaurant/restMenupage.dart';
+import 'dart:ui';
+import 'package:demo/modules/custdetail.dart';
 import 'package:flutter/material.dart';
+import 'package:demo/modules/http.dart';
 
-String itemName;
-double itemPrice;
-String itemDesc;
+import 'personalInfo.dart';
 
-// ignore: must_be_immutable
-class RestAddMenuPage extends StatefulWidget {
-  int RID;
-  RestAddMenuPage({Key key, @required this.RID}) : super(key: key);
+String oldPassword;
+String newPassword;
+
+class UpdatePassword extends StatefulWidget {
+  final CustDetail cust;
   @override
-  _RestAddMenuPageState createState() => _RestAddMenuPageState();
+  UpdatePasswordState createState() => UpdatePasswordState();
+  UpdatePassword({Key key, @required this.cust}) : super(key: key);
 }
 
-class _RestAddMenuPageState extends State<RestAddMenuPage> {
-  Future insertMenu() async {
+final _formKey = GlobalKey<FormState>();
+
+/// This is the main application widget.
+class UpdatePasswordState extends State<UpdatePassword> {
+  Future passwordUpdate() async {
+    print(newPassword);
     final msg = jsonEncode({
-      "itemName": itemName,
-      "itemPrice": itemPrice,
-      "itemPhoto": "default.png",
-      "itemDesc": itemDesc,
-      "RID": widget.RID,
+      "password": newPassword,
+      "CID": widget.cust.CID,
     });
-    final result = await http_post("/addmenu", msg);
+    final result = await http_post("/custupdatepassword", msg);
     String status = jsonDecode(result.body);
-    if (status == "Insert Sucessful") {
+
+    if (status == "Update Sucessful") {
       showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
-                title: Text("Insert Sucessful"),
+                title: Text("Update Successful"),
                 actions: <Widget>[
                   TextButton(
                       child: Text('Continue'),
@@ -41,104 +43,97 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new RestMenuPage()),
+                                builder: (context) => new PersonalInfoPage()),
                             (route) => false);
                       }),
                 ],
               ));
-    } else {
-      // AlertDialog(
-      //   title: Text(status),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: Text('Continue'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
-    }
+    } else {}
   }
 
-  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
           backgroundColor: Colors.blue,
-          title: Text('Add Menu'),
-          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            'Update Password',
+            style: TextStyle(color: Colors.black),
+          ),
         ),
+        backgroundColor: Colors.yellow[200],
         body: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               Container(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.only(left: 20, bottom: 10),
                 child: Column(children: <Widget>[
                   TextFormField(
+                    obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Menu Name',
+                      labelText: 'Old Password',
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter some text';
+                      } else if (oldPassword != widget.cust.password) {
+                        return 'Wrong Password';
                       }
                       return null;
                     },
                     onChanged: (String value) {
                       setState(() {
-                        itemName = value;
+                        oldPassword = value;
                       });
                     },
                   ),
                 ]),
               ),
               Container(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.only(left: 20, bottom: 10),
                 child: Column(children: <Widget>[
                   TextFormField(
+                    obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Price (RM)',
+                      labelText: 'New Password',
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
-                        return 'Please enter some digit';
+                        return 'Please enter some text';
+                      } else if (value.length < 8 || value.length > 20) {
+                        return 'The length of the password must be from 8 to 15.';
                       }
                       return null;
                     },
                     onChanged: (String value) {
                       setState(() {
-                        itemPrice = double.parse(value);
+                        newPassword = value;
                       });
                     },
                   ),
                 ]),
               ),
               Container(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.only(left: 20, bottom: 10),
                 child: Column(children: <Widget>[
                   TextFormField(
-                    maxLines: 3,
+                    obscureText: true,
                     decoration: const InputDecoration(
-                      labelText: 'Description',
+                      labelText: 'Re-enter New Password',
                     ),
                     validator: (value) {
                       if (value.isEmpty) {
                         return 'Please enter some text';
+                      } else if (value != newPassword) {
+                        return 'The password does not match with the one you have entered';
                       }
                       return null;
-                    },
-                    onChanged: (String value) {
-                      setState(() {
-                        itemDesc = value;
-                      });
                     },
                   ),
                 ]),
@@ -146,13 +141,22 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
               Padding(
                 padding: EdgeInsets.only(left: 20, bottom: 10),
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                      (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.pressed))
+                          return Colors.yellow[800].withOpacity(0.5);
+                        return Colors
+                            .yellow[800]; // Use the component's default.
+                      },
+                    ),
                   ),
                   onPressed: () {
-                    insertMenu();
+                    if (_formKey.currentState.validate()) {
+                      passwordUpdate();
+                    }
                   },
-                  child: Text('Add'),
+                  child: Text('Update'),
                 ),
               ),
             ],

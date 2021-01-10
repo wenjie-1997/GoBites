@@ -80,16 +80,12 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow[200],
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new RestMenuPage())),
+          onPressed: () => Navigator.pop(context),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.blue,
         title: Text('Update Menu'),
         centerTitle: true,
       ),

@@ -8,6 +8,7 @@ class RestDetail {
   final String restaurantstyle;
   final String email;
   final String telephoneNo;
+  final String image;
 
   RestDetail(
       {this.RID,
@@ -18,7 +19,8 @@ class RestDetail {
       this.address,
       this.restaurantstyle,
       this.email,
-      this.telephoneNo});
+      this.telephoneNo,
+      this.image});
 
   factory RestDetail.fromJson(Map<String, dynamic> json) {
     return RestDetail(
@@ -30,24 +32,42 @@ class RestDetail {
         address: json['address'],
         restaurantstyle: json['restaurantstyle'],
         email: json['email'],
-        telephoneNo: json['telephoneNo']);
+        telephoneNo: json['telephoneNo'],
+        image: json['image']);
   }
 }
 
 class RestList {
-  int RID;
-  String restaurantname;
+  final int RID;
+  final String restaurantname;
+  final String ownername;
+  final String address;
+  final String restaurantstyle;
+  final String email;
+  final String telephoneNo;
+  final String image;
 
-  RestList({this.RID, this.restaurantname});
+  RestList(
+      {this.RID,
+      this.restaurantname,
+      this.ownername,
+      this.address,
+      this.restaurantstyle,
+      this.email,
+      this.telephoneNo,
+      this.image});
 
-  RestList.fromJson(Map<String, dynamic> json) {
-    RID = json['RID'];
-    restaurantname = json['restaurantname'];
+  factory RestList.fromJson(Map<String, dynamic> json) {
+    return RestList(
+        RID: json['RID'] as int,
+        restaurantname: json['restaurantname'],
+        ownername: json['ownername'],
+        address: json['address'],
+        restaurantstyle: json['restaurantstyle'],
+        email: json['email'],
+        telephoneNo: json['telephoneNo'],
+        image: json['image']);
   }
-  //factory RestList.fromJson(Map<String, dynamic> json) {
-  //return RestList(
-  //RID: json['RID'] as int, restaurantname: json['restaurantname']);
-  //}
 }
 
 class CustRestDetail {
