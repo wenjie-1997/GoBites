@@ -217,6 +217,9 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                             textAlign: TextAlign.right),
                       ),
                     ])),
+                Divider(
+                  color: Colors.black,
+                ),
                 Builder(
                   builder: (context) {
                     if (orders[index].hasFeedback == 1) {
@@ -228,22 +231,30 @@ class _CustomerOrderRatingPageState extends State<CustomerOrderRatingPage> {
                                   padding: EdgeInsets.all(5.0),
                                   child: Column(children: [
                                     Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: RatingBarIndicator(
-                                        rating: snapshot.data.rating,
-                                        itemBuilder: (context, index) => Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                        ),
-                                        itemCount: 5,
-                                        itemSize: 30,
-                                        direction: Axis.horizontal,
-                                      ),
-                                    ),
+                                        alignment: Alignment.centerLeft,
+                                        child: Row(children: [
+                                          Text(
+                                            "Rating        :  ",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          RatingBarIndicator(
+                                            rating: snapshot.data.rating,
+                                            itemBuilder: (context, index) =>
+                                                Icon(
+                                              Icons.star,
+                                              color: Colors.amber,
+                                            ),
+                                            itemCount: 5,
+                                            itemSize: 30,
+                                            direction: Axis.horizontal,
+                                          ),
+                                        ])),
                                     Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
-                                        "Comment:\n${snapshot.data.comment}",
+                                        "Comment  :\n${snapshot.data.comment}",
                                         style: TextStyle(
                                           fontSize: 18,
                                         ),
