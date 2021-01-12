@@ -7,6 +7,7 @@ import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:demo/pages/customer/custMenupage.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'custHomepage.dart';
 import 'cartpage.dart';
 
@@ -21,6 +22,24 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
 
   List<RestList> _restList = List<RestList>();
   List<RestList> _restListDisplay = List<RestList>();
+
+  Future<double> futurerating;
+
+  Future<double> getRestaurantRating(int rid) async {
+    final response = await http_get('/getrating/' + rid.toString());
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return jsonDecode(response.body) != null
+          ? jsonDecode(response.body).toDouble()
+          : 0;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception(
+          'Failed to load detail, code = ' + response.statusCode.toString());
+    }
+  }
 
   Future<List<RestList>> fetchRestaurantList() async {
     final response = await http_get('/restaurants');
@@ -157,65 +176,80 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
           ),
-          Image.asset("assets/default.png"),
+          Image.asset(
+            "assets/default.png",
+            height: 200,
+          ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: const EdgeInsets.only(top: 16.0, left: 16, right: 16),
               child: Text(
-                "Style\t:${_restListDisplay[index].restaurantstyle}\nEmail\t:${_restListDisplay[index].email}\nTel. No\t:${_restListDisplay[index].telephoneNo}",
+                "Style     : ${_restListDisplay[index].restaurantstyle}\nEmail    : ${_restListDisplay[index].email}\nTel. No  : ${_restListDisplay[index].telephoneNo}",
                 textAlign: TextAlign.left,
-                style: TextStyle(color: Colors.black.withOpacity(0.6)),
+                style: TextStyle(fontSize: 16),
               ),
             ),
           ),
-          ButtonBar(
-            alignment: MainAxisAlignment.start,
+          Row(
             children: [
-              FlatButton(
-                textColor: const Color(0xFF6200EE),
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              CustMenuPage(rest: _restListDisplay[index])));
-                },
-                child: const Text('View Menu'),
+              Expanded(
+                flex: 3,
+                child: ButtonBar(
+                  alignment: MainAxisAlignment.start,
+                  children: [
+                    FlatButton(
+                      textColor: const Color(0xFF6200EE),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CustMenuPage(
+                                    rest: _restListDisplay[index])));
+                      },
+                      child: const Text('View Menu'),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: FutureBuilder<double>(
+                  future: getRestaurantRating(_restListDisplay[index].RID),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Align(
+                        alignment: Alignment.center,
+                        child: RatingBarIndicator(
+                          rating: snapshot.data,
+                          itemBuilder: (context, index) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          itemCount: 5,
+                          itemSize: 20,
+                          direction: Axis.horizontal,
+                        ),
+                      );
+                    }
+                    return Align(
+                      alignment: Alignment.center,
+                      child: RatingBarIndicator(
+                        rating: 0,
+                        itemBuilder: (context, index) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 20,
+                        direction: Axis.horizontal,
+                      ),
+                    );
+                  },
+                ),
               )
             ],
-          ),
-          // OutlineButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //         context,
-          //         MaterialPageRoute(
-          //             builder: (context) =>
-          //                 CustMenuPage(rest: _restListDisplay[index])));
-          //   },
-          //   padding: EdgeInsets.all(10.0),
-          //   child: Row(
-          //     children: <Widget>[
-          //       Expanded(
-          //         flex: 1,
-          //         child: CircleAvatar(
-          //           backgroundImage: AssetImage('assets/default.png'),
-          //           radius: 30.0,
-          //         ),
-          //       ),
-          //       Expanded(
-          //         flex: 3,
-          //         child: Text(
-          //           _restListDisplay[index].restaurantname,
-          //           style: TextStyle(
-          //             fontSize: 20.0,
-          //             fontWeight: FontWeight.bold,
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // )
+          )
         ],
       ),
     );
