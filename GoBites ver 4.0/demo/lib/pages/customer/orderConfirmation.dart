@@ -137,6 +137,16 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Text(
+                          "Address: ${orders.address}",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ],
                     ),
                     Align(

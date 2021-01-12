@@ -384,7 +384,7 @@ app.post('/movetoorder', async(req, res)=>{
 
 app.get('/vieworderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid AS OID, totalPrice, status
+  await db.query( `SELECT orderid AS OID, totalPrice, status, address
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -833,6 +833,23 @@ app.get('/getfeedbackrest/:rid', async(req, res)=>{
         return;
       }
     });
+});
+
+app.post('/insertorderaddress', async(req, res) => {
+  const {address, OID} = req.body;
+  await db.query(`update orders set address = ? where orderid=?;`,
+	[address, OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Insert Address fail");
+			return;
+		}
+		else{
+			console.log('Insert Address successful');
+			res.json("Insert Address Successful");
+		}
+	});
+
 });
 
 app.get('/', (req, res) => {
