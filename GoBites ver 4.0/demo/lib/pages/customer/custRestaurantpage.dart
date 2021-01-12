@@ -176,9 +176,20 @@ class _CustRestaurantPageState extends State<CustRestaurantPage> {
               style: TextStyle(color: Colors.black.withOpacity(0.6)),
             ),
           ),
-          Image.asset(
-            "assets/default.png",
-            height: 200,
+          Builder(
+            builder: (context) {
+              if (_restListDisplay[index].image != null) {
+                return Image.network(
+                  "http://$DOMAIN/" + _restListDisplay[index].image,
+                  height: 200,
+                );
+              } else {
+                return Image(
+                  image: AssetImage('assets/default.png'),
+                  height: 200,
+                );
+              }
+            },
           ),
           Align(
             alignment: Alignment.centerLeft,

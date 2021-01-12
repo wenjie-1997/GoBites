@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:async';
 import 'package:demo/modules/http.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:demo/pages/customer/updatePassword.dart';
