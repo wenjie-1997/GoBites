@@ -62,13 +62,15 @@ fetchCustDetail() async {
 
 notification() async {
   var response = await http_get('/vieworderstatus/' + login.login_id);
-  var convert = json.decode(response.body);
-  if (convert['status'] == "DELIVERING") {
-    LocalNotification.DeliveryNotification(DateTime.now());
-  } else if (convert['status'] == "DONE") {
-    LocalNotification.DeliveredNotification(DateTime.now());
-  } else {
-    print("no message");
+  if (response.statusCode == 200) {
+    var convert = json.decode(response.body);
+    if (convert['status'] == "DELIVERING") {
+      LocalNotification.DeliveryNotification(DateTime.now());
+    } else if (convert['status'] == "DONE") {
+      LocalNotification.DeliveredNotification(DateTime.now());
+    } else {
+      print("no message");
+    }
   }
 }
 

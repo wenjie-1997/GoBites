@@ -678,8 +678,11 @@ app.get('/vieworderstatus/:CID', async(req, res) => {
 			return;
 		}
 		else{
-			console.log("showing delivery notification");
-			res.send(rows[0]);
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.send(rows[0]);}
 		}
 	});
 

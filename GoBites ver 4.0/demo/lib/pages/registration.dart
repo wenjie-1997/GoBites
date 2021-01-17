@@ -465,7 +465,7 @@ class CusRegistrationFormState extends State<CusRegistrationForm> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
-                                  "${birthdate != null ? birthdate.toLocal() : 'Please select the date'}",
+                                  "${birthdate != null ? birthdate.toLocal().toString().split(' ')[0] : 'Please select the date'}",
                                   style: TextStyle(fontSize: 15)),
                               Material(
                                 child: Center(
