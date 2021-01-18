@@ -445,7 +445,7 @@ app.get('/vieworderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
   await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
   FROM orders
-  WHERE fk_cid=?`,
+  WHERE fk_cid=? AND status != "DONE"`,
    [cid] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
