@@ -112,7 +112,7 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushAndRemoveUntil(
@@ -147,7 +147,60 @@ class _RestaurantViewOrderPageState extends State<RestaurantViewOrderPage> {
                   return Text(snapshot1.error);
                 }
                 return Center(child: CircularProgressIndicator());
-              })),
+              })),*/
+      body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => new RestHomePage()),
+                    (route) => false),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text("Order List",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
+      ),
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: FutureBuilder<RestDetail>(
+              future: futureRestDetail,
+              builder: (context, snapshot1) {
+                if (snapshot1.hasData) {
+                  rest = snapshot1.data;
+                  print(rest.RID);
+                  return FutureBuilder<List<Orders>>(
+                      future: fetchOrderDate(snapshot1.data.RID),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return orderListView(context, snapshot);
+                        } else if (snapshot.hasError) {
+                          return Text(snapshot.error);
+                        }
+                        return Center(child: CircularProgressIndicator());
+                      });
+                } else if (snapshot1.hasError) {
+                  return Text(snapshot1.error);
+                }
+                return Center(child: CircularProgressIndicator());
+              }))),
+    ]),
     );
   }
 

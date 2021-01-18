@@ -107,7 +107,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                   decoration: textFieldDecoration(),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter your user name';
+                      return 'Please enter your username';
                     }
                     return null;
                   },
@@ -122,7 +122,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: Text("Username",
+                  child: Text("Name",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
                 ),

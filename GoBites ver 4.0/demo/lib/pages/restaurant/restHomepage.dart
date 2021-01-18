@@ -41,41 +41,55 @@ fetchRestDetail() async {
 }
 
 class _RestHomePageState extends State<RestHomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+
   @override
   void initState() {
     super.initState();
     fetchRestDetail();
   }
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    final menuButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: 250.0,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => RestMenuPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.restaurant_menu),
-              SizedBox(height: 10.0),
-              Text(
+    final menuButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => RestMenuPage()));
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.restaurant_menu,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
                 "Menu List",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
-            ],
-          ),
-        ));
+              )),
+        ]));
 
-    final restaurantDetailButton = Material(
+    /*final restaurantDetailButton = Material(
         elevation: 5.0,
         color: Colors.blue,
         child: MaterialButton(
@@ -100,90 +114,138 @@ class _RestHomePageState extends State<RestHomePage> {
               ),
             ],
           ),
-        ));
+        ));*/
 
-    final viewOrderButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: 250.0,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RestaurantViewOrderPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.list),
-              SizedBox(height: 10.0),
-              Text(
+    final viewOrderButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => RestaurantViewOrderPage()));
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.list,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
                 "View Order",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
-            ],
-          ),
-        ));
+              )),
+        ]));
 
-    final feedbackButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: 250.0,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RestaurantRatingPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.feedback),
-              SizedBox(height: 10.0),
-              Text(
+    final feedbackButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => RestaurantRatingPage()));
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.feedback,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
                 "My Feedback",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
+              )),
+        ]));
+
+    final mainPage = Center(
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          height: SizeConfig.safeBlockVertical * 100,
+          child: Stack(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Padding(
+                  padding: EdgeInsets.only(top: 70),
+                  child: Column(children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                            'Welcome to GoBites, ${rest.restaurantname.split(' ')[0]}.',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 40.0,
+                              color: Colors.black,
+                            ))),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('\nManage your restaurant now!!',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 20.0,
+                              color: Colors.grey[800],
+                            )))
+                  ])),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      menuButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                      viewOrderButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                      feedbackButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                    ],
+                  ))
             ],
-          ),
-        ));
+          )),
+    );
+
+    const TextStyle optionStyle =
+        TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+    List<Widget> _widgetOptions = <Widget>[mainPage, RestaurantPersonalInfoPage()];
 
     return Scaffold(
-        body: Center(
-          child: Container(
-            height: SizeConfig.safeBlockVertical * 100,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
-              child: Column(
-                children: <Widget>[
-                  Center(
-                    child: Text('GoBites',
-                        style: TextStyle(
-                            fontSize: 50.0,
-                            letterSpacing: 3.0,
-                            color: Colors.black,
-                            fontFamily: 'Vibur')),
-                  ),
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  menuButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  restaurantDetailButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  viewOrderButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  feedbackButton,
-                ],
-              ),
-            ),
+      resizeToAvoidBottomPadding: false,
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-        ));
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
+        );
   }
 }

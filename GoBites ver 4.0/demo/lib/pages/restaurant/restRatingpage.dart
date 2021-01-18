@@ -60,7 +60,7 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+        /*appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.pushAndRemoveUntil(
@@ -146,7 +146,104 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
                   }),
             ],
           ),
-        ));
+        )*/
+        body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => new RestHomePage()),
+                    (route) => false),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text("My Rating",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
+      ),
+      Container(
+        child: Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Text(
+              'Average Rating',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 20),
+            )),
+      ),
+      Container(
+        child: FutureBuilder<double>(
+          future: futurerating,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                alignment: Alignment.topCenter,
+                padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+                child: RatingBarIndicator(
+                  rating: snapshot.data,
+                  itemBuilder: (context, index) => Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  itemCount: 5,
+                  itemSize: 50,
+                  direction: Axis.horizontal,
+                ),
+              );
+            }
+            return Container(
+              alignment: Alignment.topCenter,
+              padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
+              child: RatingBarIndicator(
+                rating: 0,
+                itemBuilder: (context, index) => Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+                itemCount: 5,
+                itemSize: 50,
+                direction: Axis.horizontal,
+              ),
+            );
+          },
+        ),
+      ),
+      Container(
+                      child: AppBar(
+                        title: Text(
+                          'Feedback List',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        centerTitle: true,
+                        leading: Container(),
+                        backgroundColor: Colors.orange,
+                      )),
+      Container(
+          child: FutureBuilder<List<Feedbacks>>(
+                  future: futureFeedbackList,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return feedbackListView(context, snapshot);
+                    } else if (snapshot.hasError) {
+                      return Text(snapshot.error);
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }),
+      )
+    ]));
   }
 
   Widget feedbackListView(BuildContext context, AsyncSnapshot snapshot) {

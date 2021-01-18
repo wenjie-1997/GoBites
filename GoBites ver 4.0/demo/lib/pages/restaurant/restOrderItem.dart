@@ -148,7 +148,7 @@ class _RestOrderItemPageState extends State<RestOrderItemPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pushAndRemoveUntil(
@@ -194,6 +194,71 @@ class _RestOrderItemPageState extends State<RestOrderItemPage> {
         shape: BeveledRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(4.0))),
       ),
+    );*/
+      body: Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 40, left: 20),
+          child: Stack(children: [
+            Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.orange,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new RestaurantViewOrderPage()),
+                      (route) => false),
+                  icon: Icon(Icons.arrow_back, color: Colors.white)),
+            ),
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text("Order Items",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 30))),
+            )
+          ]),
+        ),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: FutureBuilder<List<OrderItem>>(
+                    future: fetchOrderItem(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return FutureBuilder<List<OrderItem>>(
+                            future: fetchOrderItem(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return orderItemView(context, snapshot);
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error);
+                              }
+                              return Center(child: CircularProgressIndicator());
+                            });
+                      } else if (snapshot.hasError) {
+                        return Text(snapshot.error);
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }))),
+      ]),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          orderSetComplete(widget.orderID);
+        },
+        child: Icon(Icons.check),
+        backgroundColor: Colors.red,
+        foregroundColor: Colors.white,
+        mini: false,
+        highlightElevation: 20.0,
+        shape: BeveledRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(4.0))),
+      ),
     );
   }
 
@@ -223,11 +288,13 @@ class _RestOrderItemPageState extends State<RestOrderItemPage> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: Text(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(10,0,10,0),
+                          child: Text(
                           orderItem[index].quantity.toString(),
                           style: TextStyle(
                             fontSize: 18.0,
-                          ),
+                          ),),
                         ),
                       ),
                       Expanded(
