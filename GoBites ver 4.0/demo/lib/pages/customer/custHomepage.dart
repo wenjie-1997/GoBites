@@ -8,8 +8,6 @@ import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
 import 'package:demo/pages/pageSizing.dart';
 import 'package:demo/pages/login.dart' as login;
-import 'package:workmanager/workmanager.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:demo/modules/local_notification.dart';
 
 CustDetail cust;

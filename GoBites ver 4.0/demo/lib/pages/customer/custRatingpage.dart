@@ -6,6 +6,8 @@ import 'package:demo/pages/customer/custOrderRatingpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../registration.dart';
+
 class MakeRatingPage extends StatefulWidget {
   final int oid;
   MakeRatingPage({Key key, @required this.oid}) : super(key: key);
@@ -83,101 +85,47 @@ class _MakeRatingPageState extends State<MakeRatingPage> {
   Widget build(BuildContext context) {
     rating = 3;
     return Scaffold(
-        appBar: new AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) =>
-                        new CustomerOrderRatingPage()),
-                (route) => false),
+        body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            new CustomerOrderRatingPage()),
+                    (route) => false),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
           ),
-          title: Text('Make Rating'),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-        ),
-        body: Container(
-          //key: _formKey,
-          child:
-              /*Center(
-              child: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Text('Order ID: ${widget.oid.toString()}'),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  RatingBar.builder(
-                    initialRating: 3,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (double value) {
-                      setState(() {
-                        rating = value;
-                      });
-                    },
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10.0),
-                    child: Column(children: <Widget>[
-                      TextFormField(
-                        maxLines: 6,
-                        decoration: const InputDecoration(
-                          labelText: 'Comment',
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter some text';
-                          }
-                          return null;
-                        },
-                        onChanged: (value) {
-                          setState(() {
-                            comment = value;
-                          });
-                        },
-                      ),
-                    ]),
-                  ),
-                  Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          if (_formKey.currentState.validate()) {
-                            makeRating();
-                          }
-                        },
-                        child: Text(
-                          "Give Rating",
-                        ),
-                      ))
-                ],
-              ),
-            )*/
-              FutureBuilder<List<RestDetail>>(
-                  future: fetchOrder(widget.oid),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return orderRestView(context, snapshot);
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error);
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  }),
-        ));
+          Padding(
+            padding: EdgeInsets.only(top: 7),
+            child: Align(
+                alignment: Alignment.topCenter,
+                child: Text("Give Feedback",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
+      ),
+      Expanded(
+          child: FutureBuilder<List<RestDetail>>(
+              future: fetchOrder(widget.oid),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return orderRestView(context, snapshot);
+                } else if (snapshot.hasError) {
+                  return Text(snapshot.error);
+                }
+                return Center(child: CircularProgressIndicator());
+              }))
+    ]));
   }
 
   Widget orderRestView(BuildContext context, AsyncSnapshot snapshot) {
@@ -188,55 +136,65 @@ class _MakeRatingPageState extends State<MakeRatingPage> {
         padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
         itemCount: snapshot.data.length,
         itemBuilder: (context, index) {
-          return Column(
-            children: <Widget>[
-              Text(
-                'Rating for ${orderrest[index].restaurantname}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Text(
-                'ID: ${orderrest[index].RID.toString()}',
-                style: TextStyle(
-                  fontSize: 18.0,
-                ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  children: <Widget>[
-                    RatingBar.builder(
-                      initialRating: 3,
-                      minRating: 1,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (double value) {
-                        setState(() {
-                          rating = value;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 20.0,
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(10.0),
-                      child: Column(children: <Widget>[
+          return Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+              child: Column(
+                children: <Widget>[
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        "Restaurant: ${orderrest[index].restaurantname}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Rating",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        RatingBar.builder(
+                          initialRating: 3,
+                          minRating: 1,
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                          onRatingUpdate: (double value) {
+                            setState(() {
+                              rating = value;
+                            });
+                          },
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text("Comment",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                         TextFormField(
                           maxLines: 6,
-                          decoration: const InputDecoration(
-                            labelText: 'Comment',
-                          ),
+                          decoration: textFieldDecoration(),
                           validator: (value) {
                             if (value.isEmpty) {
                               return 'Please enter some text';
@@ -249,27 +207,31 @@ class _MakeRatingPageState extends State<MakeRatingPage> {
                             });
                           },
                         ),
-                      ]),
-                    ),
-                    Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: RaisedButton(
-                        onPressed: () {
-                          rid = orderrest[index].RID;
-                          if (_formKey.currentState.validate()) {
-                            makeRating();
-                          }
-                        },
-                        child: Text(
-                          "Give Rating",
+                        Container(
+                          padding: EdgeInsets.all(20.0),
+                          child: Material(
+                              elevation: 3.0,
+                              color: Colors.orange,
+                              child: MaterialButton(
+                                onPressed: () {
+                                  rid = orderrest[index].RID;
+                                  if (_formKey.currentState.validate()) {
+                                    makeRating();
+                                  }
+                                },
+                                child: Text(
+                                  "Submit",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16.0),
+                                ),
+                              )),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          );
+                  ),
+                ],
+              ));
         });
   }
 }

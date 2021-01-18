@@ -356,7 +356,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       Expanded(
                         flex: 4, // 20%
                         child: Text(
-                          'Gender:',
+                          'Gender',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16.0,
@@ -383,7 +383,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       Expanded(
                         flex: 4, // 20%
                         child: Text(
-                          'Birthday:',
+                          'Birthday',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16.0,
@@ -410,7 +410,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                       Expanded(
                         flex: 4, // 20%
                         child: Text(
-                          'Address:',
+                          'Address',
                           style: TextStyle(
                               color: Colors.grey,
                               fontSize: 16.0,
@@ -432,9 +432,36 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                   SizedBox(
                     height: 20.0,
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 4, // 20%
+                        child: Text(
+                          'Telephone No.',
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 6,
+                        child: Text(
+                          cust.telephoneNo,
+                          style: TextStyle(
+                            fontSize: 16.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20.0,
+                  ),
                   editButton,
                   SizedBox(
-                    height: 30.0,
+                    height: 10.0,
                   ),
                 ],
               );

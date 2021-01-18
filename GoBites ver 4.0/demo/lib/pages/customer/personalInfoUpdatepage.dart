@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:flutter/material.dart';
 import '../../modules/custdetail.dart';
 import '../../modules/http.dart';
-import 'personalInfo.dart';
+import '../registration.dart';
 
 String username;
 String password;
@@ -49,7 +50,7 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new PersonalInfoPage()),
+                                builder: (context) => new CustHomePage()),
                             (route) => false);
                       }),
                 ],
@@ -60,67 +61,80 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.blue,
-        title: Text('Update Detail'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
+        body: SingleChildScrollView(
+            child: Column(children: [
+      Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+              padding: EdgeInsets.only(top: 50, left: 20),
+              child: Ink(
+                decoration: const ShapeDecoration(
+                  color: Colors.orange,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.arrow_back, color: Colors.white)),
+              ))),
+      Form(
+          key: _formKey,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Update Details",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Username",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
                   enabled: false,
                   initialValue: widget.cust.username,
-                  decoration: const InputDecoration(
-                    labelText: 'Username',
-                  ),
-                ),
-              ]),
-            ),
-            // Container(
-            //   padding: EdgeInsets.all(10.0),
-            //   child: Column(children: <Widget>[
-            //     TextFormField(
-            //       enabled: ,
-            //       initialValue: widget.cust.password,
-            //       decoration: const InputDecoration(
-            //         labelText: 'Password',
-            //       ),
-            //       validator: (value) {
-            //         if (value.isEmpty) {
-            //           return 'Please enter some text';
-            //         }
-            //         return null;
-            //       },
-            //       onChanged: (String value) {
-            //         setState(() {
-            //           password = value;
-            //         });
-            //       },
-            //     ),
-            //   ]),
-            // ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.cust.custname,
-                  decoration: const InputDecoration(
-                    labelText: 'Name',
-                  ),
+                  decoration: textFieldDecoration(),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please enter your user name';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      username = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Username",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  initialValue: widget.cust.custname,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your name';
                     }
                     return null;
                   },
@@ -130,19 +144,24 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     });
                   },
                 ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Email",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
                   initialValue: widget.cust.email,
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address',
-                  ),
+                  decoration: textFieldDecoration(),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please enter your email';
                     }
                     return null;
                   },
@@ -152,20 +171,24 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     });
                   },
                 ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Address",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
-                  maxLines: 6,
                   initialValue: widget.cust.address,
-                  decoration: const InputDecoration(
-                    labelText: 'Address',
-                  ),
+                  decoration: textFieldDecoration(),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please enter your address';
                     }
                     return null;
                   },
@@ -175,19 +198,24 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     });
                   },
                 ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Telephone No.",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
                 TextFormField(
                   initialValue: widget.cust.telephoneNo,
-                  decoration: const InputDecoration(
-                    labelText: 'Telephone No.',
-                  ),
+                  decoration: textFieldDecoration(),
                   validator: (value) {
                     if (value.isEmpty) {
-                      return 'Please enter some text';
+                      return 'Please enter the telephone no.';
                     }
                     return null;
                   },
@@ -197,37 +225,38 @@ class _PersonalInfoUpdatePageState extends State<PersonalInfoUpdatePage> {
                     });
                   },
                 ),
-              ]),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, bottom: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
+                SizedBox(
+                  height: 20,
                 ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    if (email == null) {
-                      email = widget.cust.email;
-                    }
-                    if (address == null) {
-                      address = widget.cust.address;
-                    }
-                    if (telephoneNo == null) {
-                      telephoneNo = widget.cust.telephoneNo;
-                    }
-                    if (custname == null) {
-                      custname = widget.cust.custname;
-                    }
-                    custUpdate();
-                  }
-                },
-                child: Text('Update'),
-              ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        if (email == null) {
+                          email = widget.cust.email;
+                        }
+                        if (address == null) {
+                          address = widget.cust.address;
+                        }
+                        if (telephoneNo == null) {
+                          telephoneNo = widget.cust.telephoneNo;
+                        }
+                        if (custname == null) {
+                          custname = widget.cust.custname;
+                        }
+                        custUpdate();
+                      }
+                    },
+                    child: Text('Update'),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-      )),
-    );
+          )),
+    ])));
   }
 }
