@@ -358,8 +358,8 @@ app.post('/cartdelete', async(req, res)=>{
 });
 
 app.post('/movetoorder', async(req, res)=>{
-  const {CID} = req.body;
-  await db.query(`INSERT INTO orders(fk_cid) VALUES(?);
+  const {CID,address} = req.body;
+  await db.query(`INSERT INTO orders(fk_cid,address) VALUES(?,?);
   SET @last_id = LAST_INSERT_ID();
   INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
   DELETE FROM cart WHERE fk_cid = ?;
@@ -368,7 +368,7 @@ app.post('/movetoorder', async(req, res)=>{
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
   WHERE fk_oid = @last_id) WHERE orderid = @last_id;
   SELECT @last_id AS OID;`,
-   [CID, CID, CID] , (error, rows, fields)=>{
+   [CID,address, CID, CID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Place an Order Failed");
@@ -384,7 +384,7 @@ app.post('/movetoorder', async(req, res)=>{
 
 app.get('/vieworderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid AS OID, totalPrice, status, address
+  await db.query( `SELECT orderid AS OID, totalPrice, status, addedDate, address
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -443,7 +443,7 @@ app.get('/vieworderrest/:rid', async(req, res)=>{
 
 app.get('/vieworderidcust/:cid', async(req, res)=>{
   const cid = req.params.cid;
-  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, address
   FROM orders
   WHERE fk_cid=? AND status != "DONE"`,
    [cid] , (error, rows, fields)=>{

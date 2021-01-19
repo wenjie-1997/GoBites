@@ -207,7 +207,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                               child: Center(
                                 child: Ink(
                                   decoration: const ShapeDecoration(
-                                    color: Colors.red,
+                                    color: Colors.orange,
                                     shape: CircleBorder(),
                                   ),
                                   child: IconButton(

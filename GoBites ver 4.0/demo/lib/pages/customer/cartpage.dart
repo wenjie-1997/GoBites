@@ -4,7 +4,6 @@ import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/orders.dart';
 import 'package:demo/pages/customer/checkoutpage.dart';
-import 'package:demo/pages/customer/orderConfirmation.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'custHomepage.dart';
@@ -14,40 +13,29 @@ class CartPage extends StatefulWidget {
   _CartPageState createState() => _CartPageState();
 }
 
+List<Cart> parseCart(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
+
+  return parsed.map<Cart>((json) => Cart.fromJson(json)).toList();
+}
+
+Future<List<Cart>> fetchCart() async {
+  final response = await http_get('/viewcart/' + cust.CID.toString());
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return parseCart(response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load, code = ' + response.statusCode.toString());
+  }
+}
+
 class _CartPageState extends State<CartPage> {
-  double _totalPrice;
   Future<CustDetail> futureCustDetail;
   bool _isButtonDisabled;
-
-  moveToOrder() async {
-    final msg = jsonEncode({
-      "CID": cust.CID,
-    });
-    final result = await http_post("/movetoorder", msg);
-    Orders orders = Orders.fromJson(jsonDecode(result.body));
-    //String status = loginResult.getStatus();
-    if (orders.OID != null) {
-      showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => AlertDialog(
-                title: Text("Order Successful"),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Continue'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  Checkoutpage(oid: orders.OID)));
-                    },
-                  )
-                ],
-              ));
-    }
-  }
+  double _totalPrice;
 
   cartItemDelete(int kid) async {
     final msg = jsonEncode({
@@ -95,26 +83,6 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  List<Cart> parseCart(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-
-    return parsed.map<Cart>((json) => Cart.fromJson(json)).toList();
-  }
-
-  Future<List<Cart>> fetchCart() async {
-    final response = await http_get('/viewcart/' + cust.CID.toString());
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return parseCart(response.body);
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception(
-          'Failed to load, code = ' + response.statusCode.toString());
-    }
-  }
-
   @override
   void initState() {
     _isButtonDisabled = false;
@@ -124,30 +92,6 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //       icon: Icon(Icons.arrow_back, color: Colors.black),
-        //       onPressed: () => Navigator.of(context).pop()),
-        //   title: Text('My Cart'),
-        //   centerTitle: true,
-        //   backgroundColor: Colors.blue,
-        // ),
-        // body: FutureBuilder(
-        //   future: fetchCart(),
-        //   builder: (context, snapshot) {
-        //     if (snapshot.hasData) {
-        //       _totalPrice = 0;
-        //       List<Cart> carts = snapshot.data;
-        //       for (var i = 0; i < carts.length; i++) {
-        //         _totalPrice += (carts[i].itemPrice * carts[i].quantity);
-        //       }
-        //       return cartListView(context, snapshot);
-        //     } else if (snapshot.hasError) {
-        //       return Text(snapshot.error);
-        //     }
-        //     return Center(child: CircularProgressIndicator());
-        //   },
-        // ));
         body: Column(children: [
       Padding(
         padding: EdgeInsets.only(top: 40, left: 20),
@@ -274,30 +218,35 @@ class _CartPageState extends State<CartPage> {
                 return null;
               }
               if (_totalPrice != 0) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Check Out"),
-                      content: Text(
-                          "Are you sure to check out? The process is irreversible."),
-                      actions: [
-                        FlatButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Yes"),
-                          onPressed: () {
-                            moveToOrder();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+                return Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Checkoutpage(totalPrice: _totalPrice)));
+                // showDialog(
+                //   context: context,
+                //   builder: (BuildContext context) {
+                //     return AlertDialog(
+                //       title: Text("Check Out"),
+                //       content: Text(
+                //           "Are you sure to check out? The process is irreversible."),
+                //       actions: [
+                //         FlatButton(
+                //           child: Text("Cancel"),
+                //           onPressed: () {
+                //             Navigator.pop(context);
+                //           },
+                //         ),
+                //         FlatButton(
+                //           child: Text("Yes"),
+                //           onPressed: () {
+                //             moveToOrder();
+                //           },
+                //         ),
+                //       ],
+                //     );
+                //   },
+                // );
               }
             },
             color: Colors.orange,

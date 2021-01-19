@@ -151,17 +151,26 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Order ID: ${orders[index].OID.toString()}',
-                          style: TextStyle(
-                            fontSize: 18.0,
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                                "Order ID: ${orders[index].OID.toString()}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
                           ),
-                        ),
-                      ),
-                    ),
+                          Expanded(
+                              flex: 6,
+                              child: Text(
+                                "${DateFormat('dd-MM-yyyy hh:mm aa').format(orders[index].addedDate)}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                                textAlign: TextAlign.end,
+                              )),
+                        ])),
                     Container(
                         padding: EdgeInsets.all(5.0),
                         child: Align(
@@ -189,34 +198,60 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
                     Container(
                         padding: EdgeInsets.all(5.0),
                         child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Price: RM ${orders[index].totalPrice.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                            ),
-                          ),
-                        )),
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  'Price:  ',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 10,
+                                child: Text(
+                                  'RM ${orders[index].totalPrice.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              )
+                            ]))),
                     Container(
                         padding: EdgeInsets.all(5.0),
-                        child: Row(children: <Widget>[
-                          Expanded(
-                              flex: 2,
-                              child: Text(
-                                "Date: ${DateFormat('dd-MM-yyyy hh:mm aa').format(orders[index].addedDate)}",
-                                style: TextStyle(
-                                  fontSize: 18,
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  'Address: ',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
                                 ),
-                              )),
-                          Expanded(
-                            flex: 1,
-                            child: Text("${orders[index].status}",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: getColor(orders[index].status)),
-                                textAlign: TextAlign.right),
-                          ),
-                        ]))
+                              ),
+                              Expanded(
+                                  flex: 10,
+                                  child: Text(
+                                    '${orders[index].address}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  )),
+                            ]))),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.all(5.0),
+                      child: Text("${orders[index].status}",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: getColor(orders[index].status)),
+                          textAlign: TextAlign.right),
+                    ),
                   ],
                 ),
               ));

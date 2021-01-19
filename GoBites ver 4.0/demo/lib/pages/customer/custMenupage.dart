@@ -132,7 +132,12 @@ class _CustMenuPageState extends State<CustMenuPage> {
                     shape: CircleBorder(),
                   ),
                   child: IconButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new CustRestaurantPage()),
+                          (route) => false),
                       icon: Icon(Icons.arrow_back, color: Colors.white)),
                 ))),
         Align(

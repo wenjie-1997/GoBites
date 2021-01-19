@@ -1,70 +1,45 @@
 import 'dart:convert';
+import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
-import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:demo/pages/customer/orderConfirmation.dart';
-import 'package:demo/pages/login.dart' as login;
+import '../registration.dart';
+import 'cartpage.dart' as cp;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'custHomepage.dart';
 
 Orders orders;
 String address;
 
 class Checkoutpage extends StatefulWidget {
-  final int oid;
-  Checkoutpage({Key key, @required this.oid}) : super(key: key);
+  final double totalPrice;
+  Checkoutpage({Key key, @required this.totalPrice}) : super(key: key);
   @override
   _CheckoutpageState createState() => _CheckoutpageState();
 }
 
 class _CheckoutpageState extends State<Checkoutpage> {
-  final _formKey = GlobalKey<FormState>();
   List<OrderItem> parseOrder(String responseBody) {
     final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
     return parsed.map<OrderItem>((json) => OrderItem.fromJson(json)).toList();
   }
 
-  Future<List<OrderItem>> fetchOrder() async {
-    final response = await http_get('/viewordername/' + widget.oid.toString());
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return parseOrder(response.body);
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception(
-          'Failed to load, code = ' + response.statusCode.toString());
-    }
-  }
-
-  Future<Orders> fetchOrderID() async {
-    final response = await http_get('/vieworderid/' + widget.oid.toString());
-
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return Orders.fromJson(jsonDecode(response.body));
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception(
-          'Failed to load album, code = ' + response.statusCode.toString());
-    }
-  }
-
-  Future insertAddress() async {
-    final msg = jsonEncode({"address": address, "OID": widget.oid});
-    final result = await http_post("/insertorderaddress", msg);
-    String status = jsonDecode(result.body);
-    print(status);
-    if (status == "Insert Address Successful") {
+  moveToOrder() async {
+    final msg = jsonEncode({
+      "CID": cust.CID,
+      "address": address,
+    });
+    final result = await http_post("/movetoorder", msg);
+    Orders orders = Orders.fromJson(jsonDecode(result.body));
+    //String status = loginResult.getStatus();
+    if (orders.OID != null) {
       showDialog<void>(
           context: context,
           barrierDismissible: false,
           builder: (BuildContext context) => AlertDialog(
-                title: Text("Insert Address successful"),
+                title: Text("Order Successful"),
                 actions: <Widget>[
                   TextButton(
                     child: Text('Continue'),
@@ -79,227 +54,301 @@ class _CheckoutpageState extends State<Checkoutpage> {
                   )
                 ],
               ));
-    } else {
-      // AlertDialog(
-      //   title: Text(status),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: Text('Continue'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
     }
   }
 
-  Future<Orders> futureOrder;
-  Future<List<OrderItem>> futureOrderList;
+  // Future<List<OrderItem>> fetchOrder() async {
+  //   final response = await http_get('/viewordername/' + widget.oid.toString());
+  //   if (response.statusCode == 200) {
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     return parseOrder(response.body);
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     throw Exception(
+  //         'Failed to load, code = ' + response.statusCode.toString());
+  //   }
+  // }
+
+  // Future<Orders> fetchOrderID() async {
+  //   final response = await http_get('/vieworderid/' + widget.oid.toString());
+
+  //   if (response.statusCode == 200) {
+  //     // If the server did return a 200 OK response,
+  //     // then parse the JSON.
+  //     return Orders.fromJson(jsonDecode(response.body));
+  //   } else {
+  //     // If the server did not return a 200 OK response,
+  //     // then throw an exception.
+  //     throw Exception(
+  //         'Failed to load album, code = ' + response.statusCode.toString());
+  //   }
+  // }
+
+  // Future insertAddress() async {
+  //   final msg = jsonEncode({"address": address, "OID": widget.oid});
+  //   final result = await http_post("/insertorderaddress", msg);
+  //   String status = jsonDecode(result.body);
+  //   print(status);
+  //   if (status == "Insert Address Successful") {
+  //     showDialog<void>(
+  //         context: context,
+  //         barrierDismissible: false,
+  //         builder: (BuildContext context) => AlertDialog(
+  //               title: Text("Insert Address successful"),
+  //               actions: <Widget>[
+  //                 TextButton(
+  //                   child: Text('Continue'),
+  //                   onPressed: () {
+  //                     Navigator.of(context).pop();
+  //                     Navigator.pushReplacement(
+  //                         context,
+  //                         MaterialPageRoute(
+  //                             builder: (context) =>
+  //                                 OrderConfirmPage(oid: orders.OID)));
+  //                   },
+  //                 )
+  //               ],
+  //             ));
+  //   } else {
+  //     // AlertDialog(
+  //     //   title: Text(status),
+  //     //   actions: <Widget>[
+  //     //     TextButton(
+  //     //       child: Text('Continue'),
+  //     //       onPressed: () {
+  //     //         Navigator.of(context).pop();
+  //     //       },
+  //     //     ),
+  //     //   ],
+  //     // );
+  //   }
+  // }
+
+  Future<List<Cart>> futureCart;
 
   @override
   void initState() {
     super.initState();
-    futureOrder = fetchOrderID();
-    futureOrderList = fetchOrder();
+    futureCart = cp.fetchCart();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.of(context).pop()),
-        title: Text('Check Out'),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
+        body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text("Check Out",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
       ),
-      body: FutureBuilder<Orders>(
-          future: futureOrder,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              orders = snapshot.data;
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Stack(
-                  children: <Widget>[
-                    ListView(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Text(
-                          "Order ID: ${orders.OID.toString()}",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "Ordered Item",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        FutureBuilder(
-                            future: futureOrderList,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return orderListView(context, snapshot);
-                              } else if (snapshot.hasError) {
-                                return Text(snapshot.error);
-                              }
-                              return Center(child: CircularProgressIndicator());
-                            }),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "Total Price: RM ${orders.totalPrice.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Form(
-                            key: _formKey,
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(10.0),
-                                  child: Column(children: <Widget>[
-                                    TextFormField(
-                                      maxLines: 3,
-                                      initialValue: cust.address,
-                                      decoration: const InputDecoration(
-                                        labelText:
-                                            'This is your current address, retype to change delivery address',
-                                      ),
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Please enter some text';
-                                        }
-                                        return null;
-                                      },
-                                      onChanged: (String value) {
-                                        setState(() {
-                                          address = value;
-                                        });
-                                      },
-                                    ),
-                                    RaisedButton(
-                                      child: Text(
-                                        'Insert Address',
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      onPressed: () {
-                                        if (_formKey.currentState.validate()) {
-                                          if (address == null) {
-                                            address = cust.address;
-                                          }
-                                          insertAddress();
-                                        }
-                                      },
-                                      color: Colors.blue,
-                                      textColor: Colors.white,
-                                    ),
-                                  ]),
-                                ),
-                              ],
-                            )),
-                      ],
-                    ),
-                    /*Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        width: double.infinity,
-                        child: RaisedButton(
-                          child: Text(
-                            'Continue',
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                          },
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                        ),
-                      ),
-                    )*/
-                  ],
+      Padding(
+        padding: EdgeInsets.only(left: 20, top: 20),
+        child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text("Ordered Item:",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18))),
+      ),
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: FutureBuilder<List<Cart>>(
+                future: cp.fetchCart(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return cartListView(context, snapshot);
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error);
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ))),
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                        'Total :RM ${widget.totalPrice.toStringAsFixed(2)}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16)))
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              children: [
+                Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Address to be Delivered:',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 16))),
+                SizedBox(
+                  height: 10,
                 ),
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-
-            // By default, show a loading spinner.
-            return Center(child: CircularProgressIndicator());
-          }),
-    );
+                TextFormField(
+                  maxLines: 3,
+                  initialValue: cust.address,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your restaurant name';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      address = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            width: double.infinity,
+            child: RaisedButton(
+              child: Text(
+                'Place Your Order',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18),
+              ),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text("Check Out"),
+                      content: Text(
+                          "Are you sure to check out? The process is irreversible."),
+                      actions: [
+                        FlatButton(
+                          child: Text("Cancel"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Yes"),
+                          onPressed: () {
+                            if (address == null) {
+                              address = cust.address;
+                            }
+                            moveToOrder();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              color: Colors.orange,
+              textColor: Colors.white,
+            ),
+          )
+        ],
+      ),
+    ]));
   }
 
-  Widget orderListView(BuildContext context, AsyncSnapshot snapshot) {
-    List<OrderItem> orderitem = snapshot.data;
-    return ListView.builder(
-        shrinkWrap: true,
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
-        itemCount: snapshot.data.length,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          return Column(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Row(
+  Widget cartListView(BuildContext context, AsyncSnapshot snapshot) {
+    List<Cart> cart = snapshot.data;
+    return Stack(children: <Widget>[
+      Container(
+          height: double.infinity,
+          padding: EdgeInsets.only(bottom: 70),
+          child: ListView.builder(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 10.0),
+              itemCount: snapshot.data.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return Column(
                   children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        orderitem[index].itemName,
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
+                    Divider(
+                      height: 0,
+                      color: Colors.black,
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10.0),
+                      child: Row(
+                        children: <Widget>[
+                          Expanded(
+                            flex: 2,
+                            child: Text(
+                              cart[index].itemName,
+                              style: TextStyle(
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              '${cart[index].quantity.toString()}',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Text(
+                              'RM ${(cart[index].itemPrice * cart[index].quantity).toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        '${orderitem[index].quantity.toString()}',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Text(
-                        'RM ${(orderitem[index].itemPrice * orderitem[index].quantity).toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    ),
+                    Builder(
+                      builder: (context) {
+                        if (index == snapshot.data.length - 1) {
+                          return Divider(
+                            height: 0,
+                            color: Colors.black,
+                          );
+                        } else {
+                          return Container();
+                        }
+                      },
+                    )
                   ],
-                ),
-              ),
-              Divider(
-                color: Colors.black,
-              ),
-            ],
-          );
-        });
+                );
+              })),
+    ]);
   }
 }
