@@ -147,7 +147,8 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
             ],
           ),
         )*/
-        body: Column(children: [
+        body: SingleChildScrollView(
+            child: Column(children: [
       Padding(
         padding: EdgeInsets.only(top: 40, left: 20),
         child: Stack(children: [
@@ -222,28 +223,30 @@ class _RestaurantRatingPageState extends State<RestaurantRatingPage> {
         ),
       ),
       Container(
-                      child: AppBar(
-                        title: Text(
-                          'Feedback List',
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        centerTitle: true,
-                        leading: Container(),
-                        backgroundColor: Colors.orange,
-                      )),
+          height: 60,
+          width: double.infinity,
+          color: Colors.orange,
+          child: Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Feedback List',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+            ),
+          )),
       Container(
-          child: FutureBuilder<List<Feedbacks>>(
-                  future: futureFeedbackList,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return feedbackListView(context, snapshot);
-                    } else if (snapshot.hasError) {
-                      return Text(snapshot.error);
-                    }
-                    return Center(child: CircularProgressIndicator());
-                  }),
+        child: FutureBuilder<List<Feedbacks>>(
+            future: futureFeedbackList,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return feedbackListView(context, snapshot);
+              } else if (snapshot.hasError) {
+                return Text(snapshot.error);
+              }
+              return Center(child: CircularProgressIndicator());
+            }),
       )
-    ]));
+    ])));
   }
 
   Widget feedbackListView(BuildContext context, AsyncSnapshot snapshot) {

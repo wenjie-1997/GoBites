@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
 import 'package:demo/pages/restaurant/restaurantInfo.dart';
 import 'package:flutter/material.dart';
 import '../registration.dart';
@@ -52,21 +53,19 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    new RestaurantPersonalInfoPage()),
+                                builder: (context) => new RestHomePage()),
                             (route) => false);
                       })
                 ],
               ));
-    } else {
-    }
+    } else {}
   }
 
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+        body: SingleChildScrollView(
             child: Column(children: [
       Align(
           alignment: Alignment.centerLeft,
@@ -216,29 +215,29 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                   height: 10,
                 ),
                 DropdownButton<String>(
-                        value: restaurantstyle,
-                        underline: Container(
-                          height: 2,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            restaurantstyle = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'Malay',
-                          'Chinese',
-                          'Indian',
-                          'Western',
-                          'Arabic',
-                          'Others'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                  value: restaurantstyle,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      restaurantstyle = newValue;
+                    });
+                  },
+                  items: <String>[
+                    'Malay',
+                    'Chinese',
+                    'Indian',
+                    'Western',
+                    'Arabic',
+                    'Others'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
                 ),
                 SizedBox(
                   height: 20,
@@ -305,32 +304,32 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                     ),
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                      if (username == null) {
-                        username = widget.rest.username;
+                        if (username == null) {
+                          username = widget.rest.username;
+                        }
+                        if (password == null) {
+                          password = widget.rest.password;
+                        }
+                        if (email == null) {
+                          email = widget.rest.email;
+                        }
+                        if (address == null) {
+                          address = widget.rest.address;
+                        }
+                        if (telephoneNo == null) {
+                          telephoneNo = widget.rest.telephoneNo;
+                        }
+                        if (restaurantname == null) {
+                          restaurantname = widget.rest.restaurantname;
+                        }
+                        if (restaurantstyle == null) {
+                          restaurantstyle = widget.rest.restaurantstyle;
+                        }
+                        if (ownername == null) {
+                          ownername = widget.rest.ownername;
+                        }
+                        restUpdate();
                       }
-                      if (password == null) {
-                        password = widget.rest.password;
-                      }
-                      if (email == null) {
-                        email = widget.rest.email;
-                      }
-                      if (address == null) {
-                        address = widget.rest.address;
-                      }
-                      if (telephoneNo == null) {
-                        telephoneNo = widget.rest.telephoneNo;
-                      }
-                      if (restaurantname == null) {
-                        restaurantname = widget.rest.restaurantname;
-                      }
-                      if (restaurantstyle == null) {
-                        restaurantstyle = widget.rest.restaurantstyle;
-                      }
-                      if (ownername == null) {
-                        ownername = widget.rest.ownername;
-                      }
-                      restUpdate();
-                    }
                     },
                     child: Text('Update'),
                   ),
@@ -338,7 +337,6 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
               ],
             ),
           )),
-    ]))
-      );
+    ])));
   }
 }
