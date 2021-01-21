@@ -27,11 +27,12 @@ class RestHomePage extends StatefulWidget {
   _RestHomePageState createState() => _RestHomePageState();
 }
 
-fetchRestDetail() async {
+Future<RestDetail> fetchRestDetail() async {
   final response = await http_get('/restaurant/' + login.login_id);
 
   if (response.statusCode == 200) {
     rest = RestDetail.fromJson(jsonDecode(response.body));
+    return RestDetail.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -48,7 +49,6 @@ class _RestHomePageState extends State<RestHomePage> {
       _selectedIndex = index;
     });
   }
-
 
   @override
   void initState() {
@@ -126,7 +126,9 @@ class _RestHomePageState extends State<RestHomePage> {
         splashColor: Colors.blueAccent,
         onPressed: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RestaurantViewOrderPage()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RestaurantViewOrderPage()));
         },
         child: Row(children: [
           Expanded(
@@ -154,8 +156,8 @@ class _RestHomePageState extends State<RestHomePage> {
         padding: EdgeInsets.all(8.0),
         splashColor: Colors.blueAccent,
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => RestaurantRatingPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RestaurantRatingPage()));
         },
         child: Row(children: [
           Expanded(
@@ -186,15 +188,29 @@ class _RestHomePageState extends State<RestHomePage> {
               Padding(
                   padding: EdgeInsets.only(top: 70),
                   child: Column(children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                            'Welcome to GoBites, ${rest.restaurantname.split(' ')[0]}.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40.0,
-                              color: Colors.black,
-                            ))),
+                    FutureBuilder<RestDetail>(
+                        future: fetchRestDetail(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    'Welcome to GoBites, ${rest.restaurantname.split(' ')[0]}.',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40.0,
+                                      color: Colors.black,
+                                    )));
+                          }
+                          return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Welcome to GoBites',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40.0,
+                                    color: Colors.black,
+                                  )));
+                        }),
                     Align(
                         alignment: Alignment.centerLeft,
                         child: Text('\nManage your restaurant now!!',
@@ -224,7 +240,10 @@ class _RestHomePageState extends State<RestHomePage> {
 
     const TextStyle optionStyle =
         TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-    List<Widget> _widgetOptions = <Widget>[mainPage, RestaurantPersonalInfoPage()];
+    List<Widget> _widgetOptions = <Widget>[
+      mainPage,
+      RestaurantPersonalInfoPage()
+    ];
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -246,6 +265,6 @@ class _RestHomePageState extends State<RestHomePage> {
         selectedItemColor: Colors.amber[800],
         onTap: _onItemTapped,
       ),
-        );
+    );
   }
 }

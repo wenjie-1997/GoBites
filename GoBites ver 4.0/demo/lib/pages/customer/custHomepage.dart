@@ -45,11 +45,12 @@ class CustHomePage extends StatefulWidget {
   _CustHomePageState createState() => _CustHomePageState();
 }
 
-fetchCustDetail() async {
+Future<CustDetail> fetchCustDetail() async {
   final response = await http_get('/customer/' + login.login_id);
 
   if (response.statusCode == 200) {
     cust = CustDetail.fromJson(jsonDecode(response.body));
+    return CustDetail.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -227,15 +228,29 @@ class _CustHomePageState extends State<CustHomePage> {
               Padding(
                   padding: EdgeInsets.only(top: 70),
                   child: Column(children: [
-                    Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                            'Welcome to GoBites, ${cust.custname.split(' ')[0]}.',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 40.0,
-                              color: Colors.black,
-                            ))),
+                    FutureBuilder<CustDetail>(
+                        future: fetchCustDetail(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    'Welcome to GoBites, ${snapshot.data.custname.split(' ')[0]}.',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40.0,
+                                      color: Colors.black,
+                                    )));
+                          }
+                          return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Welcome to GoBites',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40.0,
+                                    color: Colors.black,
+                                  )));
+                        }),
                     Align(
                         alignment: Alignment.centerLeft,
                         child: Text('\nOrder your food now!!',
