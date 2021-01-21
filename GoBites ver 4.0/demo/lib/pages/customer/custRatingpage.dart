@@ -83,7 +83,6 @@ class _MakeRatingPageState extends State<MakeRatingPage> {
 
   @override
   Widget build(BuildContext context) {
-    rating = 3;
     return Scaffold(
         body: Column(children: [
       Padding(

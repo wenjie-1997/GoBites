@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:demo/modules/http.dart';
+import 'package:demo/pages/customer/custHomepage.dart';
 import 'package:demo/pages/customer/updatePassword.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/pages/login.dart' as login;
@@ -70,7 +71,7 @@ class _PersonalInfoPageState extends State<PersonalInfoPage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => new PersonalInfoPage()),
+                                builder: (context) => new CustomerHomePage()),
                             (route) => false);
                       }),
                 ],
