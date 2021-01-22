@@ -667,7 +667,7 @@ app.post('/orderitemstatus', async(req, res) => {
 app.get('/vieworderstatus/:CID', async(req, res) => {
 	const CID = req.params.CID;
 	await db.query(`
-	select orders.fk_cid, orders.status from orders 
+	select orders.fk_cid, orders.status, orders.deliveryNotif, orders.doneNotif from orders 
 	join customer on customer.CID=orders.fk_cid
   INNER JOIN user ON  user.fk_cid=customer.CID
   WHERE user.UID = ?;`,
@@ -682,12 +682,56 @@ app.get('/vieworderstatus/:CID', async(req, res) => {
       if(rows[0]==null){
         res.json({status : "None"});
       }else{
-			res.send(rows[0]);}
+		  	console.log(rows[rows.length-1])
+			res.send(rows[rows.length-1]);}
 		}
 	});
 
 });
 
+app.post('/deliveryNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set deliveryNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
+		}
+	});
+
+});
+
+app.post('/doneNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set doneNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
+		}
+	});
+
+});
 app.post('/ordersetstatus', async(req, res) => {
 	const OID = req.body.OID;
 	await db.query(`
@@ -861,10 +905,10 @@ app.get('/', (req, res) => {
 
 async function main(){
     db = await mysql.createConnection({
-      host:"localhost",
-      user: "root",
-      password: "",
-      database: "gobites",
+      host:"johnny.heliohost.org",
+      user: "ainalfa_pharveish",
+      password: "pharveish@123",
+      database: "ainalfa_go-bites-db",
       timezone: "+00:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true

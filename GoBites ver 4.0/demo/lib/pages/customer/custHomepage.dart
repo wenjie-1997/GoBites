@@ -64,9 +64,17 @@ notification() async {
   if (response.statusCode == 200) {
     var convert = json.decode(response.body);
     if (convert['status'] == "DELIVERING") {
-      LocalNotification.DeliveryNotification(DateTime.now());
+      if (convert['deliveryNotif'] == 0) {
+        LocalNotification.DeliveryNotification(DateTime.now());
+        await http_post('/deliveryNotification/' + login.login_id);
+      } else
+        print("delivery notification already shown once!");
     } else if (convert['status'] == "DONE") {
-      LocalNotification.DeliveredNotification(DateTime.now());
+      if (convert['doneNotif'] == 0) {
+        LocalNotification.DeliveredNotification(DateTime.now());
+        await http_post('/doneNotification/' + login.login_id);
+      } else
+        print("delivered notification already shown once!");
     } else {
       print("no message");
     }
