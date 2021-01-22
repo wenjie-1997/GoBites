@@ -274,7 +274,7 @@ class _CartPageState extends State<CartPage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Delete Itm"),
+      title: Text("Delete Item"),
       content: Text("Are you sure to delete this item?"),
       actions: [
         cancelButton,
