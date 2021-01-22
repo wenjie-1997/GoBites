@@ -676,7 +676,7 @@ router.post(DOMAIN+'/ordersetstatus', async(req, res) => {
 router.get(DOMAIN+'/vieworderstatus/:CID', async(req, res) => {
 	const CID = req.params.CID;
 	await db.query(`
-	select orders.fk_cid, orders.status from orders 
+	select orders.fk_cid, orders.status, orders.deliveryNotif, orders.doneNotif from orders 
 	join customer on customer.CID=orders.fk_cid
   INNER JOIN user ON  user.fk_cid=customer.CID
   WHERE user.UID = ?;`,
@@ -687,8 +687,56 @@ router.get(DOMAIN+'/vieworderstatus/:CID', async(req, res) => {
 			return;
 		}
 		else{
-			console.log("showing delivery notification");
-			res.send(rows[0]);
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+		  	console.log(rows[rows.length-1])
+			res.send(rows[rows.length-1]);}
+		}
+	});
+
+});
+
+router.post(DOMAIN+'/deliveryNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set deliveryNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
+		}
+	});
+
+});
+
+router.post(DOMAIN+'/doneNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set doneNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
 		}
 	});
 
@@ -824,6 +872,22 @@ router.get(DOMAIN+'/getfeedbackrest/:rid', async(req, res)=>{
     });
 });
 
+router.post(DOMAIN+'/insertorderaddress', async(req, res) => {
+  const {address, OID} = req.body;
+  await db.query(`update orders set address = ? where orderid=?;`,
+	[address, OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Insert Address fail");
+			return;
+		}
+		else{
+			console.log('Insert Address successful');
+			res.json("Insert Address Successful");
+		}
+	});
+
+});
 
 
 
