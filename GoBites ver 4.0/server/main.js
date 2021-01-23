@@ -1,12 +1,19 @@
 const express = require("express");
 const mysql = require("mysql");
+path = require('path');
+var bodyParser = require("body-parser");
+var fs = require("fs");
+
 let db = null;
 
 // create express app
 const app = express();
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true, limit: "50mb" }));
+
 // Setup server port
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8000;
+app.use(express.static('images'));
 
 app.post('/login', async(req, res)=>{
   const username = req.body.username;
@@ -80,7 +87,7 @@ app.post('/restregister', async(req, res)=>{
 
 app.get('/customer/:customerId', async(req, res) => {
   const cid = req.params.customerId;
-  await db.query(`SELECT customer.CID,user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo
+  await db.query(`SELECT customer.CID,user.username,user.password,customer.custname, customer.birthdate, customer.gender, customer.address, customer.email, customer.telephoneNo, customer.image
   FROM customer
   INNER JOIN user ON  user.fk_cid=customer.CID
   WHERE user.UID = ?`
@@ -100,7 +107,7 @@ app.get('/customer/:customerId', async(req, res) => {
 
 app.get('/restaurant/:restaurantId', async(req, res) => {
   const rid = req.params.restaurantId;
-  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo
+  await db.query(`SELECT user.fk_rid as RID, user.username,user.password, restaurant.restaurantname, restaurant.ownername, restaurant.address, restaurant.restaurantstyle, restaurant.email, restaurant.telephoneNo, restaurant.image
   FROM restaurant
   INNER JOIN user ON  user.fk_rid=restaurant.RID
   WHERE user.UID = ?`
@@ -119,7 +126,7 @@ app.get('/restaurant/:restaurantId', async(req, res) => {
 });
 
 app.get('/restaurants', async(req, res) => {
-  await db.query(`SELECT RID,restaurantname
+  await db.query(`SELECT *
   FROM restaurant`
   , [], (error, rows, fields) => {
     if (error) {
@@ -172,11 +179,44 @@ app.get('/menu/:rid', async(req, res) => {
 });
 
 app.post('/custupdate', async(req, res)=>{
-  const {CID, username,password, custname,address,email,telephoneNo} = req.body;
+  const {CID, custname,address,email,telephoneNo} = req.body;
   let updateCusttable = "UPDATE `customer` SET `custname`=?, `address`=?,`email`=?,`telephoneNo`=? WHERE CID = ?;";
-  let updateUsertable = "UPDATE `user` SET `username`=? , `password` = ? WHERE fk_cid = ?";
-  await db.query( updateCusttable + updateUsertable,
-   [custname, address, email, telephoneNo, CID, username, password, CID] , (error, rows, fields)=>{
+  await db.query( updateCusttable,
+   [custname, address, email, telephoneNo, CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/custupdatepassword', async(req, res)=>{
+  const {password,CID} = req.body;
+  await db.query( "UPDATE `user` SET password = ? WHERE fk_cid = ?;",
+   [password,CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Update Failed");
+        return;
+    }
+    else{
+        console.log("Update Sucessful");
+        res.json("Update Sucessful");
+        return;
+      }
+    });
+});
+
+app.post('/restupdatepassword', async(req, res)=>{
+  const {password,RID} = req.body;
+  await db.query( "UPDATE `user` SET password = ? WHERE fk_rid = ?;",
+   [password,RID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Update Failed");
@@ -255,7 +295,7 @@ app.post('/menudelete', async(req, res)=>{
     else{
         console.log("Delete Sucessful");
         res.json("Delete Sucessful");
-        return;
+        return;s
       }
     });
 });
@@ -281,7 +321,9 @@ app.get('/viewcart/:cid', async(req, res)=>{
 });
 
 app.post('/addtocart', async(req, res)=>{
+  
   const {MID, quantity, CID} = req.body;
+  console.log(CID);
   await db.query("INSERT INTO `cart`(`fk_mid`,`quantity`,`fk_cid`) VALUES (?,?,?)",
    [MID, quantity, CID] , (error, rows, fields)=>{
     if (error) {
@@ -316,17 +358,17 @@ app.post('/cartdelete', async(req, res)=>{
 });
 
 app.post('/movetoorder', async(req, res)=>{
-  const {CID} = req.body;
-  await db.query(`INSERT INTO orders(fk_cid) VALUES(?);
+  const {CID,address} = req.body;
+  await db.query(`INSERT INTO orders(fk_cid,address) VALUES(?,?);
   SET @last_id = LAST_INSERT_ID();
   INSERT INTO orderitem (fk_oid, fk_mid, quantity) SELECT @last_id ,fk_mid , quantity FROM cart WHERE fk_cid = ?;
   DELETE FROM cart WHERE fk_cid = ?;
-  UPDATE orders SET totalprice = 
+  UPDATE orders SET totalPrice = 
   (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
   JOIN menuitem ON menuitem.MID=orderitem.fk_mid
-  WHERE fk_oid = @last_id) WHERE fk_cid = ?;
+  WHERE fk_oid = @last_id) WHERE orderid = @last_id;
   SELECT @last_id AS OID;`,
-   [CID, CID, CID, CID] , (error, rows, fields)=>{
+   [CID,address, CID, CID] , (error, rows, fields)=>{
     if (error) {
         console.log(error);
         res.json("Place an Order Failed");
@@ -342,7 +384,7 @@ app.post('/movetoorder', async(req, res)=>{
 
 app.get('/vieworderid/:oid', async(req, res)=>{
   const oid = req.params.oid;
-  await db.query( `SELECT orderid AS OID, totalPrice
+  await db.query( `SELECT orderid AS OID, totalPrice, status, addedDate, address
   FROM orders
   WHERE orderid=?`,
    [oid] , (error, rows, fields)=>{
@@ -379,17 +421,502 @@ app.get('/viewordername/:oid', async(req, res)=>{
     });
 });
 
+app.get('/vieworderrest/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE menuitem.fk_rid=? AND status='PREPARING'`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/vieworderidcust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, address
+  FROM orders
+  WHERE fk_cid=? AND status != "DONE"`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/vieworderdate/:rid', async(req, res)=>{
+	const rid = req.params.rid;
+	await db.query(`select distinct orders.orderid as OID, orders.addedDate, orders.totalPrice from orderitem join orders on orders.orderid=orderitem.fk_oid join menuitem on menuitem.MID=orderitem.fk_mid where menuitem.fk_rid=? AND orders.status='PREPARING';
+	`, [rid], (error, rows, fields)=>{
+		if(error){
+			console.log(error);
+			res.json("get orders fail");
+			return;
+		}
+		else{
+			console.log("Retrieve order in rest success");
+			res.send(rows);
+			return;
+		}
+	})
+});
+
+app.get('/vieworderitemrest/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
+  FROM orderitem
+  JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+  WHERE orderitem.fk_oid=? AND status='PREPARING'`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order Name Failed");
+        return;
+    }
+    else{
+        console.log(rows);
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.post('/checkusername', async(req, res)=>{
+  const username = req.body.username;
+  await db.query( `SELECT username FROM user WHERE username = ?`,
+   [username] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get User Name Failed");
+        return;
+    }
+    else{
+      if(rows.length > 0){
+        console.log("Username exists in Database");
+        res.json("Username exists in database");
+        return;
+        }
+        else{
+          console.log("Username does not exist");
+        res.json("Username does not exist");
+        return;
+        }
+      }
+    });
+});
+
+app.get('/getcartquantity/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT SUM(quantity) as quantity
+  FROM cart
+  WHERE fk_cid=?`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+      let quantity = 0;
+        console.log("Retrieve quantity Sucessful");
+        if(rows[0].quantity != null){
+          quantity = rows[0].quantity;
+        }
+        res.json(quantity);
+        return;
+      }
+    });
+});
+
+app.post('/orderitemdelete', async(req, res)=>{
+  const ID = req.body.ID;
+  await db.query( `
+  SET @oid = (SELECT fk_oid FROM orderitem WHERE id=?);
+  DELETE FROM orderitem WHERE id=?;
+  UPDATE orders SET totalPrice = 
+  (SELECT SUM(menuitem.itemPrice*orderitem.quantity) FROM orderitem 
+  JOIN menuitem ON menuitem.MID=orderitem.fk_mid
+  WHERE fk_oid = @oid) WHERE orderid = @oid;
+  DELETE FROM orders WHERE totalPrice = 0;
+  `,
+   [ID,ID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Delete Order Failed");
+        return;
+    }
+    else{
+        console.log("Delete Order Sucessful");
+        res.json("Delete Order Sucessful");
+        return;
+
+      }
+    });
+});
+
+app.post("/restimage", async(req, res) => {
+  var RID = req.body.RID;
+  var name = req.body.name;
+  var img = req.body.image;
+  var realFile = Buffer.from(img,"base64");
+  await db.query( `SELECT image FROM restaurant WHERE RID = ?`,
+   [RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        return;
+    }
+    else{
+      if(rows[0].image!=null){
+        console.log(rows[0].image);
+        var filePath = "images/"+rows[0].image;
+        fs.unlinkSync(filePath);
+        }
+      }
+    });
+  
+  fs.writeFile("images/" + RID + "_" + name, realFile, function (err) {
+    if (err)
+      console.log(err);
+  });
+   await db.query( `UPDATE restaurant SET image = ? WHERE RID = ?`,
+   [RID+"_"+name,RID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Upload Image Failed");
+        return;
+    }
+    else{
+        console.log("Upload Image Sucessful");
+        res.json("OK");
+        return;
+      }
+    });
+ });
+
+ app.post("/image", async(req, res) => {
+  var CID = req.body.CID;
+  var name = req.body.name;
+  var img = req.body.image;
+  var realFile = Buffer.from(img,"base64");
+  await db.query( `SELECT image FROM customer WHERE CID = ?`,
+   [CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        return;
+    }
+    else{
+      console.log(rows[0].image);
+      var filePath = "images/"+rows[0].image;
+      fs.unlinkSync(filePath);
+      }
+    });
+  
+  fs.writeFile("images/" + CID + "_" + name, realFile, function (err) {
+    if (err)
+      console.log(err);
+  });
+   await db.query( `UPDATE customer SET image = ? WHERE CID = ?`,
+   [CID+"_"+name,CID] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Upload Image Failed");
+        return;
+    }
+    else{
+        console.log("Upload Image Sucessful");
+        res.json("OK");
+        return;
+      }
+    });
+ });
+
+app.post('/orderitemstatus', async(req, res) => {
+	const ID = req.body.ID;
+	await db.query(`
+	update orderitem set status = 'DONE' where id=?;`,
+	[ID, ID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status change fail");
+			return;
+		}
+		else{
+			console.log('status success');
+			res.json("orderitem status done");
+		}
+	});
+
+});
+
+app.get('/vieworderstatus/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(`
+	select orders.fk_cid, orders.status, orders.deliveryNotif, orders.doneNotif from orders 
+	join customer on customer.CID=orders.fk_cid
+  INNER JOIN user ON  user.fk_cid=customer.CID
+  WHERE user.UID = ?;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+		  	console.log(rows[rows.length-1])
+			res.send(rows[rows.length-1]);}
+		}
+	});
+
+});
+
+app.post('/deliveryNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set deliveryNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
+		}
+	});
+
+});
+
+app.post('/doneNotification/:CID', async(req, res) => {
+	const CID = req.params.CID;
+	await db.query(
+    `set @oid = (select orders.orderid from orders join customer on customer.CID=orders.fk_cid inner join user on user.fk_cid=customer.CID where user.UID=? order by orders.orderid desc limit 1);
+	update orders set doneNotif=true where orderid=@oid;`,
+	[CID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status view fail");
+			return;
+		}
+		else{
+      console.log("showing delivery notification");
+      if(rows[0]==null){
+        res.json({status : "None"});
+      }else{
+			res.json("notification done");}
+		}
+	});
+
+});
+app.post('/ordersetstatus', async(req, res) => {
+	const OID = req.body.OID;
+	await db.query(`
+	update orders set status = 'DELIVERING' where orderid=?;`,
+	[OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Status change fail");
+			return;
+		}
+		else{
+			console.log('status success');
+			res.json("orders status done");
+		}
+	});
+
+});
+
+app.get('/viewdeliveredorderidcust/:cid', async(req, res)=>{
+  const cid = req.params.cid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate, hasFeedback
+  FROM orders
+  WHERE fk_cid=? AND status='DONE'`,
+   [cid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/viewdeliveredorderid/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT orderid as OID, totalPrice, status, addedDate
+  FROM orders
+  WHERE orderid=?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.post('/makerating', async(req, res) => {
+  const {rating, comment, OID, RID} = req.body;
+  console.log(rating);
+  await db.query(`INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?);
+  UPDATE orders SET hasFeedback = true WHERE orderid = ?;
+  `,
+	[rating, comment, OID, RID, OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Rate fail");
+			return;
+		}
+		else{
+			console.log('Rate successful');
+			res.json("Rate Successful");
+		}
+	});
+
+});
+
+app.get('/vieworderrestaurant/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT restaurant.restaurantname, restaurant.RID
+  FROM orderitem
+  JOIN menuitem ON menuitem.MID = orderitem.fk_mid
+  JOIN restaurant ON restaurant.RID = menuitem.fk_rid
+  WHERE orderitem.fk_oid=?
+  GROUP BY restaurant.restaurantname, restaurant.RID
+  `,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Order ID Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.get('/getorderfeedback/:oid', async(req, res)=>{
+  const oid = req.params.oid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE oid = ?`,
+   [oid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Get Order ID Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows[0]);
+        return;
+      }
+    });
+});
+
+app.get('/getrating/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT SUM(rating)/COUNT(*) as rating FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve rating Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve rating Sucessful");
+        res.json(rows[0].rating);
+        return;
+      }
+    });
+});
+
+app.get('/getfeedbackrest/:rid', async(req, res)=>{
+  const rid = req.params.rid;
+  await db.query( `SELECT fid,rating,comment,rid FROM feedback WHERE rid = ?`,
+   [rid] , (error, rows, fields)=>{
+    if (error) {
+        console.log(error);
+        res.json("Retrieve Feedback Failed");
+        return;
+    }
+    else{
+        console.log("Retrieve Feedback Sucessful");
+        res.send(rows);
+        return;
+      }
+    });
+});
+
+app.post('/insertorderaddress', async(req, res) => {
+  const {address, OID} = req.body;
+  await db.query(`update orders set address = ? where orderid=?;`,
+	[address, OID], (error, rows, fields) => {
+		if (error){
+			console.log(error);
+			res.json("Insert Address fail");
+			return;
+		}
+		else{
+			console.log('Insert Address successful');
+			res.json("Insert Address Successful");
+		}
+	});
+
+});
+
 app.get('/', (req, res) => {
   res.send("Hello World");
 });
 
 async function main(){
     db = await mysql.createConnection({
-      host:"localhost",
-      user: "root",
-      password: "void",
-      database: "goBites2",
-      timezone: "+00:00",
+      // host:"localhost",
+      // user: "root",
+      // password: "",
+      // database: "gobites",
+      // timezone: "+00:00",
+      // charset: "utf8mb4_general_ci",
+      // multipleStatements: true
+      host:"johnny.heliohost.org",
+      user: "ainalfa_pharveish",
+      password: "pharveish@123",
+      database: "ainalfa_go-bites-db",
+      timezone: "-08:00",
       charset: "utf8mb4_general_ci",
       multipleStatements: true
     });
@@ -403,6 +930,7 @@ async function main(){
       }
     });
 }
+
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
 main();
