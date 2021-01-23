@@ -9,6 +9,7 @@ import 'package:demo/modules/restdetail.dart';
 import 'package:image_picker/image_picker.dart';
 import 'restInfoUpdatepage.dart';
 import '../login.dart';
+
 RestDetail rest;
 
 Future<RestDetail> fetchRestDetail() async {
@@ -33,7 +34,8 @@ class RestaurantPersonalInfoPage extends StatefulWidget {
       _RestaurantPersonalInfoPageState();
 }
 
-class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage> {
+class _RestaurantPersonalInfoPageState
+    extends State<RestaurantPersonalInfoPage> {
   Future<RestDetail> futureRestDetail;
   PickedFile pickedFile;
 
@@ -122,7 +124,7 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
     ]);
     return Scaffold(
 
-      /*appBar: AppBar(
+        /*appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pushAndRemoveUntil(
@@ -341,7 +343,7 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
         ],
         currentIndex: 1,
       ),*/
-      body: Center(
+        body: Center(
             child: SingleChildScrollView(
                 child: Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
@@ -413,7 +415,7 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                               child: Center(
                                 child: Ink(
                                   decoration: const ShapeDecoration(
-                                    color: Colors.red,
+                                    color: Colors.orange,
                                     shape: CircleBorder(),
                                   ),
                                   child: IconButton(
@@ -447,8 +449,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -479,8 +481,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -527,8 +529,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -559,8 +561,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -591,8 +593,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -623,8 +625,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -655,8 +657,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -687,8 +689,8 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
                       ),
                       Expanded(
                         child: SizedBox(
-                                height: 20.0,
-                              ),
+                          height: 20.0,
+                        ),
                       ),
                       Expanded(
                         flex: 6,
@@ -718,7 +720,6 @@ class _RestaurantPersonalInfoPageState extends State<RestaurantPersonalInfoPage>
             // By default, show a loading spinner.
             return Center(child: CircularProgressIndicator());
           }),
-    )))
-    );
+    ))));
   }
 }

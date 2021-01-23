@@ -162,59 +162,60 @@ class _RestMenuPageState extends State<RestMenuPage> {
         backgroundColor: Colors.red,
       ),*/
       body: Column(children: [
-      Padding(
-        padding: EdgeInsets.only(top: 40, left: 20),
-        child: Stack(children: [
-          Ink(
-            decoration: const ShapeDecoration(
-              color: Colors.orange,
-              shape: CircleBorder(),
+        Padding(
+          padding: EdgeInsets.only(top: 40, left: 20),
+          child: Stack(children: [
+            Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.orange,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new RestHomePage()),
+                      (route) => false),
+                  icon: Icon(Icons.arrow_back, color: Colors.white)),
             ),
-            child: IconButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => new RestHomePage()),
-                    (route) => false),
-                icon: Icon(Icons.arrow_back, color: Colors.white)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text("My Menu",
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
-          )
-        ]),
-      ),
-      Expanded(
-          child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: FutureBuilder<RestDetail>(
-              future: futureRestDetail,
-              builder: (context, snapshot1) {
-                if (snapshot1.hasData) {
-                  rest = snapshot1.data;
-                  print(rest.RID);
-                  return FutureBuilder<List<Menu>>(
-                      future: fetchMenu(snapshot1.data.RID),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return menuListView(context, snapshot);
-                        } else if (snapshot.hasError) {
-                          return Text(snapshot.error);
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      });
-                } else if (snapshot1.hasError) {
-                  return Text(snapshot1.error);
-                }
-                return Center(child: CircularProgressIndicator());
-              }))),
-    ]),
-    floatingActionButton: FloatingActionButton(
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text("My Menu",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 30))),
+            )
+          ]),
+        ),
+        Expanded(
+            child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: FutureBuilder<RestDetail>(
+                    future: futureRestDetail,
+                    builder: (context, snapshot1) {
+                      if (snapshot1.hasData) {
+                        rest = snapshot1.data;
+                        print(rest.RID);
+                        return FutureBuilder<List<Menu>>(
+                            future: fetchMenu(snapshot1.data.RID),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return menuListView(context, snapshot);
+                              } else if (snapshot.hasError) {
+                                return Text(snapshot.error);
+                              }
+                              return Center(child: CircularProgressIndicator());
+                            });
+                      } else if (snapshot1.hasError) {
+                        return Text(snapshot1.error);
+                      }
+                      return Center(child: CircularProgressIndicator());
+                    }))),
+      ]),
+      floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
               context,
@@ -230,7 +231,7 @@ class _RestMenuPageState extends State<RestMenuPage> {
   Widget menuListView(BuildContext context, AsyncSnapshot snapshot) {
     List<Menu> menus = snapshot.data;
     return ListView.builder(
-      //shrinkWrap: true,
+        //shrinkWrap: true,
         padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
         itemCount: snapshot.data.length,
         scrollDirection: Axis.vertical,
@@ -244,18 +245,11 @@ class _RestMenuPageState extends State<RestMenuPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/default.png'),
-                          radius: 30.0,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(10,0,10,0),
-                          child: Text(menus[index].itemName),)
-                      ),
+                          flex: 3,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Text(menus[index].itemName),
+                          )),
                       Expanded(
                         flex: 1,
                         child: Text(

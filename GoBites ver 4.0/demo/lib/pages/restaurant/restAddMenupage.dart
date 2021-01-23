@@ -67,7 +67,9 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        /*appBar: AppBar(
+        body: SingleChildScrollView(
+      child:
+          /*appBar: AppBar(
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.black),
             onPressed: () => Navigator.of(context).pop(),
@@ -160,35 +162,36 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
             ],
           ),
         )*/
-        body: Column(children: [
-      Padding(
-        padding: EdgeInsets.only(top: 40, left: 20),
-        child: Stack(children: [
-          Ink(
-            decoration: const ShapeDecoration(
-              color: Colors.orange,
-              shape: CircleBorder(),
+          Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 40, left: 20),
+          child: Stack(children: [
+            Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.orange,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new RestMenuPage()),
+                      (route) => false),
+                  icon: Icon(Icons.arrow_back, color: Colors.white)),
             ),
-            child: IconButton(
-                onPressed: () => Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => new RestMenuPage()),
-                    (route) => false),
-                icon: Icon(Icons.arrow_back, color: Colors.white)),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10),
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text("Add Menu",
-                    textAlign: TextAlign.center,
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
-          )
-        ]),
-      ),
-      Form(
+            Padding(
+              padding: EdgeInsets.only(top: 10),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text("Add Menu",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 30))),
+            )
+          ]),
+        ),
+        Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +227,6 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                   ),
                 ]),
               ),
-
               Container(
                 padding: EdgeInsets.all(10.0),
                 child: Column(children: <Widget>[
@@ -301,8 +303,9 @@ class _RestAddMenuPageState extends State<RestAddMenuPage> {
                 ),
               ),
             ],
-          ),),
-    ]),
-    );
+          ),
+        ),
+      ]),
+    ));
   }
 }

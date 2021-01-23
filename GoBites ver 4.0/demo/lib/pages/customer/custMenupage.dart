@@ -280,7 +280,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: Text(
-                                                      "Price: ${menus[index].itemPrice}\n"),
+                                                      "Price: RM${menus[index].itemPrice.toStringAsFixed(2)}\n"),
                                                 ),
                                                 Row(
                                                   mainAxisAlignment:

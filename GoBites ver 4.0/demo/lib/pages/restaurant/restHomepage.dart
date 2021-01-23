@@ -18,6 +18,11 @@ class RestaurantHomePage extends StatelessWidget {
     return new MaterialApp(
       title: 'Restaurant Owner Home Page',
       home: RestHomePage(),
+      theme: ThemeData(
+        primaryColor: Colors.orange,
+        accentColor: Colors.orange[600],
+      ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

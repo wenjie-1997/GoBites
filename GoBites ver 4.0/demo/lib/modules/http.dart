@@ -7,7 +7,7 @@ class RequestResult {
 }
 
 const PROTOCOL = 'http';
-const DOMAIN = '10.0.2.2:8000';
+const DOMAIN = '192.168.1.103:8000';
 
 Future<http.Response> http_get(String route) async {
   //var dataStr = jsonEncode(data);

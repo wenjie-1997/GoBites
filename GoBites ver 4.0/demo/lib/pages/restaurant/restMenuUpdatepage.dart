@@ -82,115 +82,8 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.blue,
-        title: Text('Update Menu'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemName,
-                  decoration: const InputDecoration(
-                    labelText: 'Menu name',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemName = value;
-                    });
-                  },
-                ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemPrice.toStringAsFixed(2),
-                  decoration: const InputDecoration(
-                    labelText: 'Price (RM)',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some digit';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemPrice = double.parse(value);
-                    });
-                  },
-                ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemDesc,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemDesc = value;
-                    });
-                  },
-                ),
-              ]),
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 20, bottom: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    if (itemName == null) {
-                      itemName = widget.menu.itemName;
-                    }
-                    if (itemPrice == null) {
-                      itemPrice = widget.menu.itemPrice;
-                    }
-                    if (itemDesc == null) {
-                      itemDesc = widget.menu.itemDesc;
-                    }
-                    menuUpdate();
-                  }
-                },
-                child: Text('Update'),
-              ),
-            ),
-          ],
-        ),
-      )),*/
-      body: Column(children: [
+        body: SingleChildScrollView(
+      child: Column(children: [
         Padding(
           padding: EdgeInsets.only(top: 40, left: 20),
           child: Stack(children: [
@@ -294,6 +187,7 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
                     height: 10,
                   ),
                   TextFormField(
+                    maxLines: 3,
                     initialValue: widget.menu.itemDesc,
                     decoration: textFieldDecoration(),
                     validator: (value) {
@@ -340,6 +234,6 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
           ),
         )
       ]),
-    );
+    ));
   }
 }
