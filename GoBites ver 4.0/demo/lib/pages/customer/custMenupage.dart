@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/menu.dart';
 import 'package:demo/pages/customer/custHomepage.dart';
@@ -118,22 +119,40 @@ class _CustMenuPageState extends State<CustMenuPage> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 1,
-        child: Scaffold(
-            appBar: AppBar(
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.black),
-                onPressed: () => Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CustRestaurantPage())),
-              ),
-              title: Text('Make an Order'),
-              centerTitle: true,
-              backgroundColor: Colors.blue,
-              actions: <Widget>[
-                FutureBuilder<int>(
+    return Scaffold(
+        body: Column(children: [
+      Stack(children: [
+        Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+                padding: EdgeInsets.only(top: 50, left: 20),
+                child: Ink(
+                  decoration: const ShapeDecoration(
+                    color: Colors.orange,
+                    shape: CircleBorder(),
+                  ),
+                  child: IconButton(
+                      onPressed: () => Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new CustRestaurantPage()),
+                          (route) => false),
+                      icon: Icon(Icons.arrow_back, color: Colors.white)),
+                ))),
+        Align(
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+                padding: EdgeInsets.only(top: 55, left: 20, right: 20),
+                child: Text("Menu Page",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30)))),
+        Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+                padding: EdgeInsets.only(top: 50, right: 20),
+                child: FutureBuilder<int>(
                     future: fetchCartQuantity(cust.CID),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
@@ -179,178 +198,23 @@ class _CustMenuPageState extends State<CustMenuPage> {
                         return Text(snapshot.error);
                       }
                       return Center(child: CircularProgressIndicator());
-                    })
-              ],
-            ),
-            body: Column(children: <Widget>[
-              SizedBox(
-                height: 200.0,
-                child: Scrollbar(
-                  isAlwaysShown: true,
-                  controller: _scrollController,
-                  child: FutureBuilder<CustRestDetail>(
-                      future: futureCustRestDetail,
-                      builder: (content, snapshot) {
-                        if (snapshot.hasData) {
-                          return Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: ListView(
-                              //crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Center(
-                                  child: Text(
-                                    snapshot.data.restaurantname,
-                                    style: TextStyle(
-                                      fontSize: 25.0,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Text(
-                                  'Address',
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text(
-                                  snapshot.data.address,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Text(
-                                  'Restaurant style',
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Text(
-                                  snapshot.data.restaurantstyle,
-                                  style: TextStyle(
-                                    fontSize: 20.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   height: 5.0,
-                                // ),
-                                // Text(
-                                //   '9am to 9pm',
-                                //   style: TextStyle(
-                                //     fontSize: 20.0,
-                                //     fontWeight: FontWeight.bold,
-                                //   ),
-                                // ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Text(
-                                  'Contact Us',
-                                ),
-                                SizedBox(
-                                  height: 10.0,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Icon(Icons.phone),
-                                    Text(
-                                      snapshot.data.telephoneNo,
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(
-                                  height: 20.0,
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Icon(Icons.email),
-                                    Text(
-                                      snapshot.data.email,
-                                      style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
-                        } else if (snapshot.hasError) {
-                          return Text("${snapshot.error}");
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      }),
-                ),
-              ),
-              SizedBox(
-                height: 50.0,
-                child: AppBar(
-                  backgroundColor: Colors.blue,
-                  bottom: TabBar(
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          'Menu List',
-                          style: TextStyle(fontSize: 20.0),
-                        ),
-                      ),
-                      //Tab(child: Text('Drinks'),),
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                  child: TabBarView(children: [
-                FutureBuilder(
-                    future: futureMenuList,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return menuListView(context, snapshot);
-                      } else if (snapshot.hasError) {
-                        return Text(snapshot.error);
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    })
-                // MaterialButton(
-                //   onPressed: () {},
-                //   padding: EdgeInsets.all(10.0),
-                //   child: Row(
-                //     children: <Widget>[
-                //       Expanded(
-                //         flex: 1,
-                //         child: CircleAvatar(
-                //           backgroundImage: AssetImage('assets/default.png'),
-                //           radius: 30.0,
-                //         ),
-                //       ),
-                //       Expanded(
-                //         flex: 2,
-                //         child: Text('Spicy Chicken McDeluxe'),
-                //       ),
-                //       Expanded(
-                //         flex: 1,
-                //         child: Text('RM 20.00'),
-                //       ),
-                //     ],
-                //   ),
-                // )
-              ]))
-            ])));
+                    })))
+      ]),
+      Expanded(
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: FutureBuilder(
+                future: futureMenuList,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return menuListView(context, snapshot);
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error);
+                  }
+                  return Center(child: CircularProgressIndicator());
+                })),
+      )
+    ]));
   }
 
   Widget menuListView(BuildContext context, AsyncSnapshot snapshot) {
@@ -361,30 +225,31 @@ class _CustMenuPageState extends State<CustMenuPage> {
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           return Card(
-            elevation: 10.0,
+            elevation: 4.0,
+            margin: EdgeInsets.only(bottom: 15),
             child: Column(
               children: <Widget>[
                 MaterialButton(
                   onPressed: () {},
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
                   child: Row(
                     children: <Widget>[
                       Expanded(
-                        flex: 1,
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage('assets/default.png'),
-                          radius: 30.0,
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Text(menus[index].itemName),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                            'RM ${menus[index].itemPrice.toStringAsFixed(2)}'),
-                      ),
+                          flex: 3,
+                          child: Column(children: [
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                menus[index].itemName,
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    'RM ${menus[index].itemPrice.toStringAsFixed(2)}',
+                                    style: TextStyle(fontSize: 18))),
+                          ])),
                       Expanded(
                         flex: 1,
                         child: IconButton(
@@ -415,7 +280,7 @@ class _CustMenuPageState extends State<CustMenuPage> {
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   child: Text(
-                                                      "Price: ${menus[index].itemPrice}\n"),
+                                                      "Price: RM${menus[index].itemPrice.toStringAsFixed(2)}\n"),
                                                 ),
                                                 Row(
                                                   mainAxisAlignment:

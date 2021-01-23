@@ -83,124 +83,178 @@ class _CustomerViewOrderPageState extends State<CustomerViewOrderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => new CustHomePage()),
-              (route) => false),
-        ),
-        title: Text('Order List'),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
+        body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => new CustHomePage()),
+                    (route) => false),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text("Order List",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
       ),
-      body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0.0, 0, 10.0),
-          child: FutureBuilder<CustDetail>(
-              future: futureCustDetail,
-              builder: (context, snapshot1) {
-                if (snapshot1.hasData) {
-                  return FutureBuilder<List<Orders>>(
-                      future: fetchOrderId(snapshot1.data.CID),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return orderIdListView(context, snapshot);
-                        } else if (snapshot.hasError) {
-                          return Text('${snapshot.error}');
-                        }
-                        return Center(child: CircularProgressIndicator());
-                      });
-                } else if (snapshot1.hasError) {
-                  return Text(snapshot1.error);
-                }
-                return Center(child: CircularProgressIndicator());
-              })),
-    );
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: FutureBuilder<CustDetail>(
+                  future: futureCustDetail,
+                  builder: (context, snapshot1) {
+                    if (snapshot1.hasData) {
+                      return FutureBuilder<List<Orders>>(
+                          future: fetchOrderId(snapshot1.data.CID),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return orderIdListView(context, snapshot);
+                            } else if (snapshot.hasError) {
+                              return Text('${snapshot.error}');
+                            }
+                            return Center(child: CircularProgressIndicator());
+                          });
+                    } else if (snapshot1.hasError) {
+                      return Text(snapshot1.error);
+                    }
+                    return Center(child: CircularProgressIndicator());
+                  }))),
+    ]));
   }
 
   Widget orderIdListView(BuildContext context, AsyncSnapshot snapshot) {
     List<Orders> orders = snapshot.data;
     return ListView.builder(
-        padding: EdgeInsets.fromLTRB(0, 5.0, 0, 10.0),
+        padding: EdgeInsets.fromLTRB(0, 10.0, 0, 10.0),
         itemCount: snapshot.data.length,
         scrollDirection: Axis.vertical,
         itemBuilder: (context, index) {
           return Card(
-            elevation: 4.0,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Order ID: ${orders[index].OID.toString()}',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                      ),
-                    ),
-                  ),
-                ),
-                Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Ordered Item(s):',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    )),
-                Divider(
-                  color: Colors.black,
-                ),
-                FutureBuilder<List<OrderItem>>(
-                    future: fetchOrder(orders[index].OID),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return orderListView(context, snapshot);
-                      } else if (snapshot.hasError) {
-                        return Text(snapshot.error);
-                      }
-                      return Center(child: CircularProgressIndicator());
-                    }),
-                Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Price: RM ${orders[index].totalPrice.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                        ),
-                      ),
-                    )),
-                Container(
-                    padding: EdgeInsets.all(5.0),
-                    child: Row(children: <Widget>[
-                      Expanded(
-                          flex: 2,
+              margin: EdgeInsets.only(bottom: 20),
+              elevation: 4.0,
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Row(children: <Widget>[
+                          Expanded(
+                            flex: 4,
+                            child: Text(
+                                "Order ID: ${orders[index].OID.toString()}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                )),
+                          ),
+                          Expanded(
+                              flex: 6,
+                              child: Text(
+                                "${DateFormat('dd-MM-yyyy hh:mm aa').format(orders[index].addedDate)}",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                ),
+                                textAlign: TextAlign.end,
+                              )),
+                        ])),
+                    Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
                           child: Text(
-                            "Date: ${DateFormat('dd-MM-yyyy hh:mm aa').format(orders[index].addedDate)}",
+                            'Ordered Item(s):',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 18.0,
                             ),
-                          )),
-                      Expanded(
-                        flex: 1,
-                        child: Text("${orders[index].status}",
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: getColor(orders[index].status)),
-                            textAlign: TextAlign.right),
-                      ),
-                    ]))
-              ],
-            ),
-          );
+                          ),
+                        )),
+                    Divider(
+                      color: Colors.black,
+                    ),
+                    FutureBuilder<List<OrderItem>>(
+                        future: fetchOrder(orders[index].OID),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return orderListView(context, snapshot);
+                          } else if (snapshot.hasError) {
+                            return Text(snapshot.error);
+                          }
+                          return Center(child: CircularProgressIndicator());
+                        }),
+                    Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  'Price:  ',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 10,
+                                child: Text(
+                                  'RM ${orders[index].totalPrice.toStringAsFixed(2)}',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              )
+                            ]))),
+                    Container(
+                        padding: EdgeInsets.all(5.0),
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(children: <Widget>[
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  'Address: ',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                  flex: 10,
+                                  child: Text(
+                                    '${orders[index].address}',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                    ),
+                                    textAlign: TextAlign.start,
+                                  )),
+                            ]))),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.all(5.0),
+                      child: Text("${orders[index].status}",
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: getColor(orders[index].status)),
+                          textAlign: TextAlign.right),
+                    ),
+                  ],
+                ),
+              ));
         });
   }
 

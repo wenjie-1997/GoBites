@@ -30,6 +30,7 @@ void main() {
       initialDelay: Duration(seconds: 5),
       inputData: {"data1": "value1", "data2": "value2"});
   runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
     initialRoute: '/',
     routes: {
       '/': (context) => Login(),

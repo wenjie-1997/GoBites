@@ -8,8 +8,6 @@ import 'package:demo/pages/customer/custRestaurantpage.dart';
 import 'package:demo/pages/customer/personalInfo.dart';
 import 'package:demo/pages/pageSizing.dart';
 import 'package:demo/pages/login.dart' as login;
-import 'package:workmanager/workmanager.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:demo/modules/local_notification.dart';
 
 CustDetail cust;
@@ -47,11 +45,12 @@ class CustHomePage extends StatefulWidget {
   _CustHomePageState createState() => _CustHomePageState();
 }
 
-fetchCustDetail() async {
+Future<CustDetail> fetchCustDetail() async {
   final response = await http_get('/customer/' + login.login_id);
 
   if (response.statusCode == 200) {
     cust = CustDetail.fromJson(jsonDecode(response.body));
+    return CustDetail.fromJson(jsonDecode(response.body));
   } else {
     // If the server did not return a 200 OK response,
     // then throw an exception.
@@ -62,17 +61,35 @@ fetchCustDetail() async {
 
 notification() async {
   var response = await http_get('/vieworderstatus/' + login.login_id);
-  var convert = json.decode(response.body);
-  if (convert['status'] == "DELIVERING") {
-    LocalNotification.DeliveryNotification(DateTime.now());
-  } else if (convert['status'] == "DONE") {
-    LocalNotification.DeliveredNotification(DateTime.now());
-  } else {
-    print("no message");
+  if (response.statusCode == 200) {
+    var convert = json.decode(response.body);
+    if (convert['status'] == "DELIVERING") {
+      if (convert['deliveryNotif'] == 0) {
+        LocalNotification.DeliveryNotification(DateTime.now());
+        await http_post('/deliveryNotification/' + login.login_id);
+      } else
+        print("delivery notification already shown once!");
+    } else if (convert['status'] == "DONE") {
+      if (convert['doneNotif'] == 0) {
+        LocalNotification.DeliveredNotification(DateTime.now());
+        await http_post('/doneNotification/' + login.login_id);
+      } else
+        print("delivered notification already shown once!");
+    } else {
+      print("no message");
+    }
   }
 }
 
 class _CustHomePageState extends State<CustHomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -91,139 +108,208 @@ class _CustHomePageState extends State<CustHomePage> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    final orderButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: SizeConfig.safeBlockVertical * 38,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => CustRestaurantPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.fastfood),
-              SizedBox(height: 10.0),
-              Text(
+    final orderButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CustRestaurantPage()));
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.fastfood,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
                 "Order Food",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
-            ],
-          ),
-        ));
+              )),
+        ]));
 
-    final personalDetailButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: SizeConfig.safeBlockVertical * 38,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PersonalInfoPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.person),
-              SizedBox(height: 10.0),
-              Text(
-                "Personal Detail",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
-            ],
-          ),
-        ));
+    // final personalDetailButton = Material(
+    //     elevation: 5.0,
+    //     color: Colors.blue,
+    //     child: MaterialButton(
+    //       height: 100.0,
+    //       minWidth: SizeConfig.safeBlockVertical * 38,
+    //       padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+    //       onPressed: () {
+    //         Navigator.push(context,
+    //             MaterialPageRoute(builder: (context) => PersonalInfoPage()));
+    //       },
+    //       child: Column(
+    //         children: <Widget>[
+    //           Icon(Icons.person),
+    //           SizedBox(height: 10.0),
+    //           Text(
+    //             "Personal Detail",
+    //             textAlign: TextAlign.center,
+    //             style: TextStyle(
+    //                 color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+    //           ),
+    //         ],
+    //       ),
+    //     ));
 
-    final viewOrderButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: SizeConfig.safeBlockVertical * 38,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CustomerViewOrderPage()));
-          },
-          child: Column(
-            children: <Widget>[
-              Icon(Icons.list),
-              SizedBox(height: 10.0),
-              Text(
-                "View Order",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
-            ],
-          ),
-        ));
+    final viewOrderButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => CustomerViewOrderPage()));
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.list,
+                size: 40,
+              )),
+          Expanded(
+            flex: 6,
+            child: Text(
+              "View Order",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+            ),
+          )
+        ]));
 
-    final giveFeedbackButton = Material(
-        elevation: 5.0,
-        color: Colors.blue,
-        child: MaterialButton(
-          height: 100.0,
-          minWidth: SizeConfig.safeBlockVertical * 38,
-          padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CustomerOrderRatingPage()));
-          },
-          child: Column(
+    final giveFeedbackButton = FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CustomerOrderRatingPage()));
+        },
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.feedback,
+                size: 40,
+              )),
+          Expanded(
+            flex: 6,
+            child: Text(
+              "Give Feedback",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+            ),
+          )
+        ]));
+
+    final mainPage = Center(
+      child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 50),
+          height: SizeConfig.safeBlockVertical * 100,
+          child: Stack(
+            // crossAxisAlignment: CrossAxisAlignment.center,
+            // mainAxisSize: MainAxisSize.max,
+            // mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              Icon(Icons.feedback),
-              SizedBox(height: 10.0),
-              Text(
-                "Give Feedback",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-              ),
+              Padding(
+                  padding: EdgeInsets.only(top: 70),
+                  child: Column(children: [
+                    FutureBuilder<CustDetail>(
+                        future: fetchCustDetail(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                    'Welcome to GoBites, ${snapshot.data.custname.split(' ')[0]}.',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 40.0,
+                                      color: Colors.black,
+                                    )));
+                          }
+                          return Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text('Welcome to GoBites',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 40.0,
+                                    color: Colors.black,
+                                  )));
+                        }),
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text('\nOrder your food now!!',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontSize: 20.0,
+                              color: Colors.grey[800],
+                            )))
+                  ])),
+              Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      orderButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                      viewOrderButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                      giveFeedbackButton,
+                      SizedBox(height: SizeConfig.safeBlockVertical * 3),
+                    ],
+                  ))
             ],
-          ),
-        ));
+          )),
+    );
+
+    const TextStyle optionStyle =
+        TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+    List<Widget> _widgetOptions = <Widget>[mainPage, PersonalInfoPage()];
 
     return Scaffold(
-        resizeToAvoidBottomPadding: false,
-        body: Center(
-          child: Container(
-            height: SizeConfig.safeBlockVertical * 100,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10.0, 40.0, 10.0, 10.0),
-              child: Column(
-                children: <Widget>[
-                  Center(
-                    child: Text('GoBites',
-                        style: TextStyle(
-                            fontSize: 50.0,
-                            letterSpacing: 3.0,
-                            color: Colors.black,
-                            fontFamily: 'Vibur')),
-                  ),
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  orderButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  personalDetailButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  viewOrderButton,
-                  SizedBox(height: SizeConfig.safeBlockVertical * 4),
-                  giveFeedbackButton,
-                ],
-              ),
-            ),
+      resizeToAvoidBottomPadding: false,
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
-        ));
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.amber[800],
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }

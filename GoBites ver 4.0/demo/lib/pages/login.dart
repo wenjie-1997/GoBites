@@ -12,6 +12,7 @@ class Login extends StatefulWidget {
   _LoginState createState() => _LoginState();
 }
 
+// ignore: non_constant_identifier_names
 String login_id;
 
 class _LoginState extends State<Login> {
@@ -34,9 +35,19 @@ class _LoginState extends State<Login> {
       controller: _username,
       obscureText: false,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        prefixIcon: Icon(Icons.person),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         hintText: "Username",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderSide: BorderSide(color: Colors.grey, width: 2),
+        ),
         errorText: _validateEmail ? 'Username Can\'t Be Empty' : null,
       ),
     );
@@ -45,9 +56,19 @@ class _LoginState extends State<Login> {
       controller: _password,
       obscureText: true,
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+        contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
         hintText: "Password",
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(32.0)),
+        prefixIcon: Icon(Icons.vpn_key),
+        filled: true,
+        fillColor: Colors.white,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(12.0)),
+          borderSide: BorderSide(color: Colors.grey, width: 2),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+          borderSide: BorderSide(color: Colors.grey, width: 2),
+        ),
         errorText: _validatePassword ? 'Password Can\'t Be Empty' : null,
       ),
     );
@@ -81,34 +102,40 @@ class _LoginState extends State<Login> {
       }
     }
 
-    final loginButton = Material(
-        elevation: 5.0,
-        borderRadius: BorderRadius.circular(30.0),
-        color: Colors.blue,
-        child: MaterialButton(
-          padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          onPressed: () {
-            setState(() {
-              _username.text.isEmpty
-                  ? _validateEmail = true
-                  : _validateEmail = false;
-            });
-            setState(() {
-              _password.text.isEmpty
-                  ? _validatePassword = true
-                  : _validatePassword = false;
-            });
-            if (!_validateEmail && !_validatePassword) {
-              checkCredential();
-            }
-          },
-          child: Text(
-            "Login",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-          ),
-        ));
+    final loginButton = Row(children: [
+      Expanded(
+          child: Container(
+              child: Material(
+                  elevation: 5.0,
+                  borderRadius: BorderRadius.circular(30.0),
+                  color: Colors.orange,
+                  child: MaterialButton(
+                    padding: EdgeInsets.all(10),
+                    onPressed: () {
+                      setState(() {
+                        _username.text.isEmpty
+                            ? _validateEmail = true
+                            : _validateEmail = false;
+                      });
+                      setState(() {
+                        _password.text.isEmpty
+                            ? _validatePassword = true
+                            : _validatePassword = false;
+                      });
+                      if (!_validateEmail && !_validatePassword) {
+                        checkCredential();
+                      }
+                    },
+                    child: Text(
+                      "Login",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0,
+                          letterSpacing: 2.0),
+                    ),
+                  ))))
+    ]);
 
     final registrationlink = Container(
       child: InkWell(
@@ -123,38 +150,45 @@ class _LoginState extends State<Login> {
               .push(MaterialPageRoute(builder: (context) => Register()))),
     );
 
-    return Scaffold(
-      body: Center(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('GoBites',
-                    style: TextStyle(
-                        fontSize: 50.0,
-                        letterSpacing: 3.0,
-                        color: Colors.black,
-                        fontFamily: 'Vibur')),
-                SizedBox(height: 45.0),
-                usernameField,
-                SizedBox(height: 25.0),
-                passwordField,
-                SizedBox(
-                  height: 35.0,
+    return Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [Colors.yellow[100], Colors.orange[200]])),
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          body: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(36.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('GoBites',
+                        style: TextStyle(
+                            fontSize: 50.0,
+                            letterSpacing: 3.0,
+                            color: Colors.black,
+                            fontFamily: 'Vibur')),
+                    SizedBox(height: 80.0),
+                    usernameField,
+                    SizedBox(height: 20.0),
+                    passwordField,
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    loginButton,
+                    SizedBox(
+                      height: 15.0,
+                    ),
+                    registrationlink,
+                  ],
                 ),
-                loginButton,
-                SizedBox(
-                  height: 15.0,
-                ),
-                registrationlink,
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:demo/modules/http.dart';
 import 'package:demo/modules/restdetail.dart';
-import 'package:demo/pages/restaurant/restaurantInfo.dart';
+import 'package:demo/pages/restaurant/restHomepage.dart';
 import 'package:flutter/material.dart';
+import '../registration.dart';
 
 String username;
 String password;
@@ -51,258 +52,291 @@ class _RestInfoUpdatePageState extends State<RestInfoUpdatePage> {
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    new RestaurantPersonalInfoPage()),
+                                builder: (context) => new RestHomePage()),
                             (route) => false);
                       })
                 ],
               ));
-    } else {
-      // AlertDialog(
-      //   title: Text(status),
-      //   actions: <Widget>[
-      //     TextButton(
-      //       child: Text('Continue'),
-      //       onPressed: () {
-      //         Navigator.of(context).pop();
-      //       },
-      //     ),
-      //   ],
-      // );
-    }
+    } else {}
   }
 
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () => Navigator.pop(context)),
-          backgroundColor: Colors.blue,
-          title: Text('Update Detail'),
-          centerTitle: true,
-        ),
         body: SingleChildScrollView(
-            child: Form(
+            child: Column(children: [
+      Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+              padding: EdgeInsets.only(top: 50, left: 20),
+              child: Ink(
+                decoration: const ShapeDecoration(
+                  color: Colors.orange,
+                  shape: CircleBorder(),
+                ),
+                child: IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(Icons.arrow_back, color: Colors.white)),
+              ))),
+      Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                    initialValue: widget.rest.username,
-                    decoration: const InputDecoration(
-                      labelText: 'Username',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (String value) {
-                      setState(() {
-                        username = value;
-                      });
-                    },
-                  ),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                      initialValue: widget.rest.password,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onChanged: (String value) {
-                        setState(() {
-                          password = value;
-                        });
-                      }),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                      initialValue: widget.rest.restaurantname,
-                      decoration: const InputDecoration(
-                        labelText: 'Restaurant Name',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onChanged: (String value) {
-                        setState(() {
-                          restaurantname = value;
-                        });
-                      }),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                      initialValue: widget.rest.email,
-                      decoration: const InputDecoration(
-                        labelText: 'E-mail Address',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onChanged: (String value) {
-                        setState(() {
-                          email = value;
-                        });
-                      }),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                      initialValue: widget.rest.ownername,
-                      decoration: const InputDecoration(
-                        labelText: 'Restaurant Owner Name',
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                        return null;
-                      },
-                      onChanged: (String value) {
-                        setState(() {
-                          ownername = value;
-                        });
-                      }),
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        child: Text(
-                          'Restaurant type/style',
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: DropdownButton<String>(
-                        value: restaurantstyle,
-                        underline: Container(
-                          height: 2,
-                          color: Colors.deepPurpleAccent,
-                        ),
-                        onChanged: (String newValue) {
-                          setState(() {
-                            restaurantstyle = newValue;
-                          });
-                        },
-                        items: <String>[
-                          'Malay',
-                          'Chinese',
-                          'Indian',
-                          'Western',
-                          'Arabic',
-                          'Others'
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-                  ],
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Update Details",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 30)),
                 ),
-              ),
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(children: <Widget>[
-                  TextFormField(
-                    maxLines: 6,
-                    initialValue: widget.rest.address,
-                    decoration: const InputDecoration(
-                      labelText: 'Address',
-                    ),
-                    validator: (value) {
-                      if (value.isEmpty) {
-                        return 'Please enter some text';
-                      }
-                      return null;
-                    },
-                    onChanged: (String value) {
-                      setState(() {
-                        address = value;
-                      });
-                    },
-                  ),
-                ]),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20, bottom: 10),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.red,
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
-                      if (username == null) {
-                        username = widget.rest.username;
-                      }
-                      if (password == null) {
-                        password = widget.rest.password;
-                      }
-                      if (email == null) {
-                        email = widget.rest.email;
-                      }
-                      if (address == null) {
-                        address = widget.rest.address;
-                      }
-                      if (telephoneNo == null) {
-                        telephoneNo = widget.rest.telephoneNo;
-                      }
-                      if (restaurantname == null) {
-                        restaurantname = widget.rest.restaurantname;
-                      }
-                      if (restaurantstyle == null) {
-                        restaurantstyle = widget.rest.restaurantstyle;
-                      }
-                      if (ownername == null) {
-                        ownername = widget.rest.ownername;
-                      }
-                      restUpdate();
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Username",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  enabled: false,
+                  initialValue: widget.rest.username,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your username';
                     }
+                    return null;
                   },
-                  child: Text('Update'),
+                  onChanged: (String value) {
+                    setState(() {
+                      username = value;
+                    });
+                  },
                 ),
-              ),
-            ],
-          ),
-        )));
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Restaurant Name",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  initialValue: widget.rest.restaurantname,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your restaurant name';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      custname = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Email",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  initialValue: widget.rest.email,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Owner Name",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  initialValue: widget.rest.ownername,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the owner name';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      email = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Restaurant Type/Style",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                DropdownButton<String>(
+                  value: restaurantstyle,
+                  underline: Container(
+                    height: 2,
+                    color: Colors.deepPurpleAccent,
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      restaurantstyle = newValue;
+                    });
+                  },
+                  items: <String>[
+                    'Malay',
+                    'Chinese',
+                    'Indian',
+                    'Western',
+                    'Arabic',
+                    'Others'
+                  ].map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Address",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  maxLines: 6,
+                  initialValue: widget.rest.address,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter your address';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      address = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Telephone No.",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                TextFormField(
+                  initialValue: widget.rest.telephoneNo,
+                  decoration: textFieldDecoration(),
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter the telephone no.';
+                    }
+                    return null;
+                  },
+                  onChanged: (String value) {
+                    setState(() {
+                      telephoneNo = value;
+                    });
+                  },
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 10),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.orange,
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        if (username == null) {
+                          username = widget.rest.username;
+                        }
+                        if (password == null) {
+                          password = widget.rest.password;
+                        }
+                        if (email == null) {
+                          email = widget.rest.email;
+                        }
+                        if (address == null) {
+                          address = widget.rest.address;
+                        }
+                        if (telephoneNo == null) {
+                          telephoneNo = widget.rest.telephoneNo;
+                        }
+                        if (restaurantname == null) {
+                          restaurantname = widget.rest.restaurantname;
+                        }
+                        if (restaurantstyle == null) {
+                          restaurantstyle = widget.rest.restaurantstyle;
+                        }
+                        if (ownername == null) {
+                          ownername = widget.rest.ownername;
+                        }
+                        restUpdate();
+                      }
+                    },
+                    child: Text('Update'),
+                  ),
+                ),
+              ],
+            ),
+          )),
+    ])));
   }
 }

@@ -1,8 +1,9 @@
 import 'dart:convert';
+import 'dart:ui';
 import 'package:demo/modules/cart.dart';
 import 'package:demo/modules/custdetail.dart';
 import 'package:demo/modules/orders.dart';
-import 'package:demo/pages/customer/orderConfirmation.dart';
+import 'package:demo/pages/customer/checkoutpage.dart';
 import 'package:flutter/material.dart';
 import 'package:demo/modules/http.dart';
 import 'custHomepage.dart';
@@ -12,39 +13,29 @@ class CartPage extends StatefulWidget {
   _CartPageState createState() => _CartPageState();
 }
 
-class _CartPageState extends State<CartPage> {
-  double _totalPrice;
-  Future<CustDetail> futureCustDetail;
+List<Cart> parseCart(String responseBody) {
+  final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
 
-  moveToOrder() async {
-    final msg = jsonEncode({
-      "CID": cust.CID,
-    });
-    final result = await http_post("/movetoorder", msg);
-    Orders orders = Orders.fromJson(jsonDecode(result.body));
-    //String status = loginResult.getStatus();
-    if (orders.OID != null) {
-      showDialog<void>(
-          context: context,
-          barrierDismissible: false,
-          builder: (BuildContext context) => AlertDialog(
-                title: Text("Order Successful"),
-                actions: <Widget>[
-                  TextButton(
-                    child: Text('Continue'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  OrderConfirmPage(oid: orders.OID)));
-                    },
-                  )
-                ],
-              ));
-    }
+  return parsed.map<Cart>((json) => Cart.fromJson(json)).toList();
+}
+
+Future<List<Cart>> fetchCart() async {
+  final response = await http_get('/viewcart/' + cust.CID.toString());
+  if (response.statusCode == 200) {
+    // If the server did return a 200 OK response,
+    // then parse the JSON.
+    return parseCart(response.body);
+  } else {
+    // If the server did not return a 200 OK response,
+    // then throw an exception.
+    throw Exception('Failed to load, code = ' + response.statusCode.toString());
   }
+}
+
+class _CartPageState extends State<CartPage> {
+  Future<CustDetail> futureCustDetail;
+  bool _isButtonDisabled;
+  double _totalPrice;
 
   cartItemDelete(int kid) async {
     final msg = jsonEncode({
@@ -92,59 +83,62 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  List<Cart> parseCart(String responseBody) {
-    final parsed = json.decode(responseBody).cast<Map<String, dynamic>>();
-
-    return parsed.map<Cart>((json) => Cart.fromJson(json)).toList();
-  }
-
-  Future<List<Cart>> fetchCart() async {
-    final response = await http_get('/viewcart/' + cust.CID.toString());
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-      return parseCart(response.body);
-    } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception(
-          'Failed to load, code = ' + response.statusCode.toString());
-    }
-  }
-
   @override
   void initState() {
-    // TODO: implement initState
+    _isButtonDisabled = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.black),
-              onPressed: () => Navigator.of(context).pop()),
-          title: Text('My Cart'),
-          centerTitle: true,
-          backgroundColor: Colors.blue,
-        ),
-        body: FutureBuilder(
-          future: fetchCart(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              _totalPrice = 0;
-              List<Cart> carts = snapshot.data;
-              for (var i = 0; i < carts.length; i++) {
-                _totalPrice += (carts[i].itemPrice * carts[i].quantity);
-              }
-              return cartListView(context, snapshot);
-            } else if (snapshot.hasError) {
-              return Text(snapshot.error);
-            }
-            return Center(child: CircularProgressIndicator());
-          },
-        ));
+        body: Column(children: [
+      Padding(
+        padding: EdgeInsets.only(top: 40, left: 20),
+        child: Stack(children: [
+          Ink(
+            decoration: const ShapeDecoration(
+              color: Colors.orange,
+              shape: CircleBorder(),
+            ),
+            child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: Icon(Icons.arrow_back, color: Colors.white)),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10),
+            child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text("My Cart",
+                    textAlign: TextAlign.center,
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 30))),
+          )
+        ]),
+      ),
+      Expanded(
+          child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: FutureBuilder<List<Cart>>(
+                future: fetchCart(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    _totalPrice = 0;
+                    List<Cart> carts = snapshot.data;
+                    for (var i = 0; i < carts.length; i++) {
+                      _totalPrice += (carts[i].itemPrice * carts[i].quantity);
+                    }
+                    if (_totalPrice == 0) {
+                      _isButtonDisabled = true;
+                    }
+                    return cartListView(context, snapshot);
+                  } else if (snapshot.hasError) {
+                    return Text(snapshot.error);
+                  }
+                  return Center(child: CircularProgressIndicator());
+                },
+              ))),
+    ]));
   }
 
   Widget cartListView(BuildContext context, AsyncSnapshot snapshot) {
@@ -210,42 +204,52 @@ class _CartPageState extends State<CartPage> {
       Align(
         alignment: Alignment.bottomCenter,
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          margin: EdgeInsets.symmetric(horizontal: 5, vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 10),
           width: double.infinity,
           child: RaisedButton(
             child: Text(
               'Total (RM ${_totalPrice.toStringAsFixed(2)}) \n Check Out',
               textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
             ),
             onPressed: () {
+              if (_isButtonDisabled) {
+                return null;
+              }
               if (_totalPrice != 0) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text("Check Out"),
-                      content: Text(
-                          "Are you sure to check out? The process is irreversible."),
-                      actions: [
-                        FlatButton(
-                          child: Text("Cancel"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Yes"),
-                          onPressed: () {
-                            moveToOrder();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
+                return Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            Checkoutpage(totalPrice: _totalPrice)));
+                // showDialog(
+                //   context: context,
+                //   builder: (BuildContext context) {
+                //     return AlertDialog(
+                //       title: Text("Check Out"),
+                //       content: Text(
+                //           "Are you sure to check out? The process is irreversible."),
+                //       actions: [
+                //         FlatButton(
+                //           child: Text("Cancel"),
+                //           onPressed: () {
+                //             Navigator.pop(context);
+                //           },
+                //         ),
+                //         FlatButton(
+                //           child: Text("Yes"),
+                //           onPressed: () {
+                //             moveToOrder();
+                //           },
+                //         ),
+                //       ],
+                //     );
+                //   },
+                // );
               }
             },
-            color: Colors.blue,
+            color: Colors.orange,
             textColor: Colors.white,
           ),
         ),
@@ -270,7 +274,7 @@ class _CartPageState extends State<CartPage> {
 
     // set up the AlertDialog
     AlertDialog alert = AlertDialog(
-      title: Text("Delete Itm"),
+      title: Text("Delete Item"),
       content: Text("Are you sure to delete this item?"),
       actions: [
         cancelButton,

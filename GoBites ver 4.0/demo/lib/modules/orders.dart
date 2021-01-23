@@ -7,6 +7,7 @@ class Orders {
   final DateTime addedDate;
   final double rating;
   final String comment;
+  final String address;
   final int hasFeedback;
 
   Orders(
@@ -16,6 +17,7 @@ class Orders {
       this.addedDate,
       this.rating,
       this.comment,
+      this.address,
       this.hasFeedback});
 
   factory Orders.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class Orders {
         rating:
             ((json['rating'] is int) ? json['rating'] + .0 : json['rating']),
         comment: json['comment'],
+        address: json['address'],
         hasFeedback: json['hasFeedback']);
   }
 }

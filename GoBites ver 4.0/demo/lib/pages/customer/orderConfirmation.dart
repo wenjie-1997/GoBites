@@ -3,6 +3,7 @@ import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'custHomepage.dart';
 
 Orders orders;
@@ -63,108 +64,170 @@ class _OrderConfirmPageState extends State<OrderConfirmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: new AppBar(
-        leading: new Container(),
-        title: Text('Order Confirmation'),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-      ),
       body: FutureBuilder<Orders>(
           future: futureOrder,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               orders = snapshot.data;
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Stack(
-                  children: <Widget>[
-                    ListView(
+              return Card(
+                  elevation: 5,
+                  margin:
+                      EdgeInsets.only(top: 40, bottom: 20, left: 20, right: 20),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10.0),
+                    child: Stack(
                       children: <Widget>[
-                        SizedBox(
-                          height: 10.0,
+                        ListView(
+                          children: <Widget>[
+                            Text(
+                              "Order Successful!",
+                              style: TextStyle(
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: 20.0,
+                            ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 4,
+                                  child: Text(
+                                    "Order ID: ${orders.OID.toString()}",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 5,
+                                  child: Text(
+                                    "${DateFormat('dd-MM-yyyy hh:mm aa').format(orders.addedDate)}",
+                                    style: TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Text(
+                              "Ordered Item(s):",
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                            Divider(
+                              color: Colors.black,
+                            ),
+                            Container(
+                              height: 220,
+                              child: FutureBuilder(
+                                  future: futureOrderList,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      return orderListView(context, snapshot);
+                                    } else if (snapshot.hasError) {
+                                      return Text(snapshot.error);
+                                    }
+                                    return Center(
+                                        child: CircularProgressIndicator());
+                                  }),
+                            ),
+                            SizedBox(
+                              height: 10.0,
+                            ),
+                          ],
                         ),
-                        Text(
-                          "Order Successful!",
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "Order ID: ${orders.OID.toString()}",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "Ordered Item",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        Divider(
-                          color: Colors.black,
-                        ),
-                        FutureBuilder(
-                            future: futureOrderList,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                return orderListView(context, snapshot);
-                              } else if (snapshot.hasError) {
-                                return Text(snapshot.error);
-                              }
-                              return Center(child: CircularProgressIndicator());
-                            }),
-                        SizedBox(
-                          height: 20.0,
-                        ),
-                        Text(
-                          "Total Price: RM ${orders.totalPrice.toStringAsFixed(2)}",
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.max,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Row(
+                                children: [
+                                  Expanded(
+                                      flex: 4,
+                                      child: Text(
+                                        "Total Price",
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                  Expanded(
+                                      flex: 9,
+                                      child: Text(
+                                        "RM ${orders.totalPrice.toStringAsFixed(2)}",
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 10.0,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    flex: 4,
+                                    child: Text(
+                                      "Address",
+                                      style: TextStyle(
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      flex: 9,
+                                      child: Text(
+                                        "${orders.address}",
+                                        style: TextStyle(
+                                          fontSize: 18.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )),
+                                ],
+                              ),
+                              Container(
+                                margin: EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                width: double.infinity,
+                                child: RaisedButton(
+                                  child: Text(
+                                    'Continue',
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                CustHomePage()),
+                                        (route) => false);
+                                  },
+                                  color: Colors.orange,
+                                  textColor: Colors.white,
+                                ),
+                              ),
+                            ])
                       ],
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                        width: double.infinity,
-                        child: RaisedButton(
-                          child: Text(
-                            'Continue',
-                            textAlign: TextAlign.center,
-                          ),
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CustHomePage()),
-                                (route) => false);
-                          },
-                          color: Colors.blue,
-                          textColor: Colors.white,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
+                  ));
             } else if (snapshot.hasError) {
               return Text("${snapshot.error}");
             }

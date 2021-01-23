@@ -5,6 +5,8 @@ import 'package:demo/modules/menu.dart';
 import 'package:demo/pages/restaurant/restMenupage.dart';
 import 'package:flutter/material.dart';
 
+import '../registration.dart';
+
 class RestMenuUpdatePage extends StatefulWidget {
   final Menu menu;
   RestMenuUpdatePage({Key key, @required this.menu}) : super(key: key);
@@ -80,114 +82,158 @@ class _RestMenuUpdatePageState extends State<RestMenuUpdatePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
-        ),
-        backgroundColor: Colors.blue,
-        title: Text('Update Menu'),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-          child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemName,
-                  decoration: const InputDecoration(
-                    labelText: 'Menu name',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemName = value;
-                    });
-                  },
-                ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemPrice.toStringAsFixed(2),
-                  decoration: const InputDecoration(
-                    labelText: 'Price (RM)',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some digit';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemPrice = double.parse(value);
-                    });
-                  },
-                ),
-              ]),
-            ),
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Column(children: <Widget>[
-                TextFormField(
-                  initialValue: widget.menu.itemDesc,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    labelText: 'Description',
-                  ),
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  onChanged: (String value) {
-                    setState(() {
-                      itemDesc = value;
-                    });
-                  },
-                ),
-              ]),
+        body: SingleChildScrollView(
+      child: Column(children: [
+        Padding(
+          padding: EdgeInsets.only(top: 40, left: 20),
+          child: Stack(children: [
+            Ink(
+              decoration: const ShapeDecoration(
+                color: Colors.orange,
+                shape: CircleBorder(),
+              ),
+              child: IconButton(
+                  onPressed: () => Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              new RestMenuPage()),
+                      (route) => false),
+                  icon: Icon(Icons.arrow_back, color: Colors.white)),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 20, bottom: 10),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.red,
-                ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    if (itemName == null) {
-                      itemName = widget.menu.itemName;
-                    }
-                    if (itemPrice == null) {
-                      itemPrice = widget.menu.itemPrice;
-                    }
-                    if (itemDesc == null) {
-                      itemDesc = widget.menu.itemDesc;
-                    }
-                    menuUpdate();
-                  }
-                },
-                child: Text('Update'),
-              ),
-            ),
-          ],
+              padding: EdgeInsets.only(top: 10),
+              child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text("Update Menu",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 30))),
+            )
+          ]),
         ),
-      )),
-    );
+        Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(10.0),
+                child: Column(children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Menu name",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    initialValue: widget.menu.itemName,
+                    decoration: textFieldDecoration(),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the name';
+                      }
+                      return null;
+                    },
+                    onChanged: (String value) {
+                      setState(() {
+                        itemName = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Price (RM)",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    initialValue: widget.menu.itemPrice.toStringAsFixed(2),
+                    decoration: textFieldDecoration(),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the price';
+                      }
+                      return null;
+                    },
+                    onChanged: (String value) {
+                      setState(() {
+                        itemPrice = double.parse(value);
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("Description",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15)),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  TextFormField(
+                    maxLines: 3,
+                    initialValue: widget.menu.itemDesc,
+                    decoration: textFieldDecoration(),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter the description';
+                      }
+                      return null;
+                    },
+                    onChanged: (String value) {
+                      setState(() {
+                        itemDesc = value;
+                      });
+                    },
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20, bottom: 10),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.orange,
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          if (itemName == null) {
+                            itemName = widget.menu.itemName;
+                          }
+                          if (itemPrice == null) {
+                            itemPrice = widget.menu.itemPrice;
+                          }
+                          if (itemDesc == null) {
+                            itemDesc = widget.menu.itemDesc;
+                          }
+                          menuUpdate();
+                        }
+                      },
+                      child: Text('Update'),
+                    ),
+                  ),
+                ]),
+              ),
+            ],
+          ),
+        )
+      ]),
+    ));
   }
 }

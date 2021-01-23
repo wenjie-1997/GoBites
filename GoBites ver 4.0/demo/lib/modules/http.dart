@@ -7,7 +7,7 @@ class RequestResult {
 }
 
 const PROTOCOL = 'http';
-const DOMAIN = 'go-bites-server.herokuapp.com/mobile/api';
+const DOMAIN = '192.168.68.106:8000';
 
 Future<http.Response> http_get(String route) async {
   //var dataStr = jsonEncode(data);

@@ -1,11 +1,8 @@
 import 'dart:convert';
 import 'package:demo/modules/orderItem.dart';
 import 'package:demo/modules/orders.dart';
-import 'package:demo/modules/custdetail.dart';
-import 'package:demo/pages/login.dart' as login;
 import 'package:demo/modules/http.dart';
 import 'package:flutter/material.dart';
-import 'custViewOrderpage.dart';
 
 class CustomerViewOrderDetailPage extends StatefulWidget {
   final Orders order;
