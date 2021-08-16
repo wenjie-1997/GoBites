@@ -6,11 +6,10 @@ import 'auth_service.dart';
 class AuthServiceRest implements AuthService {
   RestService get rest => dependency();
 
-  Future<User> authenticate({String login, String password}) async {
-    final List json = await rest.get('users?login=$login&&password=$password');
-    if (json == null || json.length == 0) return null;
-
-    final _user = User.fromJson(json[0]);
-    return _user;
+  Future<User> checkCredential({String username, String password}) async {
+    final json = await rest
+        .post("auth/login", data: {'username': username, 'password': password});
+    if (json['user'] == null) return null;
+    return User.fromJson(json['user']);
   }
 }

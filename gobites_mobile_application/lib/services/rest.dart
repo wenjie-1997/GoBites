@@ -21,7 +21,7 @@ class RestService {
     final response = await http.post(Uri.parse('$_baseUrl/$endpoint'),
         headers: {'Content-Type': 'application/json'}, body: jsonEncode(data));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 201 || response.statusCode == 200) {
       return jsonDecode(response.body);
     }
     throw response;

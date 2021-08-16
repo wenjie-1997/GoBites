@@ -11,6 +11,6 @@ class UserViewmodel extends Viewmodel {
   set user(value) => _user = value;
   bool get isUserSignedIn => _user != null;
 
-  void authenticate(User user) async => _user =
-      await _service.authenticate(login: user.login, password: user.password);
+  // void authenticate(User user) async => _user =
+  //     await _service.authenticate(login: user.login, password: user.password);
 }

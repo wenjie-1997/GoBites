@@ -1,53 +1,52 @@
-import '../../app/dependencies.dart';
-import '../../services/auth/auth_service.dart';
-import '../../models/user.dart';
+import 'package:flutter/material.dart';
+import 'package:gobites/app/dependencies.dart';
+import 'package:gobites/models/user.dart';
+import 'package:gobites/services/auth/auth_service.dart';
+
+// import '../../app/dependencies.dart';
+// import '../../models/user.dart';
 import '../viewmodel.dart';
 
 class LoginViewmodel extends Viewmodel {
   AuthService get _service => dependency();
-  User _user = User();
-  bool _showPassword = false;
-  bool _showErrorMessage = false;
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  bool validateEmail = false;
+  bool validatePassword = false;
 
-  get user => _user;
-  set user(value) => _user = value;
+  LoginViewmodel();
 
-  get showPassword => _showPassword;
-  set showPassword(value) {
-    turnBusy();
-    _showPassword = value;
-    turnIdle();
+  Future<User> checkCredential() async {
+    return await _service.checkCredential(
+        username: usernameController.text, password: passwordController.text);
   }
+  // Future checkCredential() async {
+  //   final msg =
+  //       jsonEncode({"username": _username.text, "password": _password.text});
+  //   final result = await http_post("/login", msg);
+  //   loginResult = LoginResult.fromJson(jsonDecode(result.body));
+  //   if (loginResult.status == "Login Sucessful as Customer") {
+  //     login_id = loginResult.id;
+  //     Navigator.push(context,
+  //         MaterialPageRoute(builder: (context) => CustomerHomePage()));
+  //   } else if (loginResult.status == "Login Sucessful as Restaurant") {
+  //     login_id = loginResult.id;
+  //     Navigator.push(
+  //         context, MaterialPageRoute(builder: (context) => RestHomePage()));
+  //   } else {
+  //     showDialog<void>(
+  //         context: context,
+  //         barrierDismissible: false,
+  //         builder: (BuildContext context) => AlertDialog(
+  //               title:
+  //                   Text("Invalid username or password, please try again."),
+  //               actions: <Widget>[
+  //                 TextButton(
+  //                     child: Text('Continue'),
+  //                     onPressed: () => Navigator.of(context).pop()),
+  //               ],
+  //             ));
+  //   }
+  // }
 
-  get showErrorMessage => _showErrorMessage;
-  set showErrorMessage(value) {
-    turnBusy();
-    _showErrorMessage = value;
-    turnIdle();
-  }
-
-  get username => _user.login;
-  set username(value) {
-    turnBusy();
-    _showErrorMessage = false;
-    _user.login = value;
-    turnIdle();
-  }
-
-  get password => _user.password;
-  set password(value) {
-    turnBusy();
-    _showErrorMessage = false;
-    _user.password = value;
-    turnIdle();
-  }
-
-  Future<User> authenticate() async {
-    turnBusy();
-    final User _user =
-        await _service.authenticate(login: username, password: password);
-    if (_user == null) _showErrorMessage = true;
-    turnIdle();
-    return _user;
-  }
 }
