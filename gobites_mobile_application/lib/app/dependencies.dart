@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:gobites/screens/login/login_viewmodel.dart';
 import 'package:gobites/screens/register/register_viewmodel.dart';
+import 'package:gobites/services/register/register_service.dart';
+import 'package:gobites/services/register/register_service_rest.dart';
 
 import '../services/rest.dart';
 
@@ -20,6 +22,7 @@ void init() {
 
   dependency.registerLazySingleton<CounterService>(() => CounterServiceRest());
   dependency.registerLazySingleton<AuthService>(() => AuthServiceRest());
+  dependency.registerLazySingleton<RegisterSevice>(() => RegisterServiceRest());
 
   // Viewmodels
   dependency.registerLazySingleton(() => LoginViewmodel());

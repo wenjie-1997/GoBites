@@ -20,33 +20,4 @@ class LoginViewmodel extends Viewmodel {
     return await _service.checkCredential(
         username: usernameController.text, password: passwordController.text);
   }
-  // Future checkCredential() async {
-  //   final msg =
-  //       jsonEncode({"username": _username.text, "password": _password.text});
-  //   final result = await http_post("/login", msg);
-  //   loginResult = LoginResult.fromJson(jsonDecode(result.body));
-  //   if (loginResult.status == "Login Sucessful as Customer") {
-  //     login_id = loginResult.id;
-  //     Navigator.push(context,
-  //         MaterialPageRoute(builder: (context) => CustomerHomePage()));
-  //   } else if (loginResult.status == "Login Sucessful as Restaurant") {
-  //     login_id = loginResult.id;
-  //     Navigator.push(
-  //         context, MaterialPageRoute(builder: (context) => RestHomePage()));
-  //   } else {
-  //     showDialog<void>(
-  //         context: context,
-  //         barrierDismissible: false,
-  //         builder: (BuildContext context) => AlertDialog(
-  //               title:
-  //                   Text("Invalid username or password, please try again."),
-  //               actions: <Widget>[
-  //                 TextButton(
-  //                     child: Text('Continue'),
-  //                     onPressed: () => Navigator.of(context).pop()),
-  //               ],
-  //             ));
-  //   }
-  // }
-
 }

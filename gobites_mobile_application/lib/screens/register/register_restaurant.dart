@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 
-class RestRegistrationForm extends StatefulWidget {
-  @override
-  RestRegistrationFormState createState() {
-    return RestRegistrationFormState();
-  }
-}
-
-class RestRegistrationFormState extends State<RestRegistrationForm> {
-  // Create a global key that uniquely identifies the Form widget
-  // and allows validation of the form.
-  //
-  // Note: This is a GlobalKey<FormState>,
-  // not a GlobalKey<MyCustomFormState>.
-  final _formKey = GlobalKey<FormState>();
-
+class RestRegister extends StatelessWidget {
+  static Route route() =>
+      MaterialPageRoute(builder: (context) => RestRegister());
   // Future restaurantRegister() async {
   //   final msg = jsonEncode({
   //     "username": username,
@@ -88,7 +76,7 @@ class RestRegistrationFormState extends State<RestRegistrationForm> {
                           icon: Icon(Icons.arrow_back, color: Colors.white)),
                     ))),
             Form(
-                key: _formKey,
+                key: null,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
                   child: Column(
