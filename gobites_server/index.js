@@ -2,6 +2,8 @@ const express = require("express");
 const db = require("./db");
 const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
+const customerRoute = require("./routes/customer");
+const restaurantRoute = require("./routes/restaurant");
 // const bodyParser = require("body-parser");
 // const fs = require("fs");
 
@@ -16,6 +18,8 @@ app.use(express.static("images"));
 app.get("/", (req, res) => res.json("Gobites Server Home"));
 app.use("/auth", authRoute);
 app.use("/user", userRoute);
+app.use("/customer", customerRoute);
+app.use("/restaurant", restaurantRoute);
 
 app.listen(port, () =>
   console.log(`Access the server at http://localhost:${port}`)

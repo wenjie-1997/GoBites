@@ -3,7 +3,7 @@ import 'package:gobites/screens/customer_home/customer_home.dart';
 import 'package:gobites/screens/register/register.dart';
 import 'package:gobites/screens/register/register_customer.dart';
 import 'package:gobites/screens/register/register_restaurant.dart';
-import 'package:gobites/screens/restaurant_home/restaurant_home.dart';
+import 'package:gobites/screens/restaurant_main/restaurant_main.dart';
 
 import '../screens/login/login.dart';
 
@@ -20,8 +20,8 @@ Route<dynamic> createRoute(settings) {
       return RestRegister.route();
     case '/cust_home':
       return CustomerHome.route();
-    case '/rest_home':
-      return RestaurantHome.route();
+    case '/rest_main':
+      return RestaurantMain.route();
   }
   return null;
 }

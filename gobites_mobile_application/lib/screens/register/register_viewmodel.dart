@@ -8,6 +8,7 @@ class RegisterViewmodel extends Viewmodel {
   RegisterSevice get _service => dependency();
   final formKeyOne = GlobalKey<FormState>();
   final formKeyTwo = GlobalKey<FormState>();
+  final formKeyThree = GlobalKey<FormState>();
   String _username;
   String _password;
   String _usertype;
@@ -95,6 +96,18 @@ class RegisterViewmodel extends Viewmodel {
     turnIdle();
   }
 
+  void init() {
+    _birthdate = null;
+    _custname = null;
+    _gender = null;
+    _email = null;
+    _address = null;
+    _telephoneNo = null;
+    _restaurantname = null;
+    _ownername = null;
+    _restaurantstyle = null;
+  }
+
   Future<bool> checkUsername() async {
     final bool existed = await _service.checkUsername(this.username);
     return existed;
@@ -119,6 +132,21 @@ class RegisterViewmodel extends Viewmodel {
       "birthdate": formattedbirthdate,
       "custname": _custname,
       "gender": _gender,
+      "email": _email,
+      "address": _address,
+      "telephoneNo": _telephoneNo
+    };
+    await _service.register(json);
+  }
+
+  Future<void> registerRestaurant() async {
+    final json = {
+      "username": _username,
+      "password": _password,
+      "usertype": _usertype,
+      "restaurantname": _restaurantname,
+      "ownername": _ownername,
+      "restaurantstyle": _restaurantstyle,
       "email": _email,
       "address": _address,
       "telephoneNo": _telephoneNo

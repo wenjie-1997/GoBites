@@ -3,8 +3,7 @@ import 'package:gobites/app/dependencies.dart';
 import 'package:gobites/models/user.dart';
 import 'package:gobites/services/auth/auth_service.dart';
 
-// import '../../app/dependencies.dart';
-// import '../../models/user.dart';
+import '../../app/dependencies.dart';
 import '../viewmodel.dart';
 
 class LoginViewmodel extends Viewmodel {
@@ -17,7 +16,8 @@ class LoginViewmodel extends Viewmodel {
   LoginViewmodel();
 
   Future<User> checkCredential() async {
-    return await _service.checkCredential(
+    user = await _service.checkCredential(
         username: usernameController.text, password: passwordController.text);
+    return user;
   }
 }

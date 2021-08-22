@@ -81,9 +81,9 @@ class Login extends StatelessWidget {
                                               if (user != null) {
                                                 user.userType == "customer"
                                                     ? Navigator.popAndPushNamed(
-                                                        context, '/cust_home')
+                                                        context, '/cust_main')
                                                     : Navigator.popAndPushNamed(
-                                                        context, '/rest_home');
+                                                        context, '/rest_main');
                                               } else {
                                                 showDialog<void>(
                                                     context: context,

@@ -1,40 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gobites/app/dependencies.dart';
-import 'package:gobites/screens/register/register.dart';
 import 'package:gobites/screens/register/register_viewmodel.dart';
+import 'package:gobites/screens/register/widget/custom_text_field.dart';
 import 'package:gobites/screens/view.dart';
 
 class CustRegister extends StatelessWidget {
   static Route route() =>
       MaterialPageRoute(builder: (context) => CustRegister());
-  // Future customerRegister() async {
-  //   final formattedbirthdate = formatDate(birthdate, [yyyy, '-', m, '-', dd]);
-  //   final msg = jsonEncode({
-  //     "username": username,
-  //     "password": password,
-  //     "usertype": usertype,
-  //     "custname": custname,
-  //     "birthdate": formattedbirthdate,
-  //     "gender": gender,
-  //     "address": address,
-  //     "email": email,
-  //     "telephoneNo": telephoneNo
-  //   });
-  //   final result = await http_post("/custregister", msg);
-  //   String status = jsonDecode(result.body);
-  //   showDialog<void>(
-  //       context: context,
-  //       barrierDismissible: false,
-  //       builder: (BuildContext context) => AlertDialog(
-  //             title: Text("Resgister Successful"),
-  //             actions: <Widget>[
-  //               TextButton(
-  //                   child: Text('Continue'),
-  //                   onPressed: () => Navigator.of(context).pop()),
-  //             ],
-  //           ));
-  //   Navigator.pop(context);
-  // }
 
   @override
   Widget build(BuildContext context) {

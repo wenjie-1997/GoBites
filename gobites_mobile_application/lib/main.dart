@@ -23,7 +23,14 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           title: 'Gobites',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(primarySwatch: Colors.blue),
+          theme: ThemeData(
+            fontFamily: 'san serif',
+            textTheme: TextTheme(
+                bodyText1: TextStyle(fontSize: 14),
+                bodyText2: TextStyle(fontSize: 14)),
+            primaryColor: Colors.amber,
+            primarySwatch: Colors.amber,
+          ),
           initialRoute: '/login',
           onGenerateRoute: createRoute,
         ));

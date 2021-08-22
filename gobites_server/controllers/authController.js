@@ -10,11 +10,8 @@ class AuthController {
       if (user===null)return res.json({ user: null});
 
       if (user.usertype == "customer") {
-        console.log("Login Sucessful as Customer");
         return res.json({ user });
       } else if (user.usertype == "restaurant") {
-        console.log("Login Sucessful as Restaurant");
-
         return res.json({ user });
       } else {
         return next();
