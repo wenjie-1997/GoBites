@@ -1,35 +1,6 @@
 import 'package:flutter/material.dart';
 
 class RestaurantHome extends StatelessWidget {
-  final menuButton = FlatButton(
-      height: 80.0,
-      color: Colors.orange,
-      textColor: Colors.white,
-      disabledColor: Colors.grey,
-      disabledTextColor: Colors.black,
-      padding: EdgeInsets.all(8.0),
-      splashColor: Colors.blueAccent,
-      onPressed: () {
-        // Navigator.push(
-        //     context, MaterialPageRoute(builder: (context) => RestMenuPage()));
-      },
-      child: Row(children: [
-        Expanded(
-            flex: 2,
-            child: Icon(
-              Icons.restaurant_menu,
-              size: 40,
-            )),
-        Expanded(
-            flex: 6,
-            child: Text(
-              "Menu List",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-            )),
-      ]));
-
   final viewOrderButton = FlatButton(
       height: 80.0,
       color: Colors.orange,
@@ -115,7 +86,7 @@ class RestaurantHome extends StatelessWidget {
                     color: Colors.grey[800],
                   ))),
           Expanded(flex: 1, child: Container()),
-          menuButton,
+          menuButton(context),
           SizedBox(height: 20),
           viewOrderButton,
           SizedBox(height: 20),
@@ -124,5 +95,35 @@ class RestaurantHome extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  FlatButton menuButton(BuildContext context) {
+    return FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.pushNamed(context, '/rest_menu');
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.restaurant_menu,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
+                "Menu List",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+              )),
+        ]));
   }
 }

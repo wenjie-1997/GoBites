@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:gobites/app/dependencies.dart';
+import 'package:gobites/models/restaurant.dart';
 // import 'package:gobites/models/user.dart';
 import 'package:gobites/services/register/register_service.dart';
 

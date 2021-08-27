@@ -75,29 +75,23 @@ class RestaurantProfile extends StatelessWidget {
   //   }
   // }
 
-  final editButton = Row(children: [
-    Expanded(
-        child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 70),
-            child: Material(
-                elevation: 5.0,
-                color: Colors.orange,
-                child: MaterialButton(
-                  padding: EdgeInsets.all(10),
-                  onPressed: () {
-                    // Navigator.push(
-                    //     context,
-                    //     MaterialPageRoute(
-                    //         builder: (context) =>
-                    //             new RestInfoUpdatePage(rest: rest)));
-                  },
-                  child: Text(
-                    "Edit Profile",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ))))
-  ]);
+  Row editButton({Function onPressed}) => Row(children: [
+        Expanded(
+            child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 70),
+                child: Material(
+                    elevation: 5.0,
+                    color: Colors.orange,
+                    child: MaterialButton(
+                      padding: EdgeInsets.all(10),
+                      onPressed: onPressed,
+                      child: Text(
+                        "Edit Profile",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ))))
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -425,7 +419,9 @@ class RestaurantProfile extends StatelessWidget {
                   SizedBox(
                     height: 20.0,
                   ),
-                  editButton,
+                  editButton(
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/rest_edit_profile')),
                 ],
               ),
             ),

@@ -23,6 +23,17 @@ class Restaurant {
     return this.rowToArray(rows[0]);
   }
 
+  async put(id,{restaurantname,ownername,address,restaurantstyle,email,telephoneNo}) {
+    console.log(ownername);
+    const rows = await db.query(
+      `UPDATE restaurant
+      SET restaurantname = ?, ownername = ?, address = ?,restaurantstyle= ?, email = ?, telephoneNo = ?
+      WHERE RID = ?`,
+      [restaurantname,ownername,address,restaurantstyle,email,telephoneNo,id]
+    );
+    return this.rowToArray(rows);
+  }
+
   rowToArray(sqlRows) {
     if (!sqlRows) return null;
     return JSON.parse(JSON.stringify(sqlRows));

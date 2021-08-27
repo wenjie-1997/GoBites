@@ -24,6 +24,18 @@ class RestaurantController {
         next(error);
     }
   };
+
+  updateRestaurant = async (req,res,next)=>{
+    try {
+      const { id } = req.params;
+      console.log(req.body);
+      const result = await Restaurant.put(id,req.body);
+      console.log(result);
+      return res.json(result);
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
 
 module.exports = new RestaurantController();

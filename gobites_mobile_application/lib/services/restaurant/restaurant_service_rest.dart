@@ -11,4 +11,11 @@ class RestaurantServiceRest extends RestaurantService {
     final json = await rest.get("restaurant/" + user.id.toString());
     return Restaurant.fromJson(json);
   }
+
+  @override
+  Future updateProfile(Restaurant restaurant) async {
+    print(restaurant.toJson());
+    await rest.put('restaurant/' + user.rid.toString(),
+        data: restaurant.toJson());
+  }
 }

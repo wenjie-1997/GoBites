@@ -2,12 +2,10 @@ class User {
   int id;
   String username;
   String userType;
+  int rid;
+  int cid;
 
-  User({
-    this.id,
-    this.username,
-    this.userType,
-  });
+  User({this.id, this.username, this.userType, this.rid, this.cid});
 
   User.copy(User from)
       : this(
@@ -21,6 +19,8 @@ class User {
           id: json['UID'],
           username: json['username'],
           userType: json['usertype'],
+          rid: json['fk_rid'],
+          cid: json['fk_cid'],
         );
 
   Map<String, dynamic> toJson() => {
