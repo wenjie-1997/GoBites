@@ -43,4 +43,5 @@ void init() {
   dependency.registerLazySingleton(() => RegisterViewmodel());
   dependency.registerLazySingleton(() => RestProfileViewmodel());
   dependency.registerLazySingleton(() => RestaurantMenuViewmodel());
+  dependency.registerLazySingleton(() => CustProfileViewmodel());
 }
