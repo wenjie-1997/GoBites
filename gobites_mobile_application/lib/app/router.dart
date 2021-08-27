@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gobites/screens/customer_home/customer_home.dart';
+import 'package:gobites/screens/customer_main/customer_main.dart';
 import 'package:gobites/screens/register/register.dart';
 import 'package:gobites/screens/register/register_customer.dart';
 import 'package:gobites/screens/register/register_restaurant.dart';
@@ -22,8 +22,6 @@ Route<dynamic> createRoute(settings) {
       return CustRegister.route();
     case '/register_rest':
       return RestRegister.route();
-    case '/cust_home':
-      return CustomerHome.route();
     case '/rest_main':
       return RestaurantMain.route();
     case '/rest_edit_profile':
@@ -34,6 +32,8 @@ Route<dynamic> createRoute(settings) {
       return RestaurantAddMenu.route();
     case '/rest_edit_menu':
       return RestaurantEditMenu.route(settings.arguments);
+    case '/cust_main':
+      return CustomerMain.route();
   }
   return null;
 }

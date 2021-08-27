@@ -41,7 +41,7 @@ class Customer extends User {
           username: json['username'],
           userType: json['usertype'],
           custname: json['custname'],
-          birthdate: json['birthdate'],
+          birthdate: DateTime.tryParse(json['birthdate']),
           gender: json['gender'],
           address: json['address'],
           email: json['email'],
