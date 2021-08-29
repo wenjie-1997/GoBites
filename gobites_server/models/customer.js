@@ -23,6 +23,17 @@ class Customer {
     return this.rowToArray(rows[0]);
   }
 
+  async put(id,{custname,address,email,telephoneNo,gender,birthdate}) {
+    console.log(custname);
+    const rows = await db.query(
+      `UPDATE customer
+      SET custname = ?, address = ?, email = ?, telephoneNo = ?, gender = ?, birthdate = ?
+      WHERE CID = ?`,
+      [custname,address,email,telephoneNo,gender,birthdate,id]
+    );
+    return this.rowToArray(rows);
+  }
+
   rowToArray(sqlRows) {
     if (!sqlRows) return null;
     return JSON.parse(JSON.stringify(sqlRows));

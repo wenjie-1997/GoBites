@@ -53,7 +53,7 @@ class Customer extends User {
         'username': username,
         'usertype': userType,
         'custname': custname,
-        'birthdate': birthdate,
+        'birthdate': birthdate.toIso8601String(),
         'gender': gender,
         'address': address,
         'email': email,

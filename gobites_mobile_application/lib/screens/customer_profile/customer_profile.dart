@@ -5,27 +5,24 @@ import 'package:gobites/screens/view.dart';
 import 'customer_profile_viewmodel.dart';
 import 'package:intl/intl.dart';
 
-
 class CustomerProfile extends StatelessWidget {
-
-  final editButton = Row(children: [
-    Expanded(
-        child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 70),
-            child: Material(
-                elevation: 5.0,
-                color: Colors.orange,
-                child: MaterialButton(
-                  padding: EdgeInsets.all(10),
-                  onPressed: () {
-                  },
-                  child: Text(
-                    "Edit Profile",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 18.0),
-                  ),
-                ))))
-  ]);
+  Row editButton({Function onPressed}) => Row(children: [
+        Expanded(
+            child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 70),
+                child: Material(
+                    elevation: 5.0,
+                    color: Colors.orange,
+                    child: MaterialButton(
+                      padding: EdgeInsets.all(10),
+                      onPressed: onPressed,
+                      child: Text(
+                        "Edit Profile",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white, fontSize: 18.0),
+                      ),
+                    ))))
+      ]);
 
   @override
   Widget build(BuildContext context) {
@@ -162,8 +159,7 @@ class CustomerProfile extends StatelessWidget {
                       Expanded(
                         flex: 6,
                         child: InkWell(
-                          onTap: () {
-                          },
+                          onTap: () {},
                           child: Row(children: [
                             Text(
                               "Change Password  ",
@@ -348,7 +344,8 @@ class CustomerProfile extends StatelessWidget {
                   SizedBox(
                     height: 20.0,
                   ),
-                  editButton,
+                  editButton(
+                      onPressed: () => Navigator.pushNamed(context, '/cust_edit_profile')),
                 ],
               ),
             ),
