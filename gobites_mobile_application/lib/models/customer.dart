@@ -37,7 +37,7 @@ class Customer extends User {
 
   Customer.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
+          id: json['UID'],
           username: json['username'],
           userType: json['usertype'],
           custname: json['custname'],
@@ -49,7 +49,7 @@ class Customer extends User {
         );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
+        'UID': id,
         'username': username,
         'usertype': userType,
         'custname': custname,

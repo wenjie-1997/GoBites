@@ -6,30 +6,38 @@ class Restaurant {
     Restaurant.instance = this;
   }
 
-  async get() {
-    const rows = await db.query(
-      `SELECT * FROM restaurant INNER JOIN user ON user.fk_rid=restaurant.RID`
-    );
+  async get(id) {
+    if (id) {
+      const rows = await db.query(
+        `SELECT * FROM restaurant 
+      INNER JOIN user ON user.fk_rid=restaurant.RID 
+      WHERE user.UID = ?`,
+        [id]
+      );
+      return this.rowToArray(rows[0]);
+    }
+    const rows = await db.query("SELECT * FROM restaurant");
     return this.rowToArray(rows);
   }
 
-  async get(id) {
-    const rows = await db.query(
-      `SELECT * FROM restaurant 
-      INNER JOIN user ON user.fk_rid=restaurant.RID 
-      WHERE user.UID = ?`,
-      [id]
-    );
-    return this.rowToArray(rows[0]);
-  }
-
-  async put(id,{restaurantname,ownername,address,restaurantstyle,email,telephoneNo}) {
+  async put(
+    id,
+    { restaurantname, ownername, address, restaurantstyle, email, telephoneNo }
+  ) {
     console.log(ownername);
     const rows = await db.query(
       `UPDATE restaurant
       SET restaurantname = ?, ownername = ?, address = ?,restaurantstyle= ?, email = ?, telephoneNo = ?
       WHERE RID = ?`,
-      [restaurantname,ownername,address,restaurantstyle,email,telephoneNo,id]
+      [
+        restaurantname,
+        ownername,
+        address,
+        restaurantstyle,
+        email,
+        telephoneNo,
+        id,
+      ]
     );
     return this.rowToArray(rows);
   }

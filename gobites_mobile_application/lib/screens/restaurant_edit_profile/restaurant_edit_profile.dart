@@ -7,42 +7,6 @@ import 'package:gobites/screens/view.dart';
 class RestaurantEditProfile extends StatelessWidget {
   static route() =>
       MaterialPageRoute(builder: (context) => RestaurantEditProfile());
-  // Future restUpdate() async {
-  //   final msg = jsonEncode({
-  //     "RID": widget.rest.RID,
-  //     "username": username,
-  //     "password": password,
-  //     "restaurantname": restaurantname,
-  //     "ownername": ownername,
-  //     "restaurantstyle": restaurantstyle,
-  //     "address": address,
-  //     "email": email,
-  //     "telephoneNo": telephoneNo,
-  //   });
-  //   final result = await http_post("/restupdate", msg);
-  //   String status = jsonDecode(result.body);
-  //   //String status = loginResult.getStatus();
-  //   if (status == "Update Sucessful") {
-  //     showDialog<void>(
-  //         context: context,
-  //         barrierDismissible: false,
-  //         builder: (BuildContext context) => AlertDialog(
-  //               title: Text("Update Successful"),
-  //               actions: <Widget>[
-  //                 TextButton(
-  //                     child: Text('Continue'),
-  //                     onPressed: () {
-  //                       Navigator.of(context).pop();
-  //                       Navigator.pushAndRemoveUntil(
-  //                           context,
-  //                           MaterialPageRoute(
-  //                               builder: (context) => new RestHomePage()),
-  //                           (route) => false);
-  //                     })
-  //               ],
-  //             ));
-  //   } else {}
-  // }
 
   @override
   Widget build(BuildContext context) {

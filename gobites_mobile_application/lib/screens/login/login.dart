@@ -76,9 +76,13 @@ class Login extends StatelessWidget {
                                                     .text.isNotEmpty &&
                                                 _viewmodel.passwordController
                                                     .text.isNotEmpty) {
-                                              User user = await _viewmodel
+                                              user = await _viewmodel
                                                   .checkCredential();
                                               if (user != null) {
+                                                _viewmodel.usernameController
+                                                    .text = "";
+                                                _viewmodel.passwordController
+                                                    .text = "";
                                                 user.userType == "customer"
                                                     ? Navigator.popAndPushNamed(
                                                         context, '/cust_main')

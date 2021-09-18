@@ -14,8 +14,15 @@ class RestaurantServiceRest extends RestaurantService {
 
   @override
   Future updateProfile(Restaurant restaurant) async {
-    print(restaurant.toJson());
     await rest.put('restaurant/' + user.rid.toString(),
         data: restaurant.toJson());
+  }
+
+  @override
+  Future<List<Restaurant>> getRestaurantList() async {
+    final result = await rest.get('restaurant');
+    List<Restaurant> restaurants =
+        result.map<Restaurant>((json) => Restaurant.fromJson(json)).toList();
+    return restaurants;
   }
 }

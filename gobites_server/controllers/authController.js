@@ -6,13 +6,11 @@ class AuthController {
       
       const { username, password } = req.body;
       const user = await User.login(username, password);
-      console.log(user);
-      if (user===null)return res.json({ user: null});
-
+      if (user===null)return res.json(null);
       if (user.usertype == "customer") {
-        return res.json({ user });
+        return res.json( user );
       } else if (user.usertype == "restaurant") {
-        return res.json({ user });
+        return res.json( user );
       } else {
         return next();
       }

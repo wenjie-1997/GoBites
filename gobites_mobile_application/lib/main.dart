@@ -5,7 +5,6 @@ import 'app/router.dart';
 
 void main() {
   di.init();
-
   runApp(MyApp());
 }
 

@@ -19,6 +19,7 @@ class CustomerController {
       const { id } = req.params;
       const result = await Customer.get(id);
       delete result["password"];
+      console.log(result);
       return res.json(result);
     } catch (error) {}
   };

@@ -8,6 +8,7 @@ class Restaurant extends User {
   String address;
   String email;
   String telephoneNo;
+  double rating;
 
   Restaurant(
       {id,
@@ -19,7 +20,8 @@ class Restaurant extends User {
       this.restaurantstyle,
       this.address,
       this.email,
-      this.telephoneNo})
+      this.telephoneNo,
+      this.rating})
       : super(id: id, username: username, userType: userType);
 
   Restaurant.copy(Restaurant from)
@@ -33,20 +35,22 @@ class Restaurant extends User {
             restaurantstyle: from.restaurantstyle,
             address: from.address,
             email: from.email,
-            telephoneNo: from.telephoneNo);
+            telephoneNo: from.telephoneNo,
+            rating: from.rating);
 
   Restaurant.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['id'],
-          username: json['username'],
-          userType: json['usertype'],
-          restaurantname: json['restaurantname'],
-          ownername: json['ownername'],
-          restaurantstyle: json['restaurantstyle'],
-          address: json['address'],
-          email: json['email'],
-          telephoneNo: json['telephoneNo'],
-        );
+            id: json['id'],
+            rid: json['RID'],
+            username: json['username'],
+            userType: json['usertype'],
+            restaurantname: json['restaurantname'],
+            ownername: json['ownername'],
+            restaurantstyle: json['restaurantstyle'],
+            address: json['address'],
+            email: json['email'],
+            telephoneNo: json['telephoneNo'],
+            rating: json['rating'] == null ? -1 : json['rating'] + .0);
 
   Map<String, dynamic> toJson() => {
         'id': id,

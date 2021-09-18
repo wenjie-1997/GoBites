@@ -10,14 +10,12 @@ class LoginViewmodel extends Viewmodel {
   AuthService get _service => dependency();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  bool validateEmail = false;
-  bool validatePassword = false;
-
-  LoginViewmodel();
 
   Future<User> checkCredential() async {
-    user = await _service.checkCredential(
+    turnBusy();
+    final user = await _service.checkCredential(
         username: usernameController.text, password: passwordController.text);
+    turnIdle();
     return user;
   }
 }

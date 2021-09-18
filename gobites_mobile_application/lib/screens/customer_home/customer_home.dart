@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomerHome extends StatelessWidget {
-  final orderButton = FlatButton(
+  orderButton(context) => FlatButton(
       height: 80.0,
       color: Colors.orange,
       textColor: Colors.white,
@@ -10,6 +10,7 @@ class CustomerHome extends StatelessWidget {
       padding: EdgeInsets.all(8.0),
       splashColor: Colors.blueAccent,
       onPressed: () {
+        Navigator.pushNamed(context, '/cust_restaurant_list');
       },
       child: Row(children: [
         Expanded(
@@ -36,8 +37,7 @@ class CustomerHome extends StatelessWidget {
       disabledTextColor: Colors.black,
       padding: EdgeInsets.all(8.0),
       splashColor: Colors.blueAccent,
-      onPressed: () {
-      },
+      onPressed: () {},
       child: Row(children: [
         Expanded(
             flex: 2,
@@ -63,8 +63,7 @@ class CustomerHome extends StatelessWidget {
       disabledTextColor: Colors.black,
       padding: EdgeInsets.all(8.0),
       splashColor: Colors.blueAccent,
-      onPressed: () {
-      },
+      onPressed: () {},
       child: Row(children: [
         Expanded(
             flex: 2,
@@ -107,7 +106,7 @@ class CustomerHome extends StatelessWidget {
                     color: Colors.grey[800],
                   ))),
           Expanded(flex: 1, child: Container()),
-          orderButton,
+          orderButton(context),
           SizedBox(height: 20),
           viewOrderButton,
           SizedBox(height: 20),

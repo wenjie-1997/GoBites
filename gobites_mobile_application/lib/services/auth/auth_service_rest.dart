@@ -9,7 +9,13 @@ class AuthServiceRest implements AuthService {
   Future<User> checkCredential({String username, String password}) async {
     final json = await rest
         .post("auth/login", data: {'username': username, 'password': password});
-    if (json['user'] == null) return null;
-    return User.fromJson(json['user']);
+    if (json == null) return null;
+    return User.fromJson(json);
+  }
+
+  @override
+  Future<User> getUser() async {
+    final json = await rest.get("auth");
+    return User.fromJson(json);
   }
 }

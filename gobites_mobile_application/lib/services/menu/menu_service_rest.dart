@@ -6,8 +6,9 @@ import 'package:gobites/services/rest.dart';
 class MenuServiceRest extends MenuService {
   RestService get rest => dependency();
 
-  Future<List<Menu>> getMenuList() async {
-    final result = await rest.get('menu/' + user.rid.toString());
+  Future<List<Menu>> getMenuList({int rid}) async {
+    final result = await rest
+        .get('menu/' + (rid == null ? user.rid.toString() : rid.toString()));
     List<Menu> menuList =
         result.map<Menu>((json) => Menu.fromJson(json)).toList();
     return menuList;

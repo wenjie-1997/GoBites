@@ -5,6 +5,9 @@ const userRoute = require("./routes/user");
 const customerRoute = require("./routes/customer");
 const restaurantRoute = require("./routes/restaurant");
 const menuRoute = require("./routes/menu");
+const orderRoute = require("./routes/order");
+const feedbackRoute = require("./routes/feedback");
+const cartRoute = require("./routes/cart");
 // const bodyParser = require("body-parser");
 // const fs = require("fs");
 
@@ -22,6 +25,9 @@ app.use("/user", userRoute);
 app.use("/customer", customerRoute);
 app.use("/restaurant", restaurantRoute);
 app.use("/menu", menuRoute);
+app.use("/order", orderRoute);
+app.use("/feedback", feedbackRoute);
+app.use("/cart", cartRoute);
 
 app.listen(port, () =>
   console.log(`Access the server at http://localhost:${port}`)

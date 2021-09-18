@@ -1,13 +1,14 @@
 const Restaurant = require("../models/restaurant");
+const Feedback = require("../models/feedback");
 
 class RestaurantController {
   getRestaurantsList = async (req, res, next) => {
     try {
       let result = await Restaurant.get();
-      result = result.map((c) => {
-        delete c["password"];
-        return c;
-      });
+      for (let index = 0; index < result.length; index++) {
+        let rating = await Feedback.getRatingByRid(result[index].RID);
+        result[index].rating = rating.rating;
+      }
       res.json(result);
     } catch (e) {
       next(e);

@@ -1,66 +1,6 @@
 import 'package:flutter/material.dart';
 
 class RestaurantHome extends StatelessWidget {
-  final viewOrderButton = FlatButton(
-      height: 80.0,
-      color: Colors.orange,
-      textColor: Colors.white,
-      disabledColor: Colors.grey,
-      disabledTextColor: Colors.black,
-      padding: EdgeInsets.all(8.0),
-      splashColor: Colors.blueAccent,
-      onPressed: () {
-        // Navigator.push(
-        //     context,
-        //     MaterialPageRoute(
-        //         builder: (context) => RestaurantViewOrderPage()));
-      },
-      child: Row(children: [
-        Expanded(
-            flex: 2,
-            child: Icon(
-              Icons.list,
-              size: 40,
-            )),
-        Expanded(
-            flex: 6,
-            child: Text(
-              "View Order",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-            )),
-      ]));
-
-  final feedbackButton = FlatButton(
-      height: 80.0,
-      color: Colors.orange,
-      textColor: Colors.white,
-      disabledColor: Colors.grey,
-      disabledTextColor: Colors.black,
-      padding: EdgeInsets.all(8.0),
-      splashColor: Colors.blueAccent,
-      onPressed: () {
-        // Navigator.push(context,
-        //     MaterialPageRoute(builder: (context) => RestaurantRatingPage()));
-      },
-      child: Row(children: [
-        Expanded(
-            flex: 2,
-            child: Icon(
-              Icons.feedback,
-              size: 40,
-            )),
-        Expanded(
-            flex: 6,
-            child: Text(
-              "My Feedback",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-            )),
-      ]));
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -88,9 +28,9 @@ class RestaurantHome extends StatelessWidget {
           Expanded(flex: 1, child: Container()),
           menuButton(context),
           SizedBox(height: 20),
-          viewOrderButton,
+          viewOrderButton(context),
           SizedBox(height: 20),
-          feedbackButton,
+          feedbackButton(context),
           SizedBox(height: 20)
         ],
       ),
@@ -126,4 +66,60 @@ class RestaurantHome extends StatelessWidget {
               )),
         ]));
   }
+
+  FlatButton viewOrderButton(BuildContext context) => FlatButton(
+      height: 80.0,
+      color: Colors.orange,
+      textColor: Colors.white,
+      disabledColor: Colors.grey,
+      disabledTextColor: Colors.black,
+      padding: EdgeInsets.all(8.0),
+      splashColor: Colors.blueAccent,
+      onPressed: () {
+        Navigator.pushNamed(context, '/rest_order');
+      },
+      child: Row(children: [
+        Expanded(
+            flex: 2,
+            child: Icon(
+              Icons.list,
+              size: 40,
+            )),
+        Expanded(
+            flex: 6,
+            child: Text(
+              "View Order",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+            )),
+      ]));
+
+  FlatButton feedbackButton(context) => FlatButton(
+      height: 80.0,
+      color: Colors.orange,
+      textColor: Colors.white,
+      disabledColor: Colors.grey,
+      disabledTextColor: Colors.black,
+      padding: EdgeInsets.all(8.0),
+      splashColor: Colors.blueAccent,
+      onPressed: () {
+        Navigator.pushNamed(context, '/rest_feedback');
+      },
+      child: Row(children: [
+        Expanded(
+            flex: 2,
+            child: Icon(
+              Icons.feedback,
+              size: 40,
+            )),
+        Expanded(
+            flex: 6,
+            child: Text(
+              "My Feedback",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+            )),
+      ]));
 }

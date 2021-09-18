@@ -13,7 +13,7 @@ class MenuController {
 
   insertMenu = async (req, res, next) => {
     try {
-      let result = await Menu.post(req.body,req.params.rid);
+      let result = await Menu.post(req.body, req.params.rid);
       return res.json(result);
     } catch (error) {
       next(error);
