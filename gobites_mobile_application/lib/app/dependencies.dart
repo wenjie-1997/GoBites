@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:gobites/models/user.dart';
 import 'package:gobites/screens/customer_cart/customer_cart_viewmodel.dart';
+import 'package:gobites/screens/customer_order/customer_order_viewmodel.dart';
 import 'package:gobites/screens/customer_profile/customer_profile_viewmodel.dart';
 import 'package:gobites/screens/customer_restaurant_list/customer_restaurant_list_viewmodel.dart';
 import 'package:gobites/screens/customer_restaurant_menu/customer_restaurant_menu_viewmodel.dart';
@@ -38,7 +39,7 @@ User user;
 void init() {
   // Services
   dependency.registerLazySingleton<RestService>(
-    () => RestService(baseUrl: 'http://192.168.1.105:3000'),
+    () => RestService(baseUrl: 'http://192.168.56.1:3000'),
   );
 
   dependency.registerLazySingleton<AuthService>(() => AuthServiceRest());
@@ -51,8 +52,7 @@ void init() {
   dependency.registerLazySingleton<OrderService>(() => OrderServiceRest());
   dependency
       .registerLazySingleton<FeedbackService>(() => FeedbackServiceRest());
-  dependency
-      .registerLazySingleton<CartService>(() => CartServiceRest());
+  dependency.registerLazySingleton<CartService>(() => CartServiceRest());
 
   // Viewmodels
   dependency.registerLazySingleton(() => LoginViewmodel());
@@ -65,4 +65,5 @@ void init() {
   dependency.registerLazySingleton(() => CustomerRestaurantListViewmodel());
   dependency.registerLazySingleton(() => CustomerRestaurantMenuViewmodel());
   dependency.registerLazySingleton(() => CustomerCartViewmodel());
+  dependency.registerLazySingleton(() => CustomerOrderViewmodel());
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gobites/screens/customer_cart/customer_cart.dart';
 import 'package:gobites/screens/customer_edit_profile/customer_edit_profile.dart';
 import 'package:gobites/screens/customer_main/customer_main.dart';
+import 'package:gobites/screens/customer_order/customer_order.dart';
 import 'package:gobites/screens/customer_restaurant_list/customer_restaurant_list.dart';
 import 'package:gobites/screens/customer_restaurant_menu/customer_restaurant_menu.dart';
 import 'package:gobites/screens/register/register.dart';
@@ -54,6 +55,8 @@ Route<dynamic> createRoute(settings) {
       return CustomerRestaurantMenu.route(settings.arguments);
     case '/cust_cart':
       return CustomerCart.route();
+    case '/cust_order':
+      return CustomerOrder.route();
   }
   return null;
 }

@@ -17,6 +17,16 @@ class OrderServiceRest extends OrderService {
     return result.map<OrderItem>((json) => OrderItem.fromJson(json)).toList();
   }
 
+  Future<List<Order>> getCustOrderList() async {
+    final result = await rest.get('order/customer/' + user.cid.toString());
+    return result.map<Order>((json) => Order.fromJson(json)).toList();
+  }
+
+  Future<List<OrderItem>> getCustOrderItems(int oid) async {
+    final result = await rest.get('order/customer/orderitems/' + oid.toString());
+    return result.map<OrderItem>((json) => OrderItem.fromJson(json)).toList();
+  }
+
   @override
   Future changeOrderItemStatus(int id) async {
     await rest.put('order/orderitems/' + id.toString(), data: {});

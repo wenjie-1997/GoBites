@@ -18,6 +18,16 @@ class Order {
     return this.rowToArray(rows);
   }
 
+  async getCustOrder(cid) {
+    const rows = await db.query(
+      `SELECT orderid AS OID, totalPrice, status, addedDate, address
+      FROM orders
+      WHERE fk_cid=?`,
+      [cid]
+    );
+    return this.rowToArray(rows);
+  }
+
   async getOrderItems(oid) {
     const rows = await db.query(
       `
@@ -25,6 +35,18 @@ class Order {
         FROM orderitem
         JOIN menuitem ON menuitem.mid=orderitem.fk_mid
         WHERE orderitem.fk_oid=? AND status='PREPARING'`,
+      [oid]
+    );
+    return this.rowToArray(rows);
+  }
+
+  async getCustOrderItems(oid) {
+    const rows = await db.query(
+      `
+        SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
+        FROM orderitem
+        JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+        WHERE orderitem.fk_oid=?`,
       [oid]
     );
     return this.rowToArray(rows);

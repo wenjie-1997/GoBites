@@ -29,31 +29,35 @@ class CustomerHome extends StatelessWidget {
             )),
       ]));
 
-  final viewOrderButton = FlatButton(
-      height: 80.0,
-      color: Colors.orange,
-      textColor: Colors.white,
-      disabledColor: Colors.grey,
-      disabledTextColor: Colors.black,
-      padding: EdgeInsets.all(8.0),
-      splashColor: Colors.blueAccent,
-      onPressed: () {},
-      child: Row(children: [
-        Expanded(
-            flex: 2,
-            child: Icon(
-              Icons.list,
-              size: 40,
-            )),
-        Expanded(
-            flex: 6,
-            child: Text(
-              "View Order",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
-            )),
-      ]));
+  FlatButton viewOrderButton(BuildContext context) {
+    return FlatButton(
+        height: 80.0,
+        color: Colors.orange,
+        textColor: Colors.white,
+        disabledColor: Colors.grey,
+        disabledTextColor: Colors.black,
+        padding: EdgeInsets.all(8.0),
+        splashColor: Colors.blueAccent,
+        onPressed: () {
+          Navigator.pushNamed(context, '/cust_order');
+        },
+        child: Row(children: [
+          Expanded(
+              flex: 2,
+              child: Icon(
+                Icons.list,
+                size: 40,
+              )),
+          Expanded(
+              flex: 6,
+              child: Text(
+                "View Order",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.white, fontSize: 20.0, letterSpacing: 3.0),
+              )),
+        ]));
+  }
 
   final giveFeedbackButton = FlatButton(
       height: 80.0,
@@ -108,7 +112,7 @@ class CustomerHome extends StatelessWidget {
           Expanded(flex: 1, child: Container()),
           orderButton(context),
           SizedBox(height: 20),
-          viewOrderButton,
+          viewOrderButton(context),
           SizedBox(height: 20),
           giveFeedbackButton,
           SizedBox(height: 20)

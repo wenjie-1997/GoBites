@@ -21,6 +21,26 @@ class OrderController {
     }
   };
 
+  getCustOrderList = async (req, res, next) => {
+    const { cid } = req.params;
+    try {
+      const result = await Order.getCustOrder(cid);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getCustOrderItems = async (req, res, next) => {
+    const { oid } = req.params;
+    try {
+      const result = await Order.getCustOrderItems(oid);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   changeOrderItemStatus = async (req, res, next) => {
     const { id } = req.params;
     try {
