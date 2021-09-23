@@ -40,7 +40,7 @@ User user;
 void init() {
   // Services
   dependency.registerLazySingleton<RestService>(
-    () => RestService(baseUrl: 'http://192.168.1.105:3000'),
+    () => RestService(baseUrl: 'http://192.168.56.1:3000'),
   );
 
   dependency.registerLazySingleton<AuthService>(() => AuthServiceRest());

@@ -51,6 +51,18 @@ class Order {
     return this.rowToArray(rows);
   }
 
+  async getCustOrderItems(oid) {
+    const rows = await db.query(
+      `
+        SELECT id, menuitem.itemName, quantity, menuitem.itemPrice
+        FROM orderitem
+        JOIN menuitem ON menuitem.mid=orderitem.fk_mid
+        WHERE orderitem.fk_oid=?`,
+      [oid]
+    );
+    return this.rowToArray(rows);
+  }
+
   async changeOrderItemStatus(id) {
     const rows = await db.query(
       `

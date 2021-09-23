@@ -9,4 +9,6 @@ abstract class OrderService {
   Future changeOrderItemStatus(int id);
   Future setOrderToDelivering(int oid);
   Future removeOrderItem(int id);
+  Future<List<Order>> getCustOrderList();
+  Future<List<OrderItem>> getCustOrderItems(int oid);
 }

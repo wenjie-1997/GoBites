@@ -75,6 +75,8 @@ Route<dynamic> createRoute(settings) {
       return CustomerFeedback.route();
     case '/cust_give_feedback':
       return CustomerGiveFeedback.route(settings.arguments);
+    case '/cust_order':
+      return CustomerOrder.route();
   }
   return null;
 }
