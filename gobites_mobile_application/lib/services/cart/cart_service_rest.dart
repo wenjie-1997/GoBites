@@ -23,4 +23,10 @@ class CartServiceRest extends CartService {
         result.map<Cart>((json) => Cart.fromJson(json)).toList();
     return cartList;
   }
+
+  @override
+  Future moveToOrder(String address) async {
+    await rest.post('cart/move_to_order/' + user.cid.toString(),
+        data: {'address': address});
+  }
 }

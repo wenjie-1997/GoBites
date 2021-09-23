@@ -79,10 +79,7 @@ class CustomerRestaurantMenu extends StatelessWidget {
                           ],
                         ),
                         onPressed: () {
-                          // Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => CartPage()));
+                          Navigator.pushNamed(context, '/cust_cart');
                         },
                       )))
             ]),

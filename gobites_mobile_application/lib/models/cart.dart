@@ -15,4 +15,11 @@ class Cart {
         quantity: json['quantity'],
         kid: json['KID']);
   }
+
+  Map<String, dynamic> toJson() => {
+        'itemName': itemName,
+        'itemPrice': itemPrice,
+        'quantity': quantity,
+        'KID': kid,
+      };
 }

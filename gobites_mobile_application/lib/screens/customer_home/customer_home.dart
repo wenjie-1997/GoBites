@@ -29,7 +29,7 @@ class CustomerHome extends StatelessWidget {
             )),
       ]));
 
-  final viewOrderButton = FlatButton(
+  viewOrderButton(context) => FlatButton(
       height: 80.0,
       color: Colors.orange,
       textColor: Colors.white,
@@ -37,7 +37,9 @@ class CustomerHome extends StatelessWidget {
       disabledTextColor: Colors.black,
       padding: EdgeInsets.all(8.0),
       splashColor: Colors.blueAccent,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, '/cust_order');
+      },
       child: Row(children: [
         Expanded(
             flex: 2,
@@ -55,7 +57,7 @@ class CustomerHome extends StatelessWidget {
             )),
       ]));
 
-  final giveFeedbackButton = FlatButton(
+  giveFeedbackButton(context) => FlatButton(
       height: 80.0,
       color: Colors.orange,
       textColor: Colors.white,
@@ -63,7 +65,9 @@ class CustomerHome extends StatelessWidget {
       disabledTextColor: Colors.black,
       padding: EdgeInsets.all(8.0),
       splashColor: Colors.blueAccent,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.pushNamed(context, '/cust_feedback');
+      },
       child: Row(children: [
         Expanded(
             flex: 2,
@@ -108,9 +112,9 @@ class CustomerHome extends StatelessWidget {
           Expanded(flex: 1, child: Container()),
           orderButton(context),
           SizedBox(height: 20),
-          viewOrderButton,
+          viewOrderButton(context),
           SizedBox(height: 20),
-          giveFeedbackButton,
+          giveFeedbackButton(context),
           SizedBox(height: 20)
         ],
       ),

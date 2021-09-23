@@ -1,4 +1,8 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:gobites/app/dependencies.dart';
 import 'package:gobites/models/restaurant.dart';
 import 'package:gobites/services/restaurant/restaurant_service.dart';
@@ -9,12 +13,18 @@ class RestProfileViewmodel extends Viewmodel {
   RestaurantService get _service => dependency();
   Restaurant restaurant;
   final formKeyforEdit = GlobalKey<FormState>();
+  final formKeyforChangePassword = GlobalKey<FormState>();
   TextEditingController usernameController;
   TextEditingController restaurantNameController;
   TextEditingController emailController;
   TextEditingController ownerNameController;
   TextEditingController addressController;
   TextEditingController telephoneNoController;
+  TextEditingController currentPasswordController;
+  TextEditingController newPasswordController;
+  TextEditingController newPasswordReEnterController;
+  bool currentPasswordNotMatched = false;
+  bool newPasswordNotMatched = false;
   String _restaurantstyle;
   get restaurantstyle => _restaurantstyle;
   set restaurantstyle(value) {
@@ -41,6 +51,12 @@ class RestProfileViewmodel extends Viewmodel {
     turnIdle();
   }
 
+  void initForChangePassword() {
+    currentPasswordController = new TextEditingController();
+    newPasswordController = new TextEditingController();
+    newPasswordReEnterController = new TextEditingController();
+  }
+
   Future updateProfile() async {
     restaurant.restaurantname = restaurantNameController.text;
     restaurant.email = emailController.text;
@@ -50,5 +66,28 @@ class RestProfileViewmodel extends Viewmodel {
     restaurant.restaurantstyle = _restaurantstyle;
     await _service.updateProfile(restaurant);
     init();
+  }
+
+  void uploadImage() async {
+    final _picker = ImagePicker();
+    XFile pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) return;
+    final File file = File(pickedFile.path);
+    String base64Image = base64Encode(file.readAsBytesSync());
+    String fileName = file.path.split("/").last;
+    await _service.uploadImage(fileName, base64Image);
+
+    init();
+  }
+
+  Future checkCurrentPassword() async {
+    bool result = await _service.checkPassword(currentPasswordController.text);
+    currentPasswordNotMatched = !result;
+    turnIdle();
+  }
+
+  Future updatePassword() async {
+    await _service.updatePassword(newPasswordController.text);
   }
 }

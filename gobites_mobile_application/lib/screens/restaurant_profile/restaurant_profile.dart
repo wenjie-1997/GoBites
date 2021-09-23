@@ -4,21 +4,6 @@ import 'package:gobites/screens/login/login.dart';
 import 'package:gobites/screens/restaurant_profile/restaurant_profile_viewmodel.dart';
 import 'package:gobites/screens/view.dart';
 
-// Future<RestDetail> fetchRestDetail() async {
-//   final response = await http_get('/restaurant/' + login.login_id);
-
-//   if (response.statusCode == 200) {
-//     // If the server did return a 200 OK response,
-//     // then parse the JSON.
-//     return RestDetail.fromJson(jsonDecode(response.body));
-//   } else {
-//     // If the server did not return a 200 OK response,
-//     // then throw an exception.
-//     throw Exception(
-//         'Failed to load detail, code = ' + response.statusCode.toString());
-//   }
-// }
-
 class RestaurantProfile extends StatelessWidget {
   // Future<RestDetail> futureRestDetail;
   // PickedFile pickedFile;
@@ -152,9 +137,9 @@ class RestaurantProfile extends StatelessWidget {
                     child: Stack(
                       children: <Widget>[
                         new CircleAvatar(
-                          // backgroundImage: rest.image == null
-                          //     ? AssetImage('assets/default.png')
-                          //     : NetworkImage("http://$DOMAIN/" + rest.image),
+                          backgroundImage: _viewmodel.restaurant.image == null
+                              ? AssetImage('assets/default.png')
+                              : NetworkImage(_viewmodel.restaurant.image),
                           radius: 70.0,
                         ),
                         new Positioned(
@@ -173,7 +158,7 @@ class RestaurantProfile extends StatelessWidget {
                                       Icons.upload_sharp,
                                     ),
                                     color: Colors.white,
-                                    onPressed: null,
+                                    onPressed: () => _viewmodel.uploadImage(),
                                   ),
                                 ),
                               ),
@@ -229,11 +214,8 @@ class RestaurantProfile extends StatelessWidget {
                         flex: 6,
                         child: InkWell(
                           onTap: () {
-                            //  Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (BuildContext context) =>
-                            //             new RestUpdatePassword(rest: rest))),
+                            Navigator.pushNamed(
+                                context, '/rest_change_password');
                           },
                           child: Row(children: [
                             Text(

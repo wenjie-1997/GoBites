@@ -210,12 +210,8 @@ class CustomerCart extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
             onPressed: () {
-              carts.length == 0 ? null : null;
-              // Navigator.push(
-              //       context,
-              //       MaterialPageRoute(
-              //           builder: (context) =>
-              //               Checkoutpage(totalPrice: _totalPrice)));
+              if (carts.length != 0)
+                Navigator.pushNamed(context, '/cust_checkout');
             },
             color: Colors.orange,
             textColor: Colors.white,

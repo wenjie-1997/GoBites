@@ -40,6 +40,16 @@ class CartController {
       next(error);
     }
   };
+
+  moveToOrder = async (req, res, next) => {
+    const { cid } = req.params;
+    try {
+      const result = await Cart.moveToOrder(cid, req.body);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 module.exports = new CartController();

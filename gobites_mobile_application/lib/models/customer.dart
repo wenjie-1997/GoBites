@@ -8,6 +8,7 @@ class Customer extends User {
   String address;
   String email;
   String telephoneNo;
+  String image;
 
   Customer(
       {id,
@@ -19,7 +20,8 @@ class Customer extends User {
       this.gender,
       this.address,
       this.email,
-      this.telephoneNo})
+      this.telephoneNo,
+      this.image})
       : super(id: id, username: username, userType: userType);
 
   Customer.copy(Customer from)
@@ -33,20 +35,21 @@ class Customer extends User {
             gender: from.gender,
             address: from.address,
             email: from.email,
-            telephoneNo: from.telephoneNo);
+            telephoneNo: from.telephoneNo,
+            image: from.image);
 
   Customer.fromJson(Map<String, dynamic> json)
       : this(
-          id: json['UID'],
-          username: json['username'],
-          userType: json['usertype'],
-          custname: json['custname'],
-          birthdate: DateTime.tryParse(json['birthdate']),
-          gender: json['gender'],
-          address: json['address'],
-          email: json['email'],
-          telephoneNo: json['telephoneNo'],
-        );
+            id: json['UID'],
+            username: json['username'],
+            userType: json['usertype'],
+            custname: json['custname'],
+            birthdate: DateTime.tryParse(json['birthdate']),
+            gender: json['gender'],
+            address: json['address'],
+            email: json['email'],
+            telephoneNo: json['telephoneNo'],
+            image: json['image']);
 
   Map<String, dynamic> toJson() => {
         'UID': id,
@@ -58,5 +61,6 @@ class Customer extends User {
         'address': address,
         'email': email,
         'telephoneNo': telephoneNo,
+        'image': image,
       };
 }

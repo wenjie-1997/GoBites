@@ -12,6 +12,28 @@ class UserController {
     }
   };
 
+  checkPassword = async (req, res, next) => {
+    const { uid } = req.params;
+    const { password } = req.body;
+    try {
+      const { password: actualPassword } = await User.checkPassword(uid);
+      return actualPassword === password ? res.json(true) : res.json(false);
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  updatePassword = async (req, res, next) => {
+    const { uid } = req.params;
+    const { password } = req.body;
+    try {
+      const result = await User.updatePassword(uid,password);
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   register = async (req, res, next) => {
     try {
       const { usertype } = req.body;
@@ -26,6 +48,15 @@ class UserController {
       }
     } catch (error) {
       return next(error);
+    }
+  };
+
+  uploadImage = async (req, res, next) => {
+    try {
+      const result = await User.uploadImage(req.body);
+      res.json(null);
+    } catch (error) {
+      next(error);
     }
   };
 }

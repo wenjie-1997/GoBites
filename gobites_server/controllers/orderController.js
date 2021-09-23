@@ -1,6 +1,26 @@
 const Order = require("../models/order");
 
 class OrderController {
+  getByCid = async (req, res, next) => {
+    const { cid } = req.params;
+    try {
+      const result = await Order.getByCid(cid);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+  
+  getDeliveredByCid = async (req, res, next) => {
+    const { cid } = req.params;
+    try {
+      const result = await Order.getDeliveredByCid(cid);
+      return res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  };
+
   getOrderList = async (req, res, next) => {
     const { rid } = req.params;
     try {

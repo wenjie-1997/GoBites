@@ -43,17 +43,16 @@ class CustomerRestaurantList extends StatelessWidget {
               ),
               Builder(
                 builder: (context) {
-                  // if (restaurant != null) {
-                  //   return Image.network(
-                  //     "http://$DOMAIN/" + restaurant.image,
-                  //     height: 200,
-                  //   );
-                  // } else {
+                  if (restaurant.image != null) {
+                    return Image.network(restaurant.image,
+                      height: 200,
+                    );
+                  } else {
                   return Image(
                     image: AssetImage('assets/default.png'),
                     height: 200,
                   );
-                  // }
+                  }
                 },
               ),
               SizedBox(

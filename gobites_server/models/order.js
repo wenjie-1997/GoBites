@@ -18,6 +18,27 @@ class Order {
     return this.rowToArray(rows);
   }
 
+  async getByCid(cid) {
+    const rows = await db.query(
+      `SELECT orderid as OID, totalPrice, status, addedDate, address
+          FROM orders
+          WHERE fk_cid=? AND status != "DONE"`,
+      [cid]
+    );
+    return this.rowToArray(rows);
+  }
+
+  async getDeliveredByCid(cid) {
+    const rows = await db.query(
+      `SELECT orderid as OID, totalPrice, status, addedDate, hasFeedback, rating, comment
+        FROM orders
+        LEFT JOIN feedback ON orders.orderid = feedback.oid
+        WHERE fk_cid=? AND status='DONE'`,
+      [cid]
+    );
+    return this.rowToArray(rows);
+  }
+
   async getOrderItems(oid) {
     const rows = await db.query(
       `

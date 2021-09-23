@@ -1,3 +1,4 @@
+import 'package:gobites/models/feedback.dart';
 import 'package:gobites/models/order_item.dart';
 
 class Order {

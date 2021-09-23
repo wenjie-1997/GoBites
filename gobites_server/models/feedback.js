@@ -6,6 +6,15 @@ class Feedback{
         Feedback.instance = this;
     }
 
+    async post({oid,rid,rating,comment}){
+        const rows = await db.query(
+                `INSERT INTO feedback(rating, comment, oid, rid) VALUES (?,?,?,?);
+              UPDATE orders SET hasFeedback = true WHERE orderid = ?;
+              `,
+                [rating, comment, oid, rid, oid]);
+        return this.rowToArray(rows);
+    }
+
     async getByRid(rid){
         const rows = await db.query(`SELECT * from feedback WHERE rid = ?`,[rid]); 
         return this.rowToArray(rows);

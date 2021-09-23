@@ -8,15 +8,16 @@ const menuRoute = require("./routes/menu");
 const orderRoute = require("./routes/order");
 const feedbackRoute = require("./routes/feedback");
 const cartRoute = require("./routes/cart");
-// const bodyParser = require("body-parser");
-// const fs = require("fs");
+const fs = require("fs");
 
 const app = express();
 const port = process.env.PORT || 3000;
 
 db.testConnection();
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
 app.use(express.static("images"));
 
 app.get("/", (req, res) => res.json("Gobites Server Home"));

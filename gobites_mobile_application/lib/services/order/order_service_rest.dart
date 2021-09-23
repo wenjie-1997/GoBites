@@ -7,8 +7,13 @@ import 'package:gobites/services/rest.dart';
 class OrderServiceRest extends OrderService {
   RestService get rest => dependency();
   @override
-  Future<List<Order>> getOrderList() async {
+  Future<List<Order>> getRestaurantOrder() async {
     final result = await rest.get('order/restaurant/' + user.rid.toString());
+    return result.map<Order>((json) => Order.fromJson(json)).toList();
+  }
+
+  Future<List<Order>> getCustomerOrder() async {
+    final result = await rest.get('order/customer/' + user.cid.toString());
     return result.map<Order>((json) => Order.fromJson(json)).toList();
   }
 
@@ -29,5 +34,12 @@ class OrderServiceRest extends OrderService {
   @override
   Future removeOrderItem(int id) async {
     await rest.delete('order/orderitems/' + id.toString());
+  }
+
+  @override
+  Future<List<Order>> getDeliveredOrder() async {
+    final result =
+        await rest.get('order/customer/delivered/' + user.cid.toString());
+    return result.map<Order>((json) => Order.fromJson(json)).toList();
   }
 }

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:gobites/restaurant_change_password/restaurant_change_password.dart';
 import 'package:gobites/screens/customer_cart/customer_cart.dart';
+import 'package:gobites/screens/customer_change_password/customer_change_password.dart';
+import 'package:gobites/screens/customer_checkout/customer_checkout.dart';
 import 'package:gobites/screens/customer_edit_profile/customer_edit_profile.dart';
+import 'package:gobites/screens/customer_feedbck/customer_feedback.dart';
+import 'package:gobites/screens/customer_give_feedback/customer_give_feedback.dart';
 import 'package:gobites/screens/customer_main/customer_main.dart';
+import 'package:gobites/screens/customer_order/customer_order.dart';
+import 'package:gobites/screens/customer_order_complete/customer_order_complete.dart';
 import 'package:gobites/screens/customer_restaurant_list/customer_restaurant_list.dart';
 import 'package:gobites/screens/customer_restaurant_menu/customer_restaurant_menu.dart';
 import 'package:gobites/screens/register/register.dart';
@@ -32,6 +39,8 @@ Route<dynamic> createRoute(settings) {
       return RestaurantMain.route();
     case '/rest_edit_profile':
       return RestaurantEditProfile.route();
+    case '/rest_change_password':
+      return RestaurantChangePassword.route();
     case '/rest_menu':
       return RestaurantMenu.route();
     case '/rest_add_menu':
@@ -48,12 +57,24 @@ Route<dynamic> createRoute(settings) {
       return CustomerMain.route();
     case '/cust_edit_profile':
       return CustomerEditProfile.route();
+    case '/cust_change_password':
+      return CustomerChangePassword.route();
     case '/cust_restaurant_list':
       return CustomerRestaurantList.route();
     case '/cust_restaurant_menu':
       return CustomerRestaurantMenu.route(settings.arguments);
     case '/cust_cart':
       return CustomerCart.route();
+    case '/cust_checkout':
+      return CustomerCheckout.route();
+    case '/cust_order_complete':
+      return CustomerOrderComplete.route();
+    case '/cust_order':
+      return CustomerOrder.route();
+    case '/cust_feedback':
+      return CustomerFeedback.route();
+    case '/cust_give_feedback':
+      return CustomerGiveFeedback.route(settings.arguments);
   }
   return null;
 }

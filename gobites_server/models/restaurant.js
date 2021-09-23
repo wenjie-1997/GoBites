@@ -20,6 +20,20 @@ class Restaurant {
     return this.rowToArray(rows);
   }
 
+  async getByOid(oid) {
+      const rows = await db.query(
+              `SELECT restaurant.restaurantname, restaurant.RID
+            FROM orderitem
+            JOIN menuitem ON menuitem.MID = orderitem.fk_mid
+            JOIN restaurant ON restaurant.RID = menuitem.fk_rid
+            WHERE orderitem.fk_oid=?
+            GROUP BY restaurant.restaurantname, restaurant.RID
+            `,
+        [oid]
+      );
+      return this.rowToArray(rows[0]);
+  }
+
   async put(
     id,
     { restaurantname, ownername, address, restaurantstyle, email, telephoneNo }

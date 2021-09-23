@@ -9,6 +9,7 @@ class Restaurant extends User {
   String email;
   String telephoneNo;
   double rating;
+  String image;
 
   Restaurant(
       {id,
@@ -21,7 +22,8 @@ class Restaurant extends User {
       this.address,
       this.email,
       this.telephoneNo,
-      this.rating})
+      this.rating,
+      this.image})
       : super(id: id, username: username, userType: userType);
 
   Restaurant.copy(Restaurant from)
@@ -36,7 +38,8 @@ class Restaurant extends User {
             address: from.address,
             email: from.email,
             telephoneNo: from.telephoneNo,
-            rating: from.rating);
+            rating: from.rating,
+            image: from.image);
 
   Restaurant.fromJson(Map<String, dynamic> json)
       : this(
@@ -50,7 +53,8 @@ class Restaurant extends User {
             address: json['address'],
             email: json['email'],
             telephoneNo: json['telephoneNo'],
-            rating: json['rating'] == null ? -1 : json['rating'] + .0);
+            rating: json['rating'] == null ? -1 : json['rating'] + .0,
+            image: json['image']);
 
   Map<String, dynamic> toJson() => {
         'id': id,

@@ -83,9 +83,9 @@ class CustomerProfile extends StatelessWidget {
                     child: Stack(
                       children: <Widget>[
                         new CircleAvatar(
-                          // backgroundImage: rest.image == null
-                          //     ? AssetImage('assets/default.png')
-                          //     : NetworkImage("http://$DOMAIN/" + rest.image),
+                          backgroundImage: _viewmodel.customer.image == null
+                              ? AssetImage('assets/default.png')
+                              : NetworkImage(_viewmodel.customer.image),
                           radius: 70.0,
                         ),
                         new Positioned(
@@ -104,7 +104,7 @@ class CustomerProfile extends StatelessWidget {
                                       Icons.upload_sharp,
                                     ),
                                     color: Colors.white,
-                                    onPressed: null,
+                                    onPressed: () => _viewmodel.uploadImage(),
                                   ),
                                 ),
                               ),
@@ -159,7 +159,10 @@ class CustomerProfile extends StatelessWidget {
                       Expanded(
                         flex: 6,
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/cust_change_password');
+                          },
                           child: Row(children: [
                             Text(
                               "Change Password  ",
@@ -345,7 +348,8 @@ class CustomerProfile extends StatelessWidget {
                     height: 20.0,
                   ),
                   editButton(
-                      onPressed: () => Navigator.pushNamed(context, '/cust_edit_profile')),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/cust_edit_profile')),
                 ],
               ),
             ),

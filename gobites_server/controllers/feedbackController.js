@@ -10,6 +10,14 @@ class FeedbackController{
             next(error);
         }
     }
+    post = async(req,res,next)=>{
+        try {
+            const result = await Feedback.post(req.body);
+            return res.json(result);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = new FeedbackController();

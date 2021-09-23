@@ -11,7 +11,7 @@ class RestaurantOrderViewmodel extends Viewmodel {
 
   Future init() async {
     turnBusy();
-    orderList = await _service.getOrderList();
+    orderList = await _service.getRestaurantOrder();
     for (Order order in orderList) {
       order.orderItemList = await _service.getOrderItems(order.oid);
     }

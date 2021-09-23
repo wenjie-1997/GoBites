@@ -6,6 +6,8 @@ class RestService {
   final String _baseUrl;
   const RestService({@required baseUrl}) : _baseUrl = baseUrl;
 
+  String get baseUrl => _baseUrl;
+
   // Send a GET request to retrieve data from a REST server
   Future get(String endpoint) async {
     final response = await http.get(Uri.parse('$_baseUrl/$endpoint'));

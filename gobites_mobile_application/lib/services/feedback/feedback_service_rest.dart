@@ -13,4 +13,10 @@ class FeedbackServiceRest extends FeedbackService {
         result.map<Feedback>((json) => Feedback.fromJson(json)).toList();
     return feedbackList;
   }
+
+  @override
+  Future makeFeedback(int oid, int rid, double rating, String comment) async {
+    await rest.post('feedback',
+        data: {"oid": oid, "rid": rid, "rating": rating, "comment": comment});
+  }
 }

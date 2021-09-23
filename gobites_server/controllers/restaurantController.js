@@ -26,6 +26,17 @@ class RestaurantController {
     }
   };
 
+  getRestaurantByOid = async (req, res, next) => {
+    try {
+      const { oid } = req.params;
+      const result = await Restaurant.getByOid(oid);
+      delete result["password"];
+      return res.json(result);
+    } catch (error) {
+        next(error);
+    }
+  };
+
   updateRestaurant = async (req,res,next)=>{
     try {
       const { id } = req.params;
